@@ -2,7 +2,7 @@
 // Lo esencial a la vista (nombre, ícono, tipo, frecuencia, momento);
 // lo demás en "Más opciones" para no abrumar.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito } from '../dom.js';
 import { t } from '../textos.js';
 import { COLORES, BLOQUES } from '../esquema.js';
 import { abrirHoja } from '../ui.js';
@@ -91,9 +91,9 @@ function formulario(ctx, h, v, uid, cerrar) {
   const iconos = el('div', { class: 'campo' },
     el('span', { class: 'campo__etiqueta', id: uid('icono-et') }, t('editor.icono')),
     el('div', { class: 'iconos', role: 'radiogroup', aria: { labelledby: uid('icono-et') } },
-      ICONOS.map((i) => el('label', { class: 'segmento' },
-        el('input', { type: 'radio', name: 'iconoLista', value: i, checked: !iconoPropio && v.icono === i, aria: { label: i } }),
-        el('span', { aria: { hidden: 'true' } }, i)))),
+      ICONOS.map((i, n) => el('label', { class: 'segmento' },
+        el('input', { type: 'radio', name: 'iconoLista', value: i, checked: !iconoPropio && v.icono === i, aria: { label: t('editor.iconos')[n] } }),
+        el('span', { aria: { hidden: 'true' } }, iconoHabito(i))))),
     campoTexto({ id: uid('icono-otro'), etiqueta: t('editor.icono.otro'), nombre: 'iconoOtro', valor: iconoPropio, ph: '', max: 16, extra: { class: 'entrada entrada--corta' } }),
   );
 

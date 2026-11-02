@@ -1,7 +1,7 @@
 // vistas/detalle.js — Hoja de un hábito en un día: registrar, "Hoy no", descanso,
 // congelador, nota del día, estadísticas (puntaje, racha, mejor racha), editar y pausar.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito } from '../dom.js';
 import { t } from '../textos.js';
 import { esFechaValida, sumarDias } from '../fechas.js';
 import { estadoDelDia } from '../calculos.js';
@@ -17,7 +17,7 @@ export function abrirDetalle(ctx, id, fecha) {
   abrirHoja({
     titulo: h.nombre,
     etiqueta: 'detalle',
-    encabezado: el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, h.icono),
+    encabezado: el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, iconoHabito(h.icono)),
     contenido: (cerrar) => {
       const cuerpo = el('div', { class: 'form' });
       const dibujar = () => {
@@ -75,6 +75,10 @@ function contenido(ctx, h, fecha, cerrar, redibujar) {
 
   nodos.push(el('div', { class: 'separador' }));
   nodos.push(estadisticas(ctx, h));
+  nodos.push(el('button', {
+    class: 'tv-boton tv-boton--secundario tv-boton--ancho', type: 'button', data: { foco: 'ver-analisis' },
+    onclick: () => { cerrar(); ctx.abrirAnalisis(h.id); },
+  }, icono('analisis'), t('analisis.abrir')));
   nodos.push(el('button', {
     class: 'tv-boton tv-boton--secundario tv-boton--ancho', type: 'button',
     onclick: () => { cerrar(); ctx.abrirEditor(h.id); },

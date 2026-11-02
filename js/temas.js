@@ -1,17 +1,20 @@
-// temas.js — Paletas exclusivas (M8). Se ganan con días registrados, nunca se compran.
-// Cuentan los días con al menos un registro, seguidos o no: fallar no quita nada.
-// Los colores viven en styles.css; aquí solo el umbral y el color de la barra del sistema.
+// temas.js — Temas (claro, oscuro, negro) y paletas de acento ganadas con días registrados.
+// Las paletas solo cambian el color de acento: un solo acento a la vez, sobre grafito o papel.
+// Se ganan con días registrados (seguidos o no) y nunca se compran. Los colores viven en styles.css.
 
 import { PALETAS } from './esquema.js';
 
-/** id → días registrados necesarios y color de fondo (barra del sistema en Android). */
+/** id → días registrados necesarios y colores de muestra [oscuro, claro]. */
 export const PALETA = {
-  pino: { dias: 0, barra: { claro: '#f6f3ec', oscuro: '#121614' }, muestra: ['#2e6b5c', '#f6f3ec'] },
-  arena: { dias: 7, barra: { claro: '#f5efe6', oscuro: '#16120e' }, muestra: ['#9c4a28', '#f5efe6'] },
-  niebla: { dias: 30, barra: { claro: '#eff2f4', oscuro: '#0f1418' }, muestra: ['#2f5f86', '#eff2f4'] },
-  ciruela: { dias: 60, barra: { claro: '#f4f0f1', oscuro: '#151014' }, muestra: ['#7a3d6b', '#f4f0f1'] },
-  obsidiana: { dias: 100, barra: { claro: '#f4f1ea', oscuro: '#000000' }, muestra: ['#1c1c1a', '#dcb766'] },
+  ambar: { dias: 0, muestra: ['#F2B66D', '#A2621A'] },
+  cobre: { dias: 7, muestra: ['#EE9B74', '#B95A31'] },
+  salvia: { dias: 30, muestra: ['#9CCBA5', '#3F7A4D'] },
+  acero: { dias: 60, muestra: ['#93B9E3', '#2F679C'] },
+  platino: { dias: 100, muestra: ['#D8DBE0', '#3B3F46'] },
 };
+
+/** Color de la barra del sistema (Android) según el tema. */
+export const BARRA = { claro: '#F3F3F1', oscuro: '#18191C', negro: '#000000' };
 
 /** Lista para Ajustes: cada paleta con si está ganada y cuántos días faltan. */
 export function paletas(diasRegistrados) {
@@ -23,10 +26,10 @@ export function paletas(diasRegistrados) {
   }));
 }
 
-/** La paleta que se aplica: la elegida si está ganada; si no (p. ej. tras importar otros datos), la de siempre. */
+/** La paleta que se aplica: la elegida si está ganada; si no (p. ej. tras importar otros datos), ámbar. */
 export function paletaEfectiva(elegida, diasRegistrados) {
   const p = PALETA[elegida];
-  return p && diasRegistrados >= p.dias ? elegida : 'pino';
+  return p && diasRegistrados >= p.dias ? elegida : 'ambar';
 }
 
 /** La próxima paleta por ganar (o null si ya están todas). */

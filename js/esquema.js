@@ -23,7 +23,10 @@ export const LIMITES = {
 };
 
 /** Paletas (M8). La primera es la de siempre; las demás se ganan con días registrados (ver temas.js). */
-export const PALETAS = ['pino', 'arena', 'niebla', 'ciruela', 'obsidiana'];
+export const PALETAS = ['ambar', 'cobre', 'salvia', 'acero', 'platino'];
+/** Nombres de la versión 0.8 → paletas nuevas (para no perder la elección al actualizar). */
+const PALETAS_ANTES = { pino: 'ambar', arena: 'cobre', niebla: 'acero', ciruela: 'salvia', obsidiana: 'platino' };
+export const TEMAS = ['auto', 'claro', 'oscuro', 'negro'];
 export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
 
 export const BLOQUEOS = [0, 30, 60, 300, 900]; // segundos en segundo plano antes de pedir el PIN
@@ -44,7 +47,7 @@ export function configPorDefecto() {
     pinFallos: 0,
     pinEsperaHasta: 0, // marca de tiempo (ms) hasta la que no se aceptan intentos
     avisosVistos: [],
-    paleta: 'pino',
+    paleta: 'ambar',
     manifiesto: '',
     manifiestoModo: 'pantalla', // pantalla breve una vez al día · línea en Hoy · no mostrar
     manifiestoVisto: null, // 'YYYY-MM-DD' del último día en que se mostró la pantalla
@@ -165,7 +168,7 @@ export function sanearConfig(c, idsValidos = null) {
   const base = configPorDefecto();
   if (!esObjeto(c)) return base;
   return {
-    tema: ['auto', 'claro', 'oscuro'].includes(c.tema) ? c.tema : base.tema,
+    tema: TEMAS.includes(c.tema) ? c.tema : base.tema,
     finDelDia: FINES_DE_DIA.includes(c.finDelDia) ? c.finDelDia : base.finDelDia,
     hechosAlFinal: c.hechosAlFinal === true,
     recordatorios: sanearRecordatorios(c.recordatorios, idsValidos),
@@ -180,7 +183,7 @@ export function sanearConfig(c, idsValidos = null) {
     avisosVistos: Array.isArray(c.avisosVistos)
       ? [...new Set(c.avisosVistos.filter((x) => typeof x === 'string' && /^[\w.-]{1,40}$/.test(x)))].slice(0, 50)
       : [],
-    paleta: PALETAS.includes(c.paleta) ? c.paleta : base.paleta,
+    paleta: PALETAS.includes(c.paleta) ? c.paleta : PALETAS_ANTES[c.paleta] || base.paleta,
     manifiesto: texto(c.manifiesto, LIMITES.manifiesto).replace(/\n{3,}/g, '\n\n'),
     manifiestoModo: MODOS_MANIFIESTO.includes(c.manifiestoModo) ? c.manifiestoModo : base.manifiestoModo,
     manifiestoVisto: esFechaValida(c.manifiestoVisto) ? c.manifiestoVisto : null,

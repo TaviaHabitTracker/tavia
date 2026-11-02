@@ -44,7 +44,7 @@ export function frecuenciaPorDia(h) {
  *   resultado del último programado, igual que Loop con sus frecuencias.
  * - N por semana: el valor del día es min(1, hechos en los últimos 7 días / N).
  */
-export function puntaje(h, hoy, logDe) {
+export function puntaje(h, hoy, logDe, alDia = null) {
   const fin = ultimoDia(h, hoy);
   if (fin < h.creado) return 0;
   const m = 0.5 ** (Math.sqrt(frecuenciaPorDia(h)) / 13);
@@ -53,27 +53,27 @@ export function puntaje(h, hoy, logDe) {
   let arrastre = null;
   const ventana = []; // cumplido (1/0) de los últimos 7 días, para "N por semana"
 
-  for (let d = h.creado; d <= fin; d = sumarDias(d, 1)) {
+  /** Valor del día (0–1), o null si el día no cuenta. */
+  const valorDel = (d) => {
     const log = logDe(h.id, d);
     const estado = estadoDelDia(h, log);
     if (tipo === 'semanal_n') { ventana.push(cumplido(estado) ? 1 : 0); if (ventana.length > 7) ventana.shift(); }
-    if (!activoEn(h, d)) continue;
-    if (d === hoy && !cumplido(estado)) continue;
-
-    let v;
-    if (tipo === 'diaria') {
-      v = cumplimiento(h, log);
-    } else if (tipo === 'semanal_n') {
-      if (neutro(estado)) continue;
-      v = Math.min(ventana.reduce((a, b) => a + b, 0) / h.frecuencia.n, 1);
-    } else if (tocaEnFecha(h, d)) {
-      v = cumplimiento(h, log);
+    if (!activoEn(h, d)) return null;
+    if (d === hoy && !cumplido(estado)) return null;
+    if (tipo === 'diaria') return cumplimiento(h, log);
+    if (tipo === 'semanal_n') return neutro(estado) ? null : Math.min(ventana.reduce((a, b) => a + b, 0) / h.frecuencia.n, 1);
+    if (tocaEnFecha(h, d)) {
+      const v = cumplimiento(h, log);
       if (v !== null) arrastre = v;
-    } else {
-      v = arrastre;
+      return v;
     }
-    if (v === null) continue;
-    score = score * m + v * (1 - m);
+    return arrastre;
+  };
+
+  for (let d = h.creado; d <= fin; d = sumarDias(d, 1)) {
+    const v = valorDel(d);
+    if (v !== null) score = score * m + v * (1 - m);
+    if (alDia) alDia(d, score); // para la serie del gráfico (Análisis)
   }
   return score;
 }

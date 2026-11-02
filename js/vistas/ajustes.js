@@ -1,8 +1,8 @@
 // vistas/ajustes.js — Hábitos, apariencia, día, recordatorios, seguridad, datos e instalación.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito } from '../dom.js';
 import { APP, t } from '../textos.js';
-import { BLOQUEOS, FINES_DE_DIA, LIMITES, MODOS_MANIFIESTO } from '../esquema.js';
+import { BLOQUEOS, FINES_DE_DIA, LIMITES, MODOS_MANIFIESTO, TEMAS } from '../esquema.js';
 import { diffDias, fechaLarga } from '../fechas.js';
 import { pausaActual } from '../calculos.js';
 import { confirmar } from '../ui.js';
@@ -82,7 +82,7 @@ function seccionHabitos(ctx) {
       }, icono('lapiz')));
     }
     tarjeta.append(el('div', { class: `fila-habito color-${h.color}` },
-      el('span', { class: 'tv-habito__icono', aria: { hidden: 'true' } }, h.icono),
+      el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, iconoHabito(h.icono)),
       el('div', { class: 'fila-habito__texto' },
         el('span', { class: 'fila-habito__nombre' }, h.nombre),
         el('span', { class: 'fila-habito__estado' }, estado),
@@ -131,7 +131,7 @@ function seccionApariencia(ctx) {
   const { modelo } = ctx;
   const grupo = el('fieldset', { class: 'segmentos' },
     el('legend', { class: 'solo-lector' }, t('ajustes.apariencia')),
-    ['auto', 'claro', 'oscuro'].map((v) => el('label', { class: 'segmento' },
+    TEMAS.map((v) => el('label', { class: 'segmento' },
       el('input', { type: 'radio', name: 'tema', value: v, checked: modelo.config.tema === v, data: { foco: `tema-${v}` } }),
       el('span', {}, t(`tema.${v}`)))));
   grupo.addEventListener('change', (e) => modelo.setConfig({ tema: e.target.value }));

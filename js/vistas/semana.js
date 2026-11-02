@@ -12,7 +12,7 @@ export function abrirRevision(ctx, lunes) {
   const r = resumenSemana(ctx.visibles(), lunes, modelo.hoy(), modelo.logDe);
   const previa = modelo.revisionDe(lunes);
   const lista = (items) => (items.length
-    ? el('ul', { class: 'lista-simple' }, items.map((x) => el('li', {}, `${x.habito.icono} ${x.habito.nombre} · ${x.hechos}/${x.total}`)))
+    ? el('ul', { class: 'lista-simple' }, items.map((x) => el('li', {}, `${x.habito.nombre} · ${x.hechos}/${x.total}`)))
     : el('p', { class: 'texto-ayuda' }, t('semana.nada')));
 
   abrirHoja({

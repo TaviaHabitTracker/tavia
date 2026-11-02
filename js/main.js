@@ -17,10 +17,11 @@ import { renderProgreso } from './vistas/progreso.js';
 import { renderAjustes } from './vistas/ajustes.js';
 import { abrirDetalle } from './vistas/detalle.js';
 import { abrirEditor } from './vistas/editor.js';
+import { abrirAnalisis } from './vistas/analisis.js';
 import { renderBloqueo } from './vistas/seguridad.js';
 import { exportar } from './vistas/datos.js';
 import { iniciarPWA } from './pwa.js';
-import { PALETA, paletaEfectiva } from './temas.js';
+import { BARRA, PALETA, paletaEfectiva } from './temas.js';
 import { mostrarManifiestoSiToca } from './vistas/manifiesto.js';
 
 const PESTANAS = [
@@ -33,20 +34,19 @@ const PISTA_TEMA = 'tavia:tema'; // copia mínima (tema y paleta) para pintar si
 /** Aplica tema y paleta al documento y a la barra del sistema. */
 function pintarTema(tema, paleta) {
   const raiz = document.documentElement;
-  if (tema === 'claro' || tema === 'oscuro') raiz.dataset.theme = tema;
+  if (tema === 'claro' || tema === 'oscuro' || tema === 'negro') raiz.dataset.theme = tema;
   else delete raiz.dataset.theme;
-  if (paleta && paleta !== 'pino') raiz.dataset.paleta = paleta;
+  if (paleta && paleta !== 'ambar') raiz.dataset.paleta = paleta;
   else delete raiz.dataset.paleta;
-  const barra = (PALETA[paleta] || PALETA.pino).barra;
   document.querySelectorAll('meta[name="theme-color"]').forEach((m, i) => {
-    m.setAttribute('content', tema === 'auto' ? (i === 0 ? barra.claro : barra.oscuro) : barra[tema]);
+    m.setAttribute('content', tema === 'auto' ? (i === 0 ? BARRA.claro : BARRA.oscuro) : BARRA[tema]);
   });
 }
 
 // Antes de abrir la base de datos (asíncrona), pintamos con lo último que se usó.
 try {
   const [tema, paleta] = (localStorage.getItem(PISTA_TEMA) || '').split('|');
-  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'pino');
+  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'ambar');
 } catch { /* sin localStorage: se pinta al cargar */ }
 
 async function iniciar() {
@@ -191,6 +191,7 @@ async function iniciar() {
 
   ctx.abrirDetalle = (id, fecha) => abrirDetalle(ctx, id, fecha);
   ctx.abrirEditor = (id = null, plantilla = null) => abrirEditor(ctx, id, plantilla);
+  ctx.abrirAnalisis = (id) => abrirAnalisis(ctx, id);
   ctx.alGuardarHabito = (h, esNuevo) => {
     if (esNuevo) {
       // Con el primer hábito pedimos al navegador que no borre los datos.

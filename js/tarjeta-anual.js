@@ -11,8 +11,8 @@ export const ANCHO = 1080;
 export const ALTO = 1920;
 const M = 88; // margen
 
-const SERIF = "'Fraunces Soft', Georgia, serif";
-const SANS = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+const SERIF = "'Instrument Sans', system-ui, sans-serif"; // títulos y cifras (misma familia, más peso)
+const SANS = "'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
 /** Lee los colores actuales del tema. */
 function colores() {
@@ -20,7 +20,7 @@ function colores() {
   const v = (n, x) => cs.getPropertyValue(`--${n}`).trim() || x;
   return {
     fondo: v('fondo', '#f6f3ec'), superficie: v('superficie', '#fffdf8'), tinta: v('tinta', '#1c2420'),
-    suave: v('tinta-suave', '#5b635d'), acento: v('pino', '#2e6b5c'), miel: v('miel', '#d9a03f'),
+    suave: v('tinta-suave', '#5b635d'), acento: v('acento', '#F2B66D'), acentoTexto: v('acento-texto', '#F2B66D'), miel: v('miel', '#d9a03f'),
     calor: [0, 1, 2, 3, 4].map((i) => v(`calor-${i}`, '#ebe6dc')),
     linea: v('linea', '#e3ddd1'),
   };
@@ -75,15 +75,19 @@ function textoAjustado(c, texto, x, y, ancho, { tam, minimo = tam * 0.6, peso = 
   c.fillText(linea, x, y);
 }
 
-function simbolo(c, x, y, tam, color) {
+function simbolo(c, x, y, tam, color, tallo) {
   c.save();
   c.translate(x, y);
   c.scale(tam / 96, tam / 96);
-  c.strokeStyle = color;
-  c.lineWidth = 7;
+  c.lineWidth = 5;
   c.lineCap = 'round';
   c.lineJoin = 'round';
-  for (const d of TRAZOS_SIMBOLO) c.stroke(new Path2D(d));
+  TRAZOS_SIMBOLO.forEach((d, i) => {
+    const p = new Path2D(d);
+    c.strokeStyle = i === 0 || i >= 2 ? color : tallo;
+    c.stroke(p);
+    if (i >= 2) { c.fillStyle = color; c.fill(p); }
+  });
   c.restore();
 }
 
@@ -147,7 +151,7 @@ export function paneles(r) {
   ];
   if (r.mejorMes) out.push([t('meses.largo')[r.mejorMes.mes], t('anual.mejorMes', { pct: porcentaje(r.mejorMes.pct) })]);
   else if (r.pct !== null) out.push([porcentaje(r.pct), t('anual.cumplido')]);
-  if (r.constante) out.push([`${r.constante.habito.icono} ${r.constante.habito.nombre}`, t('anual.constante', { pct: porcentaje(r.constante.pct) })]);
+  if (r.constante) out.push([r.constante.habito.nombre, t('anual.constante', { pct: porcentaje(r.constante.pct) })]);
   else if (r.mejorDia) out.push([t('dias.largo')[r.mejorDia.dia], t('anual.mejorDia')]);
   return out;
 }
@@ -164,7 +168,7 @@ export function dibujarTarjeta(lienzo, r) {
   c.fillRect(0, 0, ANCHO, ALTO);
 
   // Encabezado: símbolo + Tavia · año
-  simbolo(c, M, 104, 64, col.acento);
+  simbolo(c, M, 104, 64, col.acento, col.suave);
   c.fillStyle = col.tinta;
   c.textAlign = 'left';
   c.font = `600 46px ${SERIF}`;
@@ -176,12 +180,14 @@ export function dibujarTarjeta(lienzo, r) {
 
   // Cifra principal
   c.textAlign = 'left';
-  c.fillStyle = col.acento;
-  c.font = `700 30px ${SANS}`;
-  c.fillText(t('anual.etiqueta', { anio: r.anio }).toUpperCase(), M, 300);
+  c.fillStyle = col.acentoTexto;
+  c.font = `600 32px ${SANS}`;
+  c.fillText(t('anual.etiqueta', { anio: r.anio }), M, 300);
   c.fillStyle = col.tinta;
-  c.font = `540 260px ${SERIF}`;
+  c.font = `600 260px ${SERIF}`;
+  if ('letterSpacing' in c) c.letterSpacing = '-12px';
   c.fillText(num(r.diasConRegistro), M - 8, 540);
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
   c.fillStyle = col.suave;
   c.font = `500 40px ${SANS}`;
   cortarLineas(c, t('anual.diasCon', { n: r.diasConRegistro }), ancho, 2).forEach((l, i) => c.fillText(l, M, 610 + i * 52));

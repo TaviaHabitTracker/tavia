@@ -1,6 +1,6 @@
 // vistas/hoy.js — La pantalla Hoy: hace una sola cosa, marcar lo de hoy.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito, menosMovimiento, simboloTavia } from '../dom.js';
 import { t } from '../textos.js';
 import { BLOQUES } from '../esquema.js';
 import { fechaLarga, inicioSemana, sumarDias } from '../fechas.js';
@@ -9,6 +9,7 @@ import { fraseIdentidad, nombreDelDia, num, resumenFrecuencia, resumenMeta, text
 import { congeladores, puedeCongelar, rachaAntesDe } from '../estadisticas.js';
 import { recordatoriosVencidos } from '../recordatorios.js';
 import { semanaParaRevisar } from '../insights.js';
+import { constancia, porcentajeSemana, rachaGlobal, semanaGlobal } from '../analisis.js';
 import { abrirRitual, pendientesDelBloque } from './ritual.js';
 import { abrirRevision } from './semana.js';
 import { pedirPin } from './seguridad.js';
@@ -27,7 +28,8 @@ export function renderHoy(raiz, ctx) {
   const vistas = todos.filter((h) => tocaEnFecha(h, fecha)).map((h) => vistaDelDia(h, fecha, modelo.logDe));
   const prog = progresoDelDia(vistas);
 
-  raiz.append(cabecera(ctx, fecha, hoy, prog, vivos.length > 0, hayPrivados));
+  raiz.append(cabecera(ctx, fecha, hoy, vivos.length > 0, hayPrivados));
+  if (vivos.length) raiz.append(panelDia(ctx, fecha, hoy, prog, vivos));
   raiz.append(ctx.contenedorAvisos);
   if (fecha === hoy) {
     const { manifiesto, manifiestoModo } = modelo.config;
@@ -78,49 +80,140 @@ export function renderHoy(raiz, ctx) {
   }
 }
 
-function cabecera(ctx, fecha, hoy, prog, hayHabitos, hayPrivados) {
+function cabecera(ctx, fecha, hoy, hayHabitos, hayPrivados) {
   const { modelo } = ctx;
   const inicio = modelo.habitos().reduce((m, h) => (h.creado < m ? h.creado : m), hoy);
   const anterior = sumarDias(fecha, -1);
-  const pct = prog.total ? Math.round((prog.hechos / prog.total) * 100) : 0;
-  const relleno = el('div', { class: 'tv-progreso__relleno' });
-  relleno.style.setProperty('width', `${pct}%`); // CSSOM: permitido por la CSP
-  const subtitulo = fechaLarga(fecha);
 
   return el('header', { class: 'cabecera' },
     el('div', { class: 'cabecera__fila' },
-      el('h1', { class: 'titulo-pantalla' }, nombreDelDia(fecha, hoy)),
-      hayPrivados ? el('button', {
-        class: 'tv-boton--icono', type: 'button', data: { foco: 'boveda' },
-        aria: { label: t(ctx.verPrivados ? 'privado.ocultar' : 'privado.mostrar'), pressed: ctx.verPrivados ? 'true' : 'false' },
-        onclick: async () => {
-          if (ctx.verPrivados) { ctx.verPrivados = false; ctx.render(); return; }
-          if (await pedirPin(ctx, t('privado.mostrar'))) { ctx.verPrivados = true; ctx.render(); }
-        },
-      }, icono(ctx.verPrivados ? 'abierto' : 'candado')) : null,
+      el('div', { class: 'cabecera__titulos' },
+        el('p', { class: 'subtitulo' }, fechaLarga(fecha)),
+        el('h1', { class: 'titulo-pantalla' }, nombreDelDia(fecha, hoy)),
+      ),
+      el('div', { class: 'cabecera__acciones' },
+        hayPrivados ? el('button', {
+          class: 'tv-boton--icono tv-boton--marco', type: 'button', data: { foco: 'boveda' },
+          aria: { label: t(ctx.verPrivados ? 'privado.ocultar' : 'privado.mostrar'), pressed: ctx.verPrivados ? 'true' : 'false' },
+          onclick: async () => {
+            if (ctx.verPrivados) { ctx.verPrivados = false; ctx.render(); return; }
+            if (await pedirPin(ctx, t('privado.mostrar'))) { ctx.verPrivados = true; ctx.render(); }
+          },
+        }, icono(ctx.verPrivados ? 'abierto' : 'candado')) : null,
+        el('button', {
+          class: 'tv-boton--icono tv-boton--marco', type: 'button', data: { foco: 'crear' },
+          aria: { label: t('hoy.crear') }, onclick: () => ctx.abrirEditor(),
+        }, icono('agregar')),
+      ),
+    ),
+    hayHabitos ? el('div', { class: 'navegar-dia' },
+      fecha !== hoy ? el('button', { class: 'tv-boton tv-boton--sutil tv-boton--chico', type: 'button', data: { foco: 'volver' }, onclick: () => ctx.verFecha(null) }, t('hoy.volverHoy')) : null,
       el('button', {
-        class: 'tv-boton--icono tv-boton--redondo', type: 'button', data: { foco: 'crear' },
-        aria: { label: t('hoy.crear') }, onclick: () => ctx.abrirEditor(),
-      }, icono('agregar')),
-    ),
-    el('div', { class: 'cabecera__fila' },
-      el('p', { class: 'subtitulo' }, subtitulo),
-      hayHabitos ? el('div', { class: 'navegar-dia' },
-        fecha !== hoy ? el('button', { class: 'tv-boton tv-boton--sutil', type: 'button', data: { foco: 'volver' }, onclick: () => ctx.verFecha(null) }, t('hoy.volverHoy')) : null,
-        el('button', {
-          class: 'tv-boton--icono', type: 'button', data: { foco: 'dia-ant' }, aria: { label: t('hoy.diaAnterior') },
-          disabled: anterior < inicio, onclick: () => ctx.verFecha(anterior),
-        }, icono('izquierda')),
-        el('button', {
-          class: 'tv-boton--icono', type: 'button', data: { foco: 'dia-sig' }, aria: { label: t('hoy.diaSiguiente') },
-          disabled: fecha >= hoy, onclick: () => ctx.verFecha(sumarDias(fecha, 1) >= hoy ? null : sumarDias(fecha, 1)),
-        }, icono('derecha')),
-      ) : null,
-    ),
-    prog.total > 0 ? el('div', { class: 'tv-progreso' },
-      el('p', { class: 'tv-progreso__texto' }, t('hoy.progreso', prog)),
-      el('div', { class: 'tv-progreso__barra', role: 'progressbar', aria: { valuemin: 0, valuemax: prog.total, valuenow: prog.hechos, label: t('hoy.progreso', prog) } }, relleno),
+        class: 'tv-boton--icono', type: 'button', data: { foco: 'dia-ant' }, aria: { label: t('hoy.diaAnterior') },
+        disabled: anterior < inicio, onclick: () => ctx.verFecha(anterior),
+      }, icono('izquierda')),
+      el('button', {
+        class: 'tv-boton--icono', type: 'button', data: { foco: 'dia-sig' }, aria: { label: t('hoy.diaSiguiente') },
+        disabled: fecha >= hoy, onclick: () => ctx.verFecha(sumarDias(fecha, 1) >= hoy ? null : sumarDias(fecha, 1)),
+      }, icono('derecha')),
     ) : null,
+  );
+}
+
+/* ---------- Panel del día: el brote, cuatro cifras y la semana ---------- */
+
+const SVG = 'http://www.w3.org/2000/svg';
+function svgNodo(tag, attrs, padre) {
+  const n = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (padre) padre.append(n);
+  return n;
+}
+
+/**
+ * El brote del día: el anillo avanza con cada hábito; la primera hoja se enciende al empezar,
+ * la segunda a mitad del día y la yema se abre en flor al completarlo todo.
+ */
+export function dibujarBrote(fraccion, { antes = fraccion, clase = 'brote' } = {}) {
+  const svg = svgNodo('svg', { viewBox: '0 0 96 96', class: clase, 'aria-hidden': 'true' });
+  svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__pista' }, svg);
+  const anillo = svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__anillo', pathLength: 100, transform: 'rotate(-90 48 48)', 'stroke-dasharray': `${antes * 100} 100` }, svg);
+  svgNodo('path', { d: 'M48 80V42', class: 'brote__tallo' }, svg);
+  const hojas = [
+    ['M48 66C40 66 31 62 28 51c10 0 18 5 20 15z', fraccion > 0, antes > 0],
+    ['M48 58c8 0 16-4 19-15-10 0-17 5-19 15z', fraccion >= 0.5, antes >= 0.5],
+  ];
+  for (const [d, on, estaba] of hojas) {
+    svgNodo('path', { d, class: `brote__hoja${on ? ' brote__hoja--on' : ''}${on && !estaba ? ' brote__hoja--nueva' : ''}` }, svg);
+  }
+  const completo = fraccion >= 1;
+  if (completo) {
+    const flor = svgNodo('g', { class: `brote__flor${antes < 1 ? ' brote__flor--nueva' : ''}` }, svg);
+    for (const r of [-38, 0, 38]) svgNodo('path', { d: 'M48 42c-5-5-5-13 0-21 5 8 5 16 0 21z', transform: `rotate(${r} 48 42)` }, flor);
+  } else {
+    svgNodo('path', { d: 'M48 42c-5-5-5-13 0-21 5 8 5 16 0 21z', class: 'brote__yema' }, svg);
+  }
+  // El anillo se desliza desde donde estaba (si no se pidió menos movimiento).
+  if (antes !== fraccion) {
+    if (menosMovimiento()) anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`);
+    else requestAnimationFrame(() => requestAnimationFrame(() => anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`)));
+  }
+  return svg;
+}
+
+function cifra(valor, etiqueta, { sufijo = null, extra = null, clase = '' } = {}) {
+  return el('div', { class: `kpi ${clase}`.trim() },
+    el('dt', { class: 'kpi__etiqueta' }, etiqueta, extra),
+    el('dd', { class: 'kpi__valor' }, valor, sufijo ? el('small', {}, sufijo) : null));
+}
+
+function panelDia(ctx, fecha, hoy, prog, vivos) {
+  const { modelo } = ctx;
+  const fraccion = prog.total ? prog.hechos / prog.total : 0;
+  // Para animar: el progreso que se mostró la última vez para esta fecha.
+  ctx.progresoMostrado ??= new Map();
+  const antes = ctx.animar ? (ctx.progresoMostrado.get(fecha) ?? fraccion) : fraccion;
+  ctx.progresoMostrado.set(fecha, fraccion);
+
+  const racha = rachaGlobal(vivos, hoy, modelo.logDe);
+  const indice = constancia(vivos, hoy, modelo.logDe);
+  const dias = semanaGlobal(vivos, hoy, modelo.logDe);
+  const pctSemana = porcentajeSemana(dias, hoy);
+  const letras = t('dias.corto');
+  const nombres = t('dias.largo');
+
+  const cambio = indice?.cambio;
+  const semana = el('div', { class: 'semana-barras', role: 'group', aria: { label: t('hoy.semana') } },
+    dias.map((d, i) => {
+      const alto = d.pct === null ? 0 : Math.round(d.pct * 100);
+      const barra = el('span', { class: 'semana-barras__barra', aria: { hidden: 'true' } });
+      barra.style.setProperty('--h', `${alto}%`);
+      const etiqueta = d.futuro ? nombres[i] : d.pct === null ? t('hoy.semana.libre', { dia: nombres[i] }) : t('hoy.semana.dia', { dia: nombres[i], hechos: d.hechos, total: d.total });
+      return el('button', {
+        class: 'semana-barras__dia', type: 'button', disabled: d.futuro,
+        data: { hoy: d.fecha === hoy ? '' : null, vista: d.fecha === fecha ? '' : null, foco: `semana-${d.fecha}` },
+        aria: { label: etiqueta, current: d.fecha === fecha ? 'date' : null },
+        onclick: () => ctx.verFecha(d.fecha === hoy ? null : d.fecha),
+      }, barra, el('span', { class: 'semana-barras__letra', aria: { hidden: 'true' } }, letras[i]));
+    }));
+
+  const completo = prog.total > 0 && prog.hechos === prog.total;
+  return el('section', { class: `panel-dia${completo && antes < 1 ? ' panel-dia--florece' : ''}`, aria: { label: t('hoy.resumen') } },
+    el('div', { class: 'panel-dia__fila' },
+      el('div', {
+        class: 'panel-dia__brote', role: 'progressbar',
+        aria: { valuemin: 0, valuemax: prog.total, valuenow: prog.hechos, label: t('hoy.progreso', prog) },
+      }, dibujarBrote(fraccion, { antes })),
+      el('dl', { class: 'kpis' },
+        cifra(String(prog.hechos), t(fecha === hoy ? 'hoy.kpi.hoy' : 'hoy.kpi.dia'), { sufijo: `/${prog.total}`, clase: 'tv-progreso__texto' }),
+        cifra(num(racha), t('hoy.kpi.racha', { n: racha })),
+        cifra(indice ? String(indice.valor) : '—', t('hoy.kpi.constancia'), {
+          extra: cambio ? el('span', { class: `kpi__cambio${cambio < 0 ? ' kpi__cambio--baja' : ''}` }, ` ${cambio > 0 ? '+' : '−'}${Math.abs(cambio)}`) : null,
+        }),
+        cifra(pctSemana === null ? '—' : String(Math.round(pctSemana * 100)), t('hoy.kpi.semana'), { sufijo: pctSemana === null ? null : '%' }),
+      ),
+    ),
+    semana,
   );
 }
 
@@ -142,16 +235,17 @@ function lineaMeta(ctx, v, fecha, hoy) {
   } else if (!meta || h.frecuencia.tipo !== 'diaria') {
     partes.push(resumenFrecuencia(h));
   }
+  let racha = null;
   if (fecha === hoy) {
     const st = ctx.stats(h);
-    if (st.actual >= 2) partes.push(t('stats.rachaDe', { texto: textoRacha(st.actual, st.unidad) }));
+    if (st.actual >= 2) racha = el('span', { class: 'tv-habito__racha' }, t('stats.rachaDe', { texto: textoRacha(st.actual, st.unidad) }));
   }
   const horas = ctx.modelo.recordatoriosDe(h.id);
   return el('p', { class: 'tv-habito__meta', data: { tono } },
-    el('span', { class: 'tv-habito__punto', aria: { hidden: 'true' } }),
+    horas.length && fecha === hoy && !cumplido(v.estado) ? el('span', { class: 'tv-habito__hora' }, icono('campana', 'tv-icono--xs'), horas.join(', ')) : null,
     el('span', {}, partes.join(' · ')),
-    h.privado ? el('span', { class: 'tv-habito__privado' }, icono('candado', 'tv-icono--xs'), t('privado.marca')) : null,
-    horas.length && fecha === hoy && !cumplido(v.estado) ? el('span', { class: 'tv-habito__hora' }, icono('campana', 'tv-icono--xs'), horas.join(', ')) : null);
+    racha,
+    h.privado ? el('span', { class: 'tv-habito__privado' }, icono('candado', 'tv-icono--xs'), t('privado.marca')) : null);
 }
 
 function botonCheck(ctx, v, fecha) {
@@ -203,7 +297,7 @@ function fila(ctx, v, fecha, hoy) {
       aria: { label: t('aria.abrir', { nombre: h.nombre }) },
       onclick: () => ctx.abrirDetalle(h.id, fecha),
     },
-      el('span', { class: 'tv-habito__icono', aria: { hidden: 'true' } }, h.icono),
+      el('span', { class: 'tv-habito__icono', aria: { hidden: 'true' } }, iconoHabito(h.icono)),
       el('span', { class: 'tv-habito__texto' },
         el('span', { class: 'tv-habito__nombre' }, h.nombre),
         lineaMeta(ctx, v, fecha, hoy),
@@ -214,17 +308,7 @@ function fila(ctx, v, fecha, hoy) {
 }
 
 function vacio(ctx) {
-  // Símbolo de Tavia: anillo abierto con check.
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 96 96');
-  svg.setAttribute('class', 'vacio__simbolo');
-  svg.setAttribute('aria-hidden', 'true');
-  for (const d of ['M79.72 38.90A33 33 0 1 1 57.10 16.28', 'M30.5 50.5L42.5 62L78.05 17.95']) {
-    const p = document.createElementNS(ns, 'path');
-    p.setAttribute('d', d);
-    svg.append(p);
-  }
+  const svg = simboloTavia();
   const ideas = t('ideas');
   return el('div', { class: 'vacio' },
     svg,
@@ -234,7 +318,7 @@ function vacio(ctx) {
     el('p', { class: 'texto-ayuda' }, t('hoy.vacio.ideas')),
     el('div', { class: 'ideas' }, ideas.map((idea, i) => el('button', {
       class: 'idea', type: 'button', data: { foco: `idea-${i}` }, onclick: () => ctx.abrirEditor(null, idea),
-    }, el('span', { aria: { hidden: 'true' } }, idea.icono), idea.nombre))),
+    }, el('span', { aria: { hidden: 'true' } }, iconoHabito(idea.icono, 'tv-icono--sm')), idea.nombre))),
   );
 }
 
@@ -258,7 +342,7 @@ function rescates(ctx, hoy) {
       const puede = puedeCongelar(h, d, hoy, modelo.logDe);
       const rachaTxt = textoRacha(racha, st.unidad);
       tarjetas.push(el('div', { class: 'tv-aviso tv-aviso--rescate', role: 'note', data: { rescate: h.id } },
-        el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, h.icono),
+        el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, iconoHabito(h.icono)),
         el('div', { class: 'tv-aviso__texto' },
           el('p', { class: 'tv-aviso__titulo' }, t('rescate.texto', { nombre: h.nombre, cuando: t(atras === 1 ? 'rescate.ayer' : 'rescate.anteayer') })),
           el('p', {}, t(puede ? 'rescate.conCongelador' : 'rescate.sinCongelador', { racha: rachaTxt })),
@@ -314,7 +398,7 @@ function tarjetaRecordatorios(ctx) {
     icono('campana'),
     el('div', { class: 'tv-aviso__texto' },
       el('p', { class: 'tv-aviso__titulo' }, t('recordatorios.pendientes')),
-      el('ul', { class: 'lista-simple' }, unicos.map((v) => el('li', {}, `${v.habito.icono} ${v.habito.nombre} · ${v.hora}`)))),
+      el('ul', { class: 'lista-simple' }, unicos.map((v) => el('li', {}, `${v.habito.nombre} · ${v.hora}`)))),
     el('button', {
       class: 'tv-boton--icono', type: 'button', aria: { label: t('detalle.cerrar') },
       onclick: () => { for (const v of vencidos) ctx.recordatoriosDescartados.add(v.clave); ctx.render(); },

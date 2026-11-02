@@ -1,4 +1,4 @@
-# Tavia Habit Tracker — Módulos 1 a 8 (versión completa)
+# Tavia Habit Tracker — versión 0.9 (diseño «Analista»)
 
 App de hábitos privada, elegante y que perdona. PWA en HTML, CSS y JavaScript puro: sin cuenta, sin servidor, sin rastreadores. Se instala en el celular o el PC y funciona sin internet.
 
@@ -30,8 +30,8 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.8.0'`
-- `js/textos.js` → `version: '0.8.0'`
+- `sw.js` → `const VERSION = 'tavia-0.9.0'`
+- `js/textos.js` → `version: '0.9.0'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 
@@ -42,7 +42,10 @@ Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar
 - **Recordatorios:** aviso del sistema con la app abierta, tarjeta «Ya pasó la hora de…» al abrirla, y archivo `.ics` para el calendario del teléfono (el único que avisa siempre con la app cerrada).
 - **Tus datos:** respaldo JSON, respaldo cifrado (AES-GCM con contraseña), CSV para Excel e importación con resumen, Combinar o Reemplazar, y Deshacer. Aviso si pasan más de 14 días sin respaldo.
 - **Seguridad:** PIN de 4 a 8 dígitos (guardado como hash PBKDF2 con sal, nunca en claro), bloqueo automático, espera creciente tras 5 intentos, y bóveda de hábitos privados.
-- **Apariencia:** tema automático, claro u oscuro, y cinco paletas (Pino, Arena, Niebla, Ciruela, Obsidiana). Las exclusivas se ganan con 7, 30, 60 y 100 días registrados, seguidos o no.
+- **Diseño «Analista» (0.9):** grafito o papel con un solo color de acento, tipografía Instrument Sans y cifras tabulares. Temas automático, claro, oscuro y negro puro. Colores de acento: Ámbar, y Cobre, Salvia, Acero y Platino, que se ganan con 7, 30, 60 y 100 días registrados, seguidos o no.
+- **El brote:** en Hoy, un anillo con un tallo que echa hojas a medida que cumples los hábitos del día y florece al completarlos. Al lado, hábitos de hoy, días seguidos, índice de constancia y % de la semana; la semana es tocable.
+- **Análisis de racha:** por hábito (desde Progreso o el detalle): racha actual y mejor, índice de constancia en el tiempo (se recorre con el dedo o las flechas), cuánto tardas en volver tras fallar, historial de rachas, cumplimiento por día de la semana y una lectura en una frase.
+- **Íconos propios:** un set SVG del mismo trazo; los emojis antiguos se muestran con su ícono equivalente.
 - **Tu año:** resumen anual tipo *Wrapped* en Progreso, con una tarjeta 1080×1920 para guardar o compartir como imagen (se crea en el teléfono con canvas).
 - **Tu manifiesto:** unas líneas propias que aparecen al abrir (una vez al día, se cierran solas o con un toque) o como una línea arriba en Hoy.
 - **Guardado:** IndexedDB. La primera vez se mudan solos los datos de localStorage; si el navegador no tiene IndexedDB, sigue con localStorage.
@@ -55,7 +58,7 @@ styles.css          Marca (claro y oscuro) y componentes
 manifest.json       Nombre, íconos, colores, atajos
 sw.js               Service Worker: precache, sin internet, actualización
 icons/              Íconos 192, 512, maskable, Apple y favicon
-fonts/              Fraunces Soft (licencia OFL incluida)
+fonts/              Instrument Sans (licencia OFL incluida)
 js/main.js          Arranque, pestañas, cambio de día, Deshacer
 js/pwa.js           Registro del Service Worker, aviso de actualización, instalar
 js/textos.js        Todos los textos (listo para otros idiomas)
@@ -72,7 +75,8 @@ js/respaldo.js      Exportar, validar e importar respaldos; CSV
 js/cripto.js        PIN (PBKDF2) y respaldo cifrado (AES-GCM)
 js/recordatorios.js Motor de avisos y archivo .ics
 js/insights.js      Patrones de Progreso y revisión semanal
-js/temas.js         Paletas exclusivas y cuándo se ganan
+js/temas.js         Colores de acento y cuándo se ganan
+js/analisis.js      Racha global, constancia y análisis por hábito
 js/anual.js         Cálculo de "Tu año"
 js/tarjeta-anual.js Dibujo de la tarjeta anual (canvas)
 js/vistas/          Hoy, detalle, editor, Progreso, Ajustes, seguridad,
@@ -85,7 +89,7 @@ tests/              Pruebas automáticas (no se publican en la app)
 ```
 TZ=America/Santiago node --test tests/*.test.mjs     # 79 pruebas de lógica
 python -m http.server 8765 &                         # en otra terminal
-node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs   # 57 pruebas en el navegador (requiere Playwright)
+node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs && node tests/e2e-m9.cjs   # 64 pruebas en el navegador (requiere Playwright)
 ```
 
 ## Datos

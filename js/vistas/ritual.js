@@ -1,7 +1,7 @@
 // vistas/ritual.js — Modo Ritual: los hábitos pendientes de un bloque, uno por uno,
 // a pantalla completa. Sin prisa: "Después" deja el hábito para más tarde sin marcarlo.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito } from '../dom.js';
 import { t } from '../textos.js';
 import { cumplido, estadoDelDia } from '../calculos.js';
 import { abrirHoja } from '../ui.js';
@@ -98,7 +98,7 @@ function paso(ctx, h, fecha, i, total, avanzar) {
   return el('div', { class: `ritual__paso color-${h.color}` },
     el('p', { class: 'ritual__progreso' }, t('ritual.progreso', { n: i + 1, total })),
     el('div', { class: 'ritual__centro' },
-      el('p', { class: 'ritual__icono', aria: { hidden: 'true' } }, h.icono),
+      el('p', { class: `ritual__icono color-${h.color}`, aria: { hidden: 'true' } }, iconoHabito(h.icono)),
       el('h3', { class: 'ritual__nombre', tabindex: '-1', ...(h.tipo === 'cantidad' ? { 'data-foco-ritual': '' } : {}) }, h.nombre),
       meta ? el('p', { class: 'texto-ayuda' }, meta) : null,
       identidad ? el('p', { class: 'tv-identidad' }, identidad) : null,

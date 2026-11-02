@@ -1,7 +1,7 @@
 // vistas/progreso.js — Progreso: mapa de calor de 30 días, % del mes, mejor racha,
 // puntaje y racha por hábito, y las notas que escribiste.
 
-import { el, icono } from '../dom.js';
+import { el, icono, iconoHabito } from '../dom.js';
 import { t } from '../textos.js';
 import { diffDias, fechaLarga, inicioSemana, sumarDias } from '../fechas.js';
 import { diaDeHabito, diaGlobal, nivelCalor, porcentajePeriodo } from '../estadisticas.js';
@@ -85,7 +85,7 @@ export function renderProgreso(raiz, ctx) {
           onclick: () => ctx.abrirDetalle(n.habito.id, n.fecha),
         },
           el('span', { class: 'nota-item__cabecera' },
-            el('span', { aria: { hidden: 'true' } }, n.habito.icono),
+            el('span', { class: 'nota-item__icono', aria: { hidden: 'true' } }, iconoHabito(n.habito.icono, 'tv-icono--xs')),
             el('span', { class: 'nota-item__habito' }, n.habito.nombre),
             el('span', { class: 'nota-item__fecha' }, fechaCorta(n.fecha))),
           el('span', { class: 'nota-item__texto' }, n.nota))))),
@@ -160,10 +160,10 @@ function tarjetaHabito(ctx, h, hoy) {
     el('button', {
       class: `tarjeta-habito color-${h.color}`, type: 'button', data: { foco: `prog-${h.id}` },
       aria: { label: `${h.nombre}: ${t('stats.puntaje')} ${porcentaje(st.puntaje)}, ${t('stats.racha')} ${textoRacha(st.actual, st.unidad)}, ${t('stats.mejor')} ${textoRacha(st.mejor, st.unidad)}` },
-      onclick: () => ctx.abrirDetalle(h.id, hoy),
+      onclick: () => ctx.abrirAnalisis(h.id),
     },
       el('span', { class: 'tarjeta-habito__cabecera' },
-        el('span', { class: 'tv-habito__icono', aria: { hidden: 'true' } }, h.icono),
+        el('span', { class: `tv-habito__icono color-${h.color}`, aria: { hidden: 'true' } }, iconoHabito(h.icono)),
         el('span', { class: 'tarjeta-habito__nombre' }, h.nombre),
         el('span', { class: 'cifra__valor cifra__valor--chica' }, porcentaje(st.puntaje)),
       ),
