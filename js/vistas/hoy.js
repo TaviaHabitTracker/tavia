@@ -13,6 +13,8 @@ import { constancia, porcentajeSemana, rachaGlobal, semanaGlobal } from '../anal
 import { abrirRitual, pendientesDelBloque } from './ritual.js';
 import { abrirRevision } from './semana.js';
 import { pedirPin } from './seguridad.js';
+import { tarjetaCierre, tarjetaFraseDelDia } from './frases.js';
+import { bannerMinimo, chipPalabraHoy, minimoDeHoy, palabrasIdentidad, tarjetaGuia } from './palabras.js';
 
 const ICONO_ESTADO = { saltado: 'saltado', descanso: 'descanso', congelado: 'congelado' };
 
@@ -25,18 +27,30 @@ export function renderHoy(raiz, ctx) {
   const vivos = todos.filter((h) => !h.archivado);
   const hayPrivados = Boolean(modelo.config.pinHash) && modelo.habitos().some((h) => h.privado && !h.archivado);
 
-  const vistas = todos.filter((h) => tocaEnFecha(h, fecha)).map((h) => vistaDelDia(h, fecha, modelo.logDe));
-  const prog = progresoDelDia(vistas);
+  const todasLasVistas = todos.filter((h) => tocaEnFecha(h, fecha)).map((h) => vistaDelDia(h, fecha, modelo.logDe));
+  const prog = progresoDelDia(todasLasVistas);
+  // Día liviano: "solo lo esencial" muestra solo esos hábitos (el progreso del día sigue siendo el real).
+  const minimo = fecha === hoy && modelo.palabras.minimo === hoy ? minimoDeHoy(ctx) : null;
+  const ids = minimo ? new Set(minimo.habitos.map((h) => h.id)) : null;
+  const vistas = ids ? todasLasVistas.filter((v) => ids.has(v.habito.id)) : todasLasVistas;
 
   raiz.append(cabecera(ctx, fecha, hoy, vivos.length > 0, hayPrivados));
   if (vivos.length) raiz.append(panelDia(ctx, fecha, hoy, prog, vivos));
   raiz.append(ctx.contenedorAvisos);
+  if (fecha === hoy && vivos.length) {
+    const guia = tarjetaGuia(ctx);
+    if (guia) raiz.append(guia);
+  }
   if (fecha === hoy) {
     const { manifiesto, manifiestoModo } = modelo.config;
     if (manifiesto && manifiestoModo === 'linea') raiz.append(el('blockquote', { class: 'manifiesto-linea', aria: { label: t('manifiesto.titulo') } }, manifiesto));
     const ajuste = modelo.revisionDe(sumarDias(inicioSemana(hoy), -7))?.ajuste;
     if (ajuste && vivos.length) raiz.append(el('p', { class: 'ajuste-semana' }, icono('lapiz', 'tv-icono--sm'), t('semana.ajusteActual', { ajuste })));
     for (const extra of [tarjetaSemana(ctx, hoy, vivos), tarjetaRecordatorios(ctx), rescates(ctx, hoy)]) if (extra) raiz.append(extra);
+    // Frase del día: discreta y cerrable, nunca una ventana que interrumpa.
+    const frase = vivos.length ? tarjetaFraseDelDia(ctx) : null;
+    if (frase) raiz.append(frase);
+    if (minimo) raiz.append(bannerMinimo(ctx, minimo));
   }
 
   if (vivos.length === 0) {
@@ -75,8 +89,11 @@ export function renderHoy(raiz, ctx) {
   }
   raiz.append(bloques);
 
-  if (fecha === hoy && prog.total > 0 && prog.hechos === prog.total) {
-    raiz.append(el('p', { class: 'listo' }, t('hoy.todoListo')));
+  if (fecha === hoy) {
+    const completo = prog.total > 0 && prog.hechos === prog.total;
+    const cierre = tarjetaCierre(ctx, { completo });
+    if (cierre) raiz.append(cierre);
+    else if (completo) raiz.append(el('p', { class: 'listo' }, t('hoy.todoListo')));
   }
 }
 
@@ -88,7 +105,9 @@ function cabecera(ctx, fecha, hoy, hayHabitos, hayPrivados) {
   return el('header', { class: 'cabecera' },
     el('div', { class: 'cabecera__fila' },
       el('div', { class: 'cabecera__titulos' },
-        el('p', { class: 'subtitulo' }, fechaLarga(fecha)),
+        el('div', { class: 'cabecera__linea' },
+          el('p', { class: 'subtitulo' }, fechaLarga(fecha)),
+          fecha === hoy ? chipPalabraHoy(ctx) : null),
         el('h1', { class: 'titulo-pantalla' }, nombreDelDia(fecha, hoy)),
       ),
       el('div', { class: 'cabecera__acciones' },
@@ -220,7 +239,7 @@ function panelDia(ctx, fecha, hoy, prog, vivos) {
 function lineaMeta(ctx, v, fecha, hoy) {
   const h = v.habito;
   if (cumplido(v.estado) && fecha === hoy && ctx.recienCompletados.has(h.id) && h.identidad) {
-    return el('p', { class: 'tv-identidad' }, fraseIdentidad(h));
+    return el('p', { class: 'tv-identidad' }, el('span', {}, fraseIdentidad(h)), palabrasIdentidad(ctx));
   }
   const partes = [];
   let tono = null;

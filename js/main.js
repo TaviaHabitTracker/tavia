@@ -23,6 +23,7 @@ import { exportar } from './vistas/datos.js';
 import { iniciarPWA } from './pwa.js';
 import { BARRA, PALETA, paletaEfectiva } from './temas.js';
 import { mostrarManifiestoSiToca } from './vistas/manifiesto.js';
+import { cargarFrases } from './frases.js';
 
 const PESTANAS = [
   ['hoy', 'hoy', renderHoy],
@@ -97,10 +98,17 @@ async function iniciar() {
       if (cambio.tipo === 'todo' || cambio.tipo === 'importado') cache.olvidar();
       if (['log', 'habito', 'importado', 'todo'].includes(cambio.tipo)) contarDias(cambio.tipo === 'log');
       if (cambio.tipo === 'config' || cambio.tipo === 'importado') { aplicarTema(); revisarDia(); }
+      if (cambio.tipo === 'guia' || cambio.tipo === 'importado') ctx.alCambiarGuia?.(); // hojas abiertas (colección)
       if (cambio.redibujar !== false) ctx.render();
     },
   });
   ctx.modelo = modelo;
+  // El id de instalación se crea en la primera carga: se guarda en el acto para que la frase del día no cambie.
+  if (modelo.nuevaInstalacion) almacen.guardar(modelo.serializar(), { ya: true });
+
+  // Frases guía (M10): archivo estático precacheado. Si no carga, la app sigue igual, sin frases.
+  ctx.frases = null;
+  cargarFrases().then((d) => { ctx.frases = d; ctx.render(); });
 
   /* Días registrados: desbloquean paletas. Si se gana una nueva, se avisa con calma (sin confeti). */
   let diasRegistrados = modelo.diasRegistrados();

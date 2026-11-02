@@ -24,13 +24,13 @@ export function abrirEditor(ctx, id = null, plantilla = null) {
     metaModo: h.meta.min !== null && h.meta.max !== null ? 'rango' : h.meta.min !== null ? 'min' : h.meta.max !== null ? 'max' : 'libre',
     metaMin: h.meta.min, metaMax: h.meta.max, vecesPorDia: h.vecesPorDia,
     frecuencia: h.frecuencia, bloque: h.bloque, identidad: h.identidad, creado: h.creado,
-    privado: h.privado, horas: modelo.recordatoriosDe(h.id),
+    privado: h.privado, esencial: h.esencial, horas: modelo.recordatoriosDe(h.id),
   } : {
     nombre: plantilla?.nombre || '', icono: plantilla?.icono || '🌱', color: plantilla?.color || 'pino',
     tipo: plantilla?.tipo || 'si_no', unidad: plantilla?.unidad || '',
     metaModo: plantilla?.min ? 'min' : 'min', metaMin: plantilla?.min ?? null, metaMax: null,
     vecesPorDia: plantilla?.veces || 1, frecuencia: { tipo: 'diaria' }, bloque: plantilla?.bloque || 'dia',
-    identidad: '', creado: modelo.hoy(), privado: false, horas: [],
+    identidad: '', creado: modelo.hoy(), privado: false, esencial: false, horas: [],
   };
 
   abrirHoja({
@@ -157,7 +157,14 @@ function formulario(ctx, h, v, uid, cerrar) {
       el('input', { type: 'checkbox', role: 'switch', id: idPrivado, name: 'privado', checked: v.privado && tienePin, disabled: !tienePin })),
     el('p', { class: 'texto-ayuda' }, t(tienePin ? 'privado.ayuda' : 'privado.sinPin')));
 
-  const mas = el('details', { class: 'mas', open: h && (v.identidad || v.creado < modelo.hoy() || v.horas.length || v.privado) ? true : null },
+  const idEsencial = uid('esencial');
+  const esencial = el('div', { class: 'campo' },
+    el('label', { class: 'interruptor', for: idEsencial },
+      el('span', {}, t('editor.esencial')),
+      el('input', { type: 'checkbox', role: 'switch', id: idEsencial, name: 'esencial', checked: v.esencial })),
+    el('p', { class: 'texto-ayuda' }, t('editor.esencial.ayuda')));
+
+  const mas = el('details', { class: 'mas', open: h && (v.identidad || v.creado < modelo.hoy() || v.horas.length || v.privado || v.esencial) ? true : null },
     el('summary', {}, t('editor.mas')),
     el('div', { class: 'campos' },
       seccionHoras,
@@ -168,6 +175,7 @@ function formulario(ctx, h, v, uid, cerrar) {
         el('input', { class: 'entrada', id: uid('inicio'), name: 'creado', type: 'date', value: v.creado, max: modelo.hoy() }),
         el('p', { class: 'texto-ayuda' }, t('editor.inicio.ayuda')),
       ),
+      esencial,
       privado,
     ),
   );
@@ -226,6 +234,7 @@ function formulario(ctx, h, v, uid, cerrar) {
       identidad: E.identidad.value,
       creado: E.creado.value,
       privado: Boolean(E.privado?.checked),
+      esencial: Boolean(E.esencial?.checked),
     };
     if (fr === 'cada_n_dias' && !(Number.isInteger(entrada.frecuencia.n) && entrada.frecuencia.n >= 1 && entrada.frecuencia.n <= 3650)) {
       return mostrarError(form, error, 'editor.error.numero', E.nCada);

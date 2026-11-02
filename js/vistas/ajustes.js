@@ -12,6 +12,8 @@ import { exportar, exportarCSV, exportarICS, importar } from './datos.js';
 import { paletas, paletaEfectiva } from '../temas.js';
 import { abrirManifiesto, sugerirManifiesto } from './manifiesto.js';
 import { num } from '../formato.js';
+import { seccionFrases } from './frases.js';
+import { seccionPalabras } from './palabras.js';
 
 export function renderAjustes(raiz, ctx) {
   const { modelo } = ctx;
@@ -20,6 +22,10 @@ export function renderAjustes(raiz, ctx) {
   raiz.append(seccionHabitos(ctx));
   raiz.append(seccionApariencia(ctx));
   raiz.append(seccionManifiesto(ctx));
+  raiz.append(el('section', { class: 'seccion', id: 'frases' },
+    el('h2', { class: 'seccion__titulo' }, t('ajustes.frases')),
+    seccionFrases(ctx),
+    seccionPalabras(ctx)));
 
   const idFin = 'ajuste-fin-dia';
   const select = el('select', { class: 'entrada entrada--corta', id: idFin, data: { foco: 'fin-dia' } },

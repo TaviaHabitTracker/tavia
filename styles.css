@@ -2,6 +2,13 @@
    Sin estilos en línea: la CSP solo permite este archivo. */
 
 @font-face {
+  font-family: 'Fraunces';
+  src: url('fonts/FrauncesSoft-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
   font-family: 'Instrument Sans';
   src: url('fonts/InstrumentSans-Variable.woff2') format('woff2');
   font-weight: 400 700;
@@ -843,3 +850,196 @@ details.mas > summary { color: var(--acento-texto); }
 .por-dia__letra { fill: var(--tinta-tenue); font: 600 11px var(--font-sans); }
 .analisis__lectura { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--capa); font: 500 14px/21px var(--font-sans); color: var(--tinta-suave); }
 .analisis__lectura strong { color: var(--tinta); }
+
+
+/* ================================================================
+   Módulo 10 · Frases y palabras guía
+   Sobrio y cálido: la cita en serif (Fraunces, local), todo lo demás en sans.
+   Mucho aire, un solo acento, aparición con fundido. Nada parpadea ni grita.
+   ================================================================ */
+:root { --font-cita: 'Fraunces', Georgia, 'Times New Roman', serif; }
+
+/* Encabezado de Hoy: fecha + palabra del día */
+.cabecera__linea { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; min-width: 0; }
+.chip-palabra {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 11px 0 9px; border-radius: var(--radio-pill);
+  border: 1px solid var(--linea); background: var(--superficie); color: var(--tinta);
+  font: 500 13px/1 var(--font-cita); letter-spacing: .01em;
+}
+.chip-palabra::after { content: ''; position: absolute; inset: -8px -2px; } /* área táctil de 44 px */
+.chip-palabra__punto { width: 7px; height: 7px; border-radius: 50%; background: var(--color-habito, var(--acento)); }
+.chip-palabra--estatico::after { content: none; }
+.chip-palabra--estatico { font-family: var(--font-sans); font-size: 13px; }
+
+/* Tarjeta "Tu día": cómo llegas y palabra de hoy */
+.guia {
+  display: grid; gap: 16px; margin-bottom: var(--espacio-4); padding: 18px 16px 10px;
+  border: 1px solid var(--linea); border-radius: 18px; background: var(--superficie);
+  animation: tv-aparecer 420ms ease-out;
+}
+.guia__fila { display: grid; gap: 10px; }
+.guia__pregunta { font: 600 15px/20px var(--font-sans); letter-spacing: -0.005em; }
+.guia__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Los cuatro estados en una sola fila que se desliza (sin barra visible) */
+.guia__chips--fila { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 16px 2px; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding: 0 16px; }
+.guia__chips--fila::-webkit-scrollbar { display: none; }
+.guia__chips--fila > * { flex: none; scroll-snap-align: start; }
+.guia__saltar { justify-self: end; color: var(--tinta-tenue); }
+.guia__persona { padding-left: 10px; border-left: 2px solid var(--acento); font: 400 14px/20px var(--font-sans); color: var(--tinta-suave); }
+.chip-animo {
+  min-height: 44px; padding: 0 15px; border-radius: var(--radio-pill);
+  border: 1px solid var(--linea-fuerte); background: transparent;
+  font: 500 14px/18px var(--font-sans); transition: background-color 160ms ease, border-color 160ms ease;
+}
+.chip-animo:hover { background: var(--capa); }
+
+/* Chips de palabra: grandes, con un borde de luz del color de la palabra */
+.chip-guia {
+  --luz: var(--color-habito, var(--acento));
+  position: relative; min-height: 44px; padding: 0 18px; border-radius: var(--radio-pill);
+  border: 1px solid var(--linea); background: var(--superficie); color: var(--tinta);
+  font: 450 16px/20px var(--font-cita); letter-spacing: .005em;
+  box-shadow: inset 0 0 0 1px transparent, 0 0 0 0 transparent;
+  transition: box-shadow 220ms var(--curva-suave), transform 160ms ease, border-color 220ms ease;
+  -webkit-user-select: none; user-select: none; touch-action: manipulation;
+}
+@supports (color: color-mix(in srgb, red, blue)) {
+  .chip-guia { border-color: color-mix(in srgb, var(--luz) 38%, var(--linea)); box-shadow: 0 6px 20px -14px var(--luz); }
+  .chip-guia:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--luz) 45%, transparent), 0 8px 24px -12px var(--luz); }
+}
+.chip-guia:active { transform: scale(.97); }
+.chip-guia--mas { --luz: var(--linea-fuerte); font: 500 14px/18px var(--font-sans); color: var(--tinta-suave); border-style: dashed; box-shadow: none; }
+.chip-guia[data-florece] { animation: tv-chip-florece 620ms var(--curva-rebote); border-color: var(--luz); }
+@keyframes tv-chip-florece { 0% { transform: scale(.94); } 50% { transform: scale(1.06); } 100% { transform: none; } }
+
+/* Pétalos que se abren al tocar una palabra */
+.petalos { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px; pointer-events: none; overflow: visible; }
+.petalos__petalo {
+  fill: var(--color-habito, var(--acento)); opacity: 0;
+  transform-origin: 60px 52px;
+  animation: tv-petalo-abre 820ms var(--curva-suave) forwards;
+  animation-delay: calc(var(--i) * 35ms);
+}
+@keyframes tv-petalo-abre {
+  0% { transform: translateY(8px) scale(.2); opacity: 0; }
+  40% { opacity: .55; }
+  100% { transform: translateY(-14px) scale(1); opacity: 0; }
+}
+
+/* Tarjeta de frase (del día y de cierre) */
+.tarjeta-frase {
+  display: grid; gap: 14px; margin-bottom: var(--espacio-4); padding: 16px 16px 22px 20px;
+  border: 1px solid var(--linea); border-radius: 20px; background: var(--superficie);
+  animation: tv-aparecer 600ms ease-out;
+}
+.tarjeta-frase__cabecera { display: flex; align-items: center; justify-content: space-between; gap: var(--espacio-2); margin: -4px -6px -6px 0; }
+.tarjeta-frase__ceja {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 11px/16px var(--font-sans); letter-spacing: .09em; text-transform: uppercase; color: var(--acento-texto);
+}
+.tarjeta-frase__acciones { display: flex; }
+.frase__accion { color: var(--tinta-tenue); }
+.frase__accion[data-activa] { color: var(--acento-texto); }
+.tv-icono .tv-relleno-trazo { fill: currentColor; }
+.tarjeta-frase--cierre { margin-top: var(--espacio-6); border-color: var(--acento-suave); }
+@supports (color: color-mix(in srgb, red, blue)) {
+  .tarjeta-frase--cierre {
+    border-color: color-mix(in srgb, var(--acento) 30%, var(--linea));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--acento) 7%, var(--superficie)), var(--superficie) 70%);
+  }
+}
+
+.frase { display: grid; gap: 12px; margin: 0; }
+.frase__texto {
+  margin: 0; padding-right: 8px;
+  font: 400 21px/31px var(--font-cita); letter-spacing: -0.005em; color: var(--tinta);
+  text-wrap: pretty; hanging-punctuation: first;
+}
+.frase__pie { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font: 400 13px/18px var(--font-sans); color: var(--tinta-tenue); }
+.frase__autor { font-weight: 600; color: var(--tinta-suave); }
+.frase__autor::before { content: '— '; font-weight: 400; color: var(--tinta-tenue); }
+.frase__fuente { font-style: italic; }
+.frase__marcas { display: inline-flex; gap: 6px; }
+.frase__marca {
+  padding: 1px 6px; border: 1px solid var(--linea); border-radius: 6px;
+  font: 600 10px/15px var(--font-sans); letter-spacing: .05em; text-transform: uppercase; font-style: normal; color: var(--tinta-tenue);
+}
+.frase__marca--miel { border-color: var(--miel); color: var(--miel-tinta); }
+.frase--centro { justify-items: center; text-align: center; }
+.frase--centro .frase__pie { justify-content: center; }
+
+/* Día liviano */
+.banner-minimo {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4); padding: 12px 8px 12px 16px; border-radius: 16px; background: var(--capa);
+}
+.banner-minimo__titulo { font: 600 15px/20px var(--font-sans); }
+
+/* Identidad al completar un hábito */
+.tv-identidad { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.identidad-palabras { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.identidad-palabras__p {
+  padding: 0 7px; border-radius: var(--radio-pill); border: 1px solid var(--linea);
+  font: 500 11px/18px var(--font-cita); color: var(--tinta-suave);
+}
+
+/* Hoja de una palabra */
+.palabra { display: grid; justify-items: center; gap: 18px; padding: 4px 0 var(--espacio-6); text-align: center; touch-action: pan-y; }
+.palabra:focus { outline: none; }
+.palabra__nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; width: 100%; }
+.palabra__flor { position: relative; display: grid; place-items: center; min-height: 150px; }
+.palabra__flor::before {
+  content: ''; position: absolute; inset: 10px 18%; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--color-habito, var(--acento)), transparent); opacity: .14;
+}
+.palabra__flor .petalos { width: 200px; height: 200px; margin: -100px 0 0 -100px; }
+.palabra__nombre { position: relative; font: 380 46px/52px var(--font-cita); letter-spacing: -0.02em; color: var(--tinta); }
+.palabra__flor[data-dir="sig"] .palabra__nombre { animation: tv-palabra-sig 360ms var(--curva-suave); }
+.palabra__flor[data-dir="ant"] .palabra__nombre { animation: tv-palabra-ant 360ms var(--curva-suave); }
+@keyframes tv-palabra-sig { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes tv-palabra-ant { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.palabra__significado { max-width: 30ch; font: 400 17px/24px var(--font-sans); color: var(--tinta-suave); }
+.palabra .frase { max-width: 34ch; padding-top: 18px; border-top: 1px solid var(--linea); }
+.palabra .frase__texto { font-size: 18px; line-height: 27px; padding: 0; }
+.palabra__acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--espacio-2); }
+.palabra__hoy { color: var(--acento-texto); }
+
+/* Ajustes: chips de opción (autores, palabras de identidad) */
+.chips-opcion { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.chips-opcion legend { padding: 0; margin-bottom: 8px; }
+.chip-opcion { position: relative; }
+.chip-opcion input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip-opcion span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--linea-fuerte); border-radius: var(--radio-pill); font: 500 14px/18px var(--font-sans);
+}
+.chip-opcion input:checked + span { background: var(--principal); border-color: var(--principal); color: var(--sobre-principal); }
+.chip-opcion input:focus-visible + span { outline: 2px solid var(--foco); outline-offset: 2px; }
+.campo__fila { display: flex; justify-content: space-between; align-items: baseline; gap: var(--espacio-2); }
+.contador { font: 500 12px/16px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--tinta-tenue); }
+.insignia { min-width: 22px; padding: 0 7px; border-radius: var(--radio-pill); background: var(--capa); font: 600 12px/22px var(--font-sans); font-variant-numeric: tabular-nums; }
+
+/* Colección */
+.coleccion { display: grid; gap: var(--espacio-4); padding-bottom: var(--espacio-6); }
+.coleccion__grupo { margin-top: var(--espacio-2); font: 600 11px/16px var(--font-sans); letter-spacing: .09em; text-transform: uppercase; color: var(--acento-texto); }
+.coleccion__lista { list-style: none; margin: 0; padding: 0; }
+.coleccion__item { display: grid; grid-template-columns: 1fr auto; gap: var(--espacio-2); padding: 16px 0; border-bottom: 1px solid var(--linea); }
+.coleccion__item:last-child { border-bottom: 0; }
+.coleccion__item .frase__texto { font-size: 18px; line-height: 26px; }
+.coleccion__acciones { display: flex; flex-direction: column; margin-top: -8px; }
+
+/* Tarjeta compartible */
+.frase-lienzo__marco { display: grid; justify-items: center; }
+.frase-lienzo { display: block; width: min(100%, 380px); height: auto; aspect-ratio: 4 / 5; border-radius: var(--radio-md); box-shadow: var(--sombra-2); border: 1px solid var(--linea); }
+
+/* Revisión semanal */
+.frase-revision { display: grid; grid-template-columns: 1fr auto; gap: var(--espacio-2); padding: 16px 8px 16px 16px; border-radius: 16px; background: var(--capa); }
+.frase-revision .frase__texto { font-size: 18px; line-height: 26px; }
+.semana-palabras { display: grid; gap: var(--espacio-2); }
+.semana-palabras__lista { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.semana-palabras__obs { font: 400 14px/20px var(--font-sans); color: var(--tinta-suave); }
+
+@media (prefers-reduced-motion: reduce) {
+  .petalos { display: none; }
+}

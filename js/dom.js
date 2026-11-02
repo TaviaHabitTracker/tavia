@@ -81,6 +81,12 @@ const ICONOS = {
   calendario: [['rect', { x: 4, y: 5, width: 16, height: 15, rx: 3 }], ['path', { d: 'M8 3v4M16 3v4M4 10h16M12 13v4M10 15h4' }]],
   analisis: [['path', { d: 'M4 19h16M7 16v-5M12 16V7M17 16v-3' }]],
   brote: [['path', { d: 'M12 21v-9' }], ['path', { d: 'M12 14c-4 0-6.5-2.4-6.5-6.5 4 0 6.5 2.4 6.5 6.5z' }], ['path', { d: 'M12 12c0-3.6 2.1-5.8 5.8-5.8 0 3.6-2.1 5.8-5.8 5.8z' }]],
+  // Módulo 10
+  estrella: [['path', { d: 'M12 4.2l2.3 4.8 5.2.7-3.8 3.6.9 5.2L12 16l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z' }]],
+  'estrella-llena': [['path', { d: 'M12 4.2l2.3 4.8 5.2.7-3.8 3.6.9 5.2L12 16l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z', class: 'tv-relleno-trazo' }]],
+  compartir: [['path', { d: 'M12 15V4M8 7.5 12 4l4 3.5' }], ['path', { d: 'M7 11H6a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2h-1' }]],
+  chispa: [['path', { d: 'M12 3.5c.6 4.3 2.2 5.9 6.5 6.5-4.3.6-5.9 2.2-6.5 6.5-.6-4.3-2.2-5.9-6.5-6.5 4.3-.6 5.9-2.2 6.5-6.5z' }], ['path', { d: 'M18.5 16v4M16.5 18h4' }]],
+  comillas: [['path', { d: 'M5 17c2.5-1 3.5-3 3.5-5.5V8H5v4h3.5M14 17c2.5-1 3.5-3 3.5-5.5V8H14v4h3.5' }]],
 
   /* Íconos de hábito (mismo grosor y estilo). El hábito guarda un emoji; aquí se dibuja su versión propia. */
   'h-gota': [['path', { d: 'M12 3.5c3.2 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 2.8-6.5 6-10.5z' }]],

@@ -1,0 +1,1238 @@
+{
+ "version": 1,
+ "idioma": "es",
+ "actualizado": "2026-11-02",
+ "nota": "Traducciones propias. «adaptada» = traducción libre o paráfrasis. Confianza «Media» = fuente por confirmar antes de publicar.",
+ "reglas": {
+  "maxPorDia": 2,
+  "sinRepetirDias": 60,
+  "sinRepetirDiasRelajado": 30,
+  "mismoAutorCadaDias": 7,
+  "hitos": [
+   30,
+   60,
+   100,
+   365
+  ],
+  "prioridad": [
+   "tropiezo",
+   "regreso",
+   "dia_dificil",
+   "descanso",
+   "hito",
+   "dia_completo",
+   "racha_larga",
+   "construyendo",
+   "inicio"
+  ],
+  "tonosPorContexto": {
+   "tropiezo": [
+    "suave"
+   ],
+   "regreso": [
+    "suave"
+   ],
+   "dia_dificil": [
+    "suave",
+    "neutro"
+   ],
+   "descanso": [
+    "suave",
+    "neutro"
+   ]
+  },
+  "vecinos": {
+   "inicio": [
+    "construyendo"
+   ],
+   "construyendo": [
+    "inicio",
+    "racha_larga"
+   ],
+   "racha_larga": [
+    "construyendo",
+    "hito"
+   ],
+   "hito": [
+    "racha_larga",
+    "dia_completo"
+   ],
+   "dia_dificil": [
+    "tropiezo",
+    "descanso"
+   ],
+   "tropiezo": [
+    "regreso",
+    "dia_dificil"
+   ],
+   "regreso": [
+    "tropiezo",
+    "inicio"
+   ],
+   "descanso": [
+    "dia_completo",
+    "dia_dificil"
+   ],
+   "dia_completo": [
+    "descanso",
+    "revision"
+   ],
+   "identidad": [
+    "revision",
+    "construyendo"
+   ],
+   "revision": [
+    "dia_completo",
+    "identidad"
+   ]
+  }
+ },
+ "contextos": {
+  "inicio": {
+   "nombre": "Inicio",
+   "disparador": "Usuario nuevo, hábito nuevo o racha global de 0 a 2."
+  },
+  "construyendo": {
+   "nombre": "Construyendo",
+   "disparador": "Racha global de 3 a 20."
+  },
+  "racha_larga": {
+   "nombre": "Racha larga",
+   "disparador": "Racha global de 21 o más."
+  },
+  "hito": {
+   "nombre": "Hito",
+   "disparador": "Racha global o de un hábito llega hoy a 30, 60, 100 o 365; o primer mes de uso."
+  },
+  "dia_dificil": {
+   "nombre": "Día difícil",
+   "disparador": "Check-in cansado o abrumado, o tarde en el día con lo esencial sin completar."
+  },
+  "tropiezo": {
+   "nombre": "Tropiezo",
+   "disparador": "Ayer sin cumplir o se acaba de romper una racha."
+  },
+  "regreso": {
+   "nombre": "Regreso",
+   "disparador": "Vuelve tras 3 o más días sin registrar."
+  },
+  "descanso": {
+   "nombre": "Descanso",
+   "disparador": "Hoy es descanso, se usó un congelador o todo está en pausa."
+  },
+  "dia_completo": {
+   "nombre": "Día completo",
+   "disparador": "Todos los hábitos programados de hoy están hechos."
+  },
+  "identidad": {
+   "nombre": "Identidad",
+   "disparador": "Solo en la revisión semanal (al completar se muestra la declaración propia)."
+  },
+  "revision": {
+   "nombre": "Revisión",
+   "disparador": "Revisión semanal."
+  }
+ },
+ "frases": [
+  {
+   "id": "f001",
+   "contexto": "inicio",
+   "texto": "Un viaje de mil millas comienza con un solo paso.",
+   "autor": "Lao Tse",
+   "rol": "filosofo",
+   "fuente": "Tao Te Ching, cap. 64",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f002",
+   "contexto": "inicio",
+   "texto": "El comienzo es la parte más importante de toda obra.",
+   "autor": "Platón",
+   "rol": "filosofo",
+   "fuente": "La República, II (377a)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f003",
+   "contexto": "inicio",
+   "texto": "Puedes fallar en lo que no quieres, así que más vale arriesgarte con lo que amas.",
+   "autor": "Jim Carrey",
+   "rol": "artista",
+   "fuente": "Discurso de graduación, Universidad Maharishi, 2014",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f004",
+   "contexto": "inicio",
+   "texto": "He tenido miedo cada día de mi vida, y nunca dejé que eso me impidiera hacer lo que quería.",
+   "autor": "Georgia O'Keeffe",
+   "rol": "artista",
+   "fuente": "Atribuida; citada en biografías y entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f005",
+   "contexto": "inicio",
+   "texto": "Siempre es el día uno.",
+   "autor": "Jeff Bezos",
+   "rol": "empresario",
+   "fuente": "Cartas a los accionistas de Amazon (1997 y 2016)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f006",
+   "contexto": "inicio",
+   "texto": "No nos atrevemos a muchas cosas porque son difíciles; son difíciles porque no nos atrevemos.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Cartas a Lucilio, 104",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f007",
+   "contexto": "inicio",
+   "texto": "Sin compromiso nunca empezarás; sin constancia nunca terminarás.",
+   "autor": "Denzel Washington",
+   "rol": "artista",
+   "fuente": "Discursos y entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f008",
+   "contexto": "inicio",
+   "texto": "Empiezo todos mis libros un 8 de enero.",
+   "autor": "Isabel Allende",
+   "rol": "escritor",
+   "fuente": "Entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f009",
+   "contexto": "inicio",
+   "texto": "El mejor momento para plantar un árbol fue hace veinte años. El segundo mejor es hoy.",
+   "autor": "Proverbio chino",
+   "rol": "proverbio",
+   "fuente": "Tradición popular, autor incierto",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f010",
+   "contexto": "inicio",
+   "texto": "Sigue hambriento. Sigue siendo un poco loco.",
+   "autor": "Steve Jobs",
+   "rol": "empresario",
+   "fuente": "Discurso en Stanford, 2005 (lema del Whole Earth Catalog)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f011",
+   "contexto": "construyendo",
+   "texto": "La grandeza no nace de un impulso, sino de una sucesión de pequeñas cosas reunidas.",
+   "autor": "Vincent van Gogh",
+   "rol": "artista",
+   "fuente": "Cartas a su hermano Theo",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f012",
+   "contexto": "construyendo",
+   "texto": "Las pequeñas cosas hacen que sucedan las grandes.",
+   "autor": "John Wooden",
+   "rol": "deportista",
+   "fuente": "Máximas del entrenador de UCLA",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f013",
+   "contexto": "construyendo",
+   "texto": "No te elevas al nivel de tus metas: caes al nivel de tus sistemas.",
+   "autor": "James Clear",
+   "rol": "autor",
+   "fuente": "Hábitos atómicos",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f014",
+   "contexto": "construyendo",
+   "texto": "Sobreestimamos el cambio de los próximos dos años y subestimamos el de los próximos diez.",
+   "autor": "Bill Gates",
+   "rol": "empresario",
+   "fuente": "Camino al futuro (The Road Ahead), 1995",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f015",
+   "contexto": "construyendo",
+   "texto": "Tuve que trabajar duro; quien trabaje igual de duro llegará igual de lejos.",
+   "autor": "Johann Sebastian Bach",
+   "rol": "artista",
+   "fuente": "Atribuida; citada en biografías",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f016",
+   "contexto": "construyendo",
+   "texto": "Olvida la inspiración. El hábito es más fiable: te sostiene estés inspirado o no.",
+   "autor": "Octavia E. Butler",
+   "rol": "escritor",
+   "fuente": "Ensayo «Furor Scribendi» (en Bloodchild and Other Stories)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f017",
+   "contexto": "construyendo",
+   "texto": "La inspiración es para aficionados; el resto simplemente aparecemos y nos ponemos a trabajar.",
+   "autor": "Chuck Close",
+   "rol": "artista",
+   "fuente": "Entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f018",
+   "contexto": "construyendo",
+   "texto": "Nos hacemos justos practicando la justicia y valientes practicando la valentía.",
+   "autor": "Aristóteles",
+   "rol": "filosofo",
+   "fuente": "Ética a Nicómaco, II.1",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f019",
+   "contexto": "construyendo",
+   "texto": "Ninguna obra grande se logra de golpe; ni siquiera la uva o el higo maduran de repente.",
+   "autor": "Epicteto",
+   "rol": "filosofo",
+   "fuente": "Discursos, I.15",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f020",
+   "contexto": "construyendo",
+   "texto": "Avanzo despacio, pero nunca retrocedo.",
+   "autor": "Abraham Lincoln",
+   "rol": "lider",
+   "fuente": "Atribuida",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f021",
+   "contexto": "construyendo",
+   "texto": "Sigo practicando porque creo que estoy progresando.",
+   "autor": "Pau Casals",
+   "rol": "artista",
+   "fuente": "Anécdota ampliamente citada (a los 90 años)",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f022",
+   "contexto": "construyendo",
+   "texto": "El entusiasmo es común. La resistencia es rara.",
+   "autor": "Angela Duckworth",
+   "rol": "autor",
+   "fuente": "Grit, 2016",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f023",
+   "contexto": "racha_larga",
+   "texto": "Tu alma se tiñe del color de tus pensamientos habituales.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, V.16",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f024",
+   "contexto": "racha_larga",
+   "texto": "La lucha hacia las cimas basta para llenar un corazón humano. Hay que imaginar a Sísifo feliz.",
+   "autor": "Albert Camus",
+   "rol": "filosofo",
+   "fuente": "El mito de Sísifo, 1942",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f025",
+   "contexto": "racha_larga",
+   "texto": "A los noventa penetraré más hondo en el misterio; a los cien mi obra tendrá vida propia.",
+   "autor": "Hokusai",
+   "rol": "artista",
+   "fuente": "Posfacio de Cien vistas del monte Fuji, 1834",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f026",
+   "contexto": "racha_larga",
+   "texto": "Solo los disciplinados son libres en la vida.",
+   "autor": "Eliud Kipchoge",
+   "rol": "deportista",
+   "fuente": "Entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f027",
+   "contexto": "racha_larga",
+   "texto": "La disciplina es libertad.",
+   "autor": "Jocko Willink",
+   "rol": "autor",
+   "fuente": "Discipline Equals Freedom, 2017",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "firme"
+  },
+  {
+   "id": "f028",
+   "contexto": "racha_larga",
+   "texto": "La vida, si sabes usarla, es larga.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Sobre la brevedad de la vida, 2",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f029",
+   "contexto": "racha_larga",
+   "texto": "La disciplina es el puente entre las metas y los logros.",
+   "autor": "Jim Rohn",
+   "rol": "autor",
+   "fuente": "Atribuida; conferencias",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f030",
+   "contexto": "racha_larga",
+   "texto": "Hoy es la victoria sobre ti mismo de ayer.",
+   "autor": "Miyamoto Musashi",
+   "rol": "deportista",
+   "fuente": "Atribuida (El libro de los cinco anillos)",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f031",
+   "contexto": "racha_larga",
+   "texto": "Si mejoras un 1% cada día durante un año, terminarás siendo treinta y siete veces mejor.",
+   "autor": "James Clear",
+   "rol": "autor",
+   "fuente": "Hábitos atómicos",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f032",
+   "contexto": "racha_larga",
+   "texto": "La mentalidad Mamba consiste en intentar ser la mejor versión de ti mismo.",
+   "autor": "Kobe Bryant",
+   "rol": "deportista",
+   "fuente": "The Mamba Mentality, 2018",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f033",
+   "contexto": "hito",
+   "texto": "No es que tengamos poco tiempo, sino que perdemos mucho.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Sobre la brevedad de la vida, 1",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f034",
+   "contexto": "hito",
+   "texto": "No es la montaña lo que conquistamos, sino a nosotros mismos.",
+   "autor": "Edmund Hillary",
+   "rol": "lider",
+   "fuente": "Atribuida",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f035",
+   "contexto": "hito",
+   "texto": "Nunca se logró nada grande sin entusiasmo.",
+   "autor": "Ralph Waldo Emerson",
+   "rol": "escritor",
+   "fuente": "Ensayo «Círculos», 1841",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f036",
+   "contexto": "hito",
+   "texto": "El genio es un uno por ciento de inspiración y un noventa y nueve por ciento de transpiración.",
+   "autor": "Thomas Edison",
+   "rol": "empresario",
+   "fuente": "Citada en Harper's Monthly, 1932",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f037",
+   "contexto": "hito",
+   "texto": "La única forma de hacer un gran trabajo es amar lo que haces.",
+   "autor": "Steve Jobs",
+   "rol": "empresario",
+   "fuente": "Discurso en Stanford, 2005",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f038",
+   "contexto": "hito",
+   "texto": "Deja de discutir cómo debe ser un buen hombre. Sé uno.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, X.16",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "firme"
+  },
+  {
+   "id": "f039",
+   "contexto": "dia_dificil",
+   "texto": "Si oyes una voz dentro de ti que dice «no puedes pintar», entonces pinta, y esa voz se callará.",
+   "autor": "Vincent van Gogh",
+   "rol": "artista",
+   "fuente": "Carta a Theo, 1883",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f040",
+   "contexto": "dia_dificil",
+   "texto": "Si algo merece la pena hacerse, merece la pena hacerlo mal.",
+   "autor": "G. K. Chesterton",
+   "rol": "escritor",
+   "fuente": "Lo que está mal en el mundo, 1910",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f041",
+   "contexto": "dia_dificil",
+   "texto": "Casi todo buen texto empieza con un primer borrador terrible.",
+   "autor": "Anne Lamott",
+   "rol": "escritor",
+   "fuente": "Pájaro por pájaro (Bird by Bird), 1994",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f042",
+   "contexto": "dia_dificil",
+   "texto": "El dolor es inevitable. El sufrimiento es opcional.",
+   "autor": "Haruki Murakami",
+   "rol": "escritor",
+   "fuente": "De qué hablo cuando hablo de correr, 2007 (mantra que cita de otro corredor)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f043",
+   "contexto": "construyendo",
+   "texto": "Cuando te cueste levantarte al amanecer, piensa: me despierto para hacer el trabajo de un ser humano.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, V.1",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "firme"
+  },
+  {
+   "id": "f044",
+   "contexto": "dia_dificil",
+   "texto": "Haz lo que puedas, con lo que tengas, donde estés.",
+   "autor": "Theodore Roosevelt",
+   "rol": "lider",
+   "fuente": "Autobiografía, 1913 (cita a Squire Bill Widener)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f045",
+   "contexto": "dia_dificil",
+   "texto": "La presión es un privilegio.",
+   "autor": "Billie Jean King",
+   "rol": "deportista",
+   "fuente": "Pressure Is a Privilege, 2008",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f046",
+   "contexto": "racha_larga",
+   "texto": "El talento es más barato que la sal. Lo que separa al talentoso del exitoso es mucho trabajo duro.",
+   "autor": "Stephen King",
+   "rol": "escritor",
+   "fuente": "Atribuida; entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f047",
+   "contexto": "dia_dificil",
+   "texto": "Lo mejor es enemigo de lo bueno.",
+   "autor": "Voltaire",
+   "rol": "escritor",
+   "fuente": "La Bégueule, 1772",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f048",
+   "contexto": "dia_dificil",
+   "texto": "No nos perturban las cosas, sino la opinión que tenemos de ellas.",
+   "autor": "Epicteto",
+   "rol": "filosofo",
+   "fuente": "Enquiridión, 5",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f049",
+   "contexto": "dia_dificil",
+   "texto": "Cuando ya no podemos cambiar una situación, el reto es cambiarnos a nosotros mismos.",
+   "autor": "Viktor Frankl",
+   "rol": "autor",
+   "fuente": "El hombre en busca de sentido, 1946",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f050",
+   "contexto": "racha_larga",
+   "texto": "Odiaba cada minuto de entrenamiento, pero decía: no renuncies, sufre ahora y vive el resto de tu vida como un campeón.",
+   "autor": "Muhammad Ali",
+   "rol": "deportista",
+   "fuente": "Atribuida; citada en biografías",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "firme"
+  },
+  {
+   "id": "f051",
+   "contexto": "tropiezo",
+   "texto": "Fallar una vez es un accidente. Lo importante es no fallar dos.",
+   "autor": "James Clear",
+   "rol": "autor",
+   "fuente": "Hábitos atómicos",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f052",
+   "contexto": "tropiezo",
+   "texto": "Gané casi el 80% de mis partidos, pero solo el 54% de los puntos.",
+   "autor": "Roger Federer",
+   "rol": "deportista",
+   "fuente": "Discurso de graduación en Dartmouth, 2024",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f053",
+   "contexto": "tropiezo",
+   "texto": "He fallado una y otra vez en mi vida, y por eso tengo éxito.",
+   "autor": "Michael Jordan",
+   "rol": "deportista",
+   "fuente": "Anuncio de Nike, 1997",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f054",
+   "contexto": "tropiezo",
+   "texto": "Lo que obstruye el camino se convierte en el camino.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, V.20",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f055",
+   "contexto": "tropiezo",
+   "texto": "En medio del invierno descubrí que había en mí un verano invencible.",
+   "autor": "Albert Camus",
+   "rol": "filosofo",
+   "fuente": "Regreso a Tipasa, 1952",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f056",
+   "contexto": "tropiezo",
+   "texto": "Dolor más reflexión es igual a progreso.",
+   "autor": "Ray Dalio",
+   "rol": "empresario",
+   "fuente": "Principios, 2017",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f057",
+   "contexto": "tropiezo",
+   "texto": "Para mí, fracasar es no intentarlo.",
+   "autor": "Sara Blakely",
+   "rol": "empresario",
+   "fuente": "Entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f058",
+   "contexto": "tropiezo",
+   "texto": "Todavía no.",
+   "autor": "Carol Dweck",
+   "rol": "autor",
+   "fuente": "Charla TED «El poder del aún no», 2014",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f059",
+   "contexto": "tropiezo",
+   "texto": "Haz lo mejor que puedas hasta saber más. Cuando sepas más, hazlo mejor.",
+   "autor": "Maya Angelou",
+   "rol": "escritor",
+   "fuente": "Citada por Oprah Winfrey",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f060",
+   "contexto": "tropiezo",
+   "texto": "Siempre lo intentaste. Siempre fallaste. No importa. Vuelve a intentar. Fracasa de nuevo. Fracasa mejor.",
+   "autor": "Samuel Beckett",
+   "rol": "escritor",
+   "fuente": "Rumbo a peor (Worstward Ho), 1983",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f061",
+   "contexto": "tropiezo",
+   "texto": "Es imposible vivir sin fallar en algo, a menos que vivas con tanta cautela que sea como no haber vivido.",
+   "autor": "J. K. Rowling",
+   "rol": "escritor",
+   "fuente": "Discurso en Harvard, 2008",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f062",
+   "contexto": "tropiezo",
+   "texto": "El mundo rompe a todos, y después muchos son fuertes en los lugares rotos.",
+   "autor": "Ernest Hemingway",
+   "rol": "escritor",
+   "fuente": "Adiós a las armas, 1929",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f063",
+   "contexto": "tropiezo",
+   "texto": "Sufrimos más en la imaginación que en la realidad.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Cartas a Lucilio, 13",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f064",
+   "contexto": "tropiezo",
+   "texto": "A veces la vida te golpea en la cabeza con un ladrillo. No pierdas la fe.",
+   "autor": "Steve Jobs",
+   "rol": "empresario",
+   "fuente": "Discurso en Stanford, 2005",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f065",
+   "contexto": "regreso",
+   "texto": "Todavía estoy aprendiendo.",
+   "autor": "Miguel Ángel",
+   "rol": "artista",
+   "fuente": "Atribuida (a los 87 años)",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f066",
+   "contexto": "regreso",
+   "texto": "Si has construido castillos en el aire, tu trabajo no tiene por qué perderse; ahí es donde deben estar. Ahora construye los cimientos debajo de ellos.",
+   "autor": "Henry David Thoreau",
+   "rol": "escritor",
+   "fuente": "Walden, 1854",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f067",
+   "contexto": "regreso",
+   "texto": "Nadie se baña dos veces en el mismo río.",
+   "autor": "Heráclito",
+   "rol": "filosofo",
+   "fuente": "Fragmento B91 (atribuido)",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "neutro"
+  },
+  {
+   "id": "f068",
+   "contexto": "regreso",
+   "texto": "¿Qué bien haré hoy?",
+   "autor": "Benjamin Franklin",
+   "rol": "lider",
+   "fuente": "Autobiografía",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f069",
+   "contexto": "regreso",
+   "texto": "Cae siete veces, levántate ocho.",
+   "autor": "Proverbio japonés",
+   "rol": "proverbio",
+   "fuente": "Tradición popular (nana korobi ya oki)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f070",
+   "contexto": "regreso",
+   "texto": "Reclámate a ti mismo.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Cartas a Lucilio, 1",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f071",
+   "contexto": "regreso",
+   "texto": "La naturaleza no se apresura, y sin embargo todo se cumple.",
+   "autor": "Lao Tse",
+   "rol": "filosofo",
+   "fuente": "Atribuida; no figura en el Tao Te Ching",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f072",
+   "contexto": "regreso",
+   "texto": "Qué maravilloso es que nadie necesite esperar ni un momento antes de empezar a mejorar el mundo.",
+   "autor": "Anne Frank",
+   "rol": "escritor",
+   "fuente": "Ensayo «¡Da!», 26 de marzo de 1944 (Cuentos de la Casa de atrás)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f073",
+   "contexto": "descanso",
+   "texto": "Hay que dar reposo al ánimo: descansado, volverá más agudo y mejor.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Sobre la tranquilidad del ánimo, 17",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f074",
+   "contexto": "descanso",
+   "texto": "Descansar no es perder el tiempo.",
+   "autor": "John Lubbock",
+   "rol": "escritor",
+   "fuente": "El uso de la vida (The Use of Life), 1894",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f075",
+   "contexto": "descanso",
+   "texto": "Nos ocupamos para tener ocio.",
+   "autor": "Aristóteles",
+   "rol": "filosofo",
+   "fuente": "Ética a Nicómaco, X",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f076",
+   "contexto": "descanso",
+   "texto": "Todos los males de la humanidad vienen de no saber quedarse tranquilo en una habitación.",
+   "autor": "Blaise Pascal",
+   "rol": "filosofo",
+   "fuente": "Pensamientos, 139",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f077",
+   "contexto": "descanso",
+   "texto": "Puedes retirarte en ti mismo cuando quieras.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, IV.3",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f078",
+   "contexto": "descanso",
+   "texto": "Sé rápido, pero nunca te apresures.",
+   "autor": "John Wooden",
+   "rol": "deportista",
+   "fuente": "Máximas del entrenador de UCLA",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f079",
+   "contexto": "dia_completo",
+   "texto": "Termina cada día y déjalo ir. Has hecho lo que pudiste. Mañana es un nuevo día.",
+   "autor": "Ralph Waldo Emerson",
+   "rol": "escritor",
+   "fuente": "Carta (atribuida), 1863",
+   "tipo": "adaptada",
+   "confianza": "Media",
+   "tono": "suave"
+  },
+  {
+   "id": "f080",
+   "contexto": "dia_completo",
+   "texto": "El éxito es la paz mental que viene de saber que hiciste el esfuerzo por ser lo mejor que eres capaz de ser.",
+   "autor": "John Wooden",
+   "rol": "deportista",
+   "fuente": "Definición de éxito (Pirámide del Éxito)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f081",
+   "contexto": "dia_completo",
+   "texto": "¿Qué bien he hecho hoy?",
+   "autor": "Benjamin Franklin",
+   "rol": "lider",
+   "fuente": "Autobiografía",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f082",
+   "contexto": "dia_completo",
+   "texto": "Cuando tu obra esté hecha, retírate.",
+   "autor": "Lao Tse",
+   "rol": "filosofo",
+   "fuente": "Tao Te Ching, cap. 9",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f083",
+   "contexto": "dia_completo",
+   "texto": "Influir en la calidad del día es la más alta de las artes.",
+   "autor": "Henry David Thoreau",
+   "rol": "escritor",
+   "fuente": "Walden, 1854",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f084",
+   "contexto": "dia_completo",
+   "texto": "Acuéstate cada noche un poco más sabio de lo que te despertaste.",
+   "autor": "Charlie Munger",
+   "rol": "empresario",
+   "fuente": "Conferencias y entrevistas",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f085",
+   "contexto": "identidad",
+   "texto": "Cada acción es un voto por la persona que quieres ser.",
+   "autor": "James Clear",
+   "rol": "autor",
+   "fuente": "Hábitos atómicos",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f086",
+   "contexto": "identidad",
+   "texto": "Primero dite quién quieres ser; luego haz lo que tengas que hacer.",
+   "autor": "Epicteto",
+   "rol": "filosofo",
+   "fuente": "Discursos, III.23",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f087",
+   "contexto": "identidad",
+   "texto": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.",
+   "autor": "Friedrich Nietzsche",
+   "rol": "filosofo",
+   "fuente": "El ocaso de los ídolos, 1888",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f088",
+   "contexto": "identidad",
+   "texto": "Todo lo que tocas lo cambias. Todo lo que cambias te cambia.",
+   "autor": "Octavia E. Butler",
+   "rol": "escritor",
+   "fuente": "Parable of the Sower, 1993",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f089",
+   "contexto": "identidad",
+   "texto": "Nuestra vida, en la medida en que tiene forma definida, es solo un conjunto de hábitos.",
+   "autor": "William James",
+   "rol": "autor",
+   "fuente": "Principios de psicología, 1890",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f090",
+   "contexto": "identidad",
+   "texto": "Somos lo que elegimos.",
+   "autor": "Jeff Bezos",
+   "rol": "empresario",
+   "fuente": "Discurso en Princeton, 2010",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f091",
+   "contexto": "identidad",
+   "texto": "El hombre no es otra cosa que lo que él se hace.",
+   "autor": "Jean-Paul Sartre",
+   "rol": "filosofo",
+   "fuente": "El existencialismo es un humanismo, 1946",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f092",
+   "contexto": "identidad",
+   "texto": "Yo soy yo y mi circunstancia.",
+   "autor": "José Ortega y Gasset",
+   "rol": "filosofo",
+   "fuente": "Meditaciones del Quijote, 1914",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f093",
+   "contexto": "revision",
+   "texto": "Una vida sin examen no merece ser vivida.",
+   "autor": "Sócrates",
+   "rol": "filosofo",
+   "fuente": "Apología de Sócrates, 38a (Platón)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f094",
+   "contexto": "revision",
+   "texto": "La vida solo puede entenderse mirando hacia atrás, pero debe vivirse mirando hacia adelante.",
+   "autor": "Søren Kierkegaard",
+   "rol": "filosofo",
+   "fuente": "Diarios, 1843",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f095",
+   "contexto": "revision",
+   "texto": "Si no sabes a qué puerto te diriges, ningún viento es favorable.",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Cartas a Lucilio, 71",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f096",
+   "contexto": "revision",
+   "texto": "Atrévete a saber.",
+   "autor": "Immanuel Kant",
+   "rol": "filosofo",
+   "fuente": "¿Qué es la Ilustración?, 1784 (lema tomado de Horacio)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f097",
+   "contexto": "revision",
+   "texto": "¿Qué defecto has corregido hoy? ¿A qué vicio te resististe? ¿En qué eres mejor?",
+   "autor": "Séneca",
+   "rol": "filosofo",
+   "fuente": "Sobre la ira, III.36 (hábito de Sextio)",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f098",
+   "contexto": "revision",
+   "texto": "Conocer a los demás es inteligencia; conocerse a uno mismo es verdadera sabiduría.",
+   "autor": "Lao Tse",
+   "rol": "filosofo",
+   "fuente": "Tao Te Ching, cap. 33",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f099",
+   "contexto": "revision",
+   "texto": "La verdad, o al menos una aproximación a ella, es la base de todo buen resultado.",
+   "autor": "Ray Dalio",
+   "rol": "empresario",
+   "fuente": "Principios, 2017",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  },
+  {
+   "id": "f100",
+   "contexto": "revision",
+   "texto": "Una vida media dura unas cuatro mil semanas.",
+   "autor": "Oliver Burkeman",
+   "rol": "autor",
+   "fuente": "Four Thousand Weeks, 2021",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "neutro"
+  }
+ ]
+}

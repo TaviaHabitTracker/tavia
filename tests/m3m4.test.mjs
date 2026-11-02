@@ -107,7 +107,7 @@ function archivosDeLaApp() {
     for (const n of readdirSync(dir)) {
       const ruta = join(dir, n);
       const rel = relative(RAIZ, ruta).split('\\').join('/');
-      if (/^(tests|node_modules|\.)/.test(rel) || ['package.json', 'README.md', 'sw.js', 'INSTALAR.md', 'fonts/InstrumentSans-OFL.txt'].includes(rel)) continue;
+      if (/^(tests|node_modules|\.)/.test(rel) || ['package.json', 'README.md', 'sw.js', 'INSTALAR.md', 'fonts/InstrumentSans-OFL.txt', 'fonts/Fraunces-OFL.txt'].includes(rel)) continue;
       if (statSync(ruta).isDirectory()) recorrer(ruta);
       else lista.push(`./${rel}`);
     }

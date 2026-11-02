@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as F from '../js/fechas.js';
-import { sanearDatos, datosVacios, migrate } from '../js/esquema.js';
+import { sanearDatos, datosVacios, migrate, SCHEMA_VERSION } from '../js/esquema.js';
 import { crearModelo, validarEntrada, primerGrafema } from '../js/modelo.js';
 import { tocaEnFecha, estadoDelDia, vistaDelDia, progresoDelDia } from '../js/calculos.js';
 import { crearAlmacen } from '../js/storage.js';
@@ -85,7 +85,7 @@ test('saneamiento descarta basura y conserva lo válido', () => {
 });
 
 test('migrate: datos sin versión llegan a la versión actual; versión futura se marca', () => {
-  assert.equal(migrate({ habits: [] }).datos.schemaVersion, 2);
+  assert.equal(migrate({ habits: [] }).datos.schemaVersion, SCHEMA_VERSION);
   assert.deepEqual(migrate({ schemaVersion: 1, habits: [] }).datos.revisiones, []);
   assert.equal(migrate({ schemaVersion: 99 }).futuro, true);
 });

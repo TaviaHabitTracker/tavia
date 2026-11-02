@@ -4,7 +4,7 @@
 
 import {
   BLOQUES, COLORES, FINES_DE_DIA, LIMITES, SCHEMA_VERSION, TIPOS,
-  numero, sanearConfig, sanearFrecuencia, sanearHabito, sanearMeta, sanearRecordatorios, sanearRevisiones,
+  numero, sanearConfig, sanearFrecuencia, sanearFrases, sanearHabito, sanearMeta, sanearPalabras, sanearRecordatorios, sanearRevisiones,
 } from './esquema.js';
 import { diaLogico, esFechaValida, horaLocal, sumarDias } from './fechas.js';
 import { puedeCongelar } from './estadisticas.js';
@@ -75,6 +75,7 @@ export function validarEntrada(e, hoy) {
       identidad: String(e.identidad || '').trim().slice(0, LIMITES.identidad),
       creado,
       privado: e.privado === true,
+      esencial: e.esencial === true,
     },
   };
 }
@@ -83,6 +84,9 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
   let habits = [];
   let config = sanearConfig(null);
   let semanales = []; // revisiones semanales (M7)
+  let frases = sanearFrases(null); // M10: frase del día, vistas, favoritas, Mi frase
+  let palabras = sanearPalabras(null); // M10: palabra del día, check-in, mínimo, palabras de identidad
+  let nuevaInstalacion = false;
   /** Índice de registros: habitId → (fecha → log). Lectura O(1). */
   let indice = new Map();
   /** Revisión por hábito: cambia cada vez que cambia el hábito o sus registros (invalida la caché). */
@@ -95,6 +99,10 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
     habits = d.habits.map((h) => ({ ...h, pausas: h.pausas.map((p) => ({ ...p })) }));
     config = { ...d.config, recordatorios: (d.config.recordatorios || []).map((r) => ({ ...r })) };
     semanales = (d.revisiones || []).map((r) => ({ ...r }));
+    frases = sanearFrases(structuredClone(d.frases ?? null));
+    palabras = sanearPalabras(structuredClone(d.palabras ?? null));
+    // Id de instalación: semilla local para elegir frases (nunca sale del dispositivo).
+    if (!config.idInstalacion) { config = { ...config, idInstalacion: nuevoId() }; nuevaInstalacion = true; }
     indice = new Map(habits.map((h) => [h.id, new Map()]));
     for (const l of d.logs) indice.get(l.habitId)?.set(l.fecha, { ...l });
   }
@@ -134,9 +142,20 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
     return log;
   }
 
+  /** Aplica un cambio a las frases o palabras, siempre saneado. */
+  const cambiarFrases = (fn, redibujar = true) => { frases = sanearFrases(fn(structuredClone(frases))); avisar({ tipo: 'guia', redibujar }); };
+  const cambiarPalabras = (fn, redibujar = true) => { palabras = sanearPalabras(fn(structuredClone(palabras))); avisar({ tipo: 'guia', redibujar }); };
+  const anotarVista = (f, id, fecha) => {
+    if (!f.vistas.some((v) => v.id === id && v.fecha === fecha)) f.vistas.push({ id, fecha });
+    // Solo sirven los últimos 120 días (60 de repetición + margen).
+    f.vistas = f.vistas.filter((v) => v.fecha >= sumarDias(fecha, -120));
+  };
+
   return {
     hoy,
     habito,
+    /** true si el id de instalación se creó en esta carga (main.js lo guarda en el acto). */
+    get nuevaInstalacion() { return nuevaInstalacion; },
     logDe,
     puedeMarcar,
     get config() { return config; },
@@ -366,6 +385,59 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
       return () => { semanales = antes; avisar({ tipo: 'revision' }); };
     },
 
+    /* ---------- Frases y palabras guía (M10) ---------- */
+
+    get frases() { return frases; },
+    get palabras() { return palabras; },
+
+    /** Fija la frase del día (y la anota como vista). `propia`: es "Mi frase", no se anota. */
+    fijarFraseDelDia({ fecha, id, contexto, propia = false }) {
+      cambiarFrases((f) => {
+        f.delDia = { fecha, id, contexto, ...(propia ? { propia: true } : {}) };
+        if (!propia) anotarVista(f, id, fecha);
+        return f;
+      }, false);
+    },
+    cerrarFraseDelDia() {
+      if (!frases.delDia) return null;
+      cambiarFrases((f) => { f.delDia.cerrada = true; return f; });
+      return () => cambiarFrases((f) => { if (f.delDia) delete f.delDia.cerrada; return f; });
+    },
+    /** Frase de cierre (una vez al día). `hitos`: claves de hitos que se celebran con ella. */
+    fijarCierre({ fecha, id, contexto }, hitos = []) {
+      cambiarFrases((f) => {
+        f.cierre = { fecha, id, contexto };
+        anotarVista(f, id, fecha);
+        f.hitosVistos.push(...hitos);
+        return f;
+      }, false);
+    },
+    alternarFavorita(id) {
+      cambiarFrases((f) => {
+        f.favoritas = f.favoritas.includes(id) ? f.favoritas.filter((x) => x !== id) : [id, ...f.favoritas];
+        return f;
+      });
+    },
+    fijarMiFrase(texto, { redibujar = false } = {}) {
+      cambiarFrases((f) => { f.miFrase = String(texto ?? ''); return f; }, redibujar);
+    },
+    /** Palabra del día: id, '-' (saltada) o null (borrar). */
+    fijarPalabra(fecha, id) {
+      if (!esFechaValida(fecha)) return;
+      cambiarPalabras((p) => { if (id) p.porDia[fecha] = id; else delete p.porDia[fecha]; return p; });
+    },
+    fijarCheckin(fecha, estado) {
+      if (!esFechaValida(fecha)) return;
+      cambiarPalabras((p) => { if (estado) p.checkin[fecha] = estado; else delete p.checkin[fecha]; return p; });
+    },
+    /** "Solo lo esencial" hoy (o null para volver a ver todo). */
+    fijarMinimo(fecha) {
+      cambiarPalabras((p) => { p.minimo = fecha; return p; });
+    },
+    fijarPalabrasIdentidad(ids) {
+      cambiarPalabras((p) => { p.identidad = Array.isArray(ids) ? ids : []; return p; });
+    },
+
     /** Datos listos para guardar o exportar. */
     serializar() {
       const logs = [];
@@ -376,6 +448,8 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
         habits: habits.map((h) => ({ ...h, pausas: h.pausas.map((p) => ({ ...p })) })),
         logs,
         revisiones: semanales.map((r) => ({ ...r })),
+        frases: structuredClone(frases),
+        palabras: structuredClone(palabras),
         config: { ...config, recordatorios: config.recordatorios.map((r) => ({ ...r })) },
       };
     },
@@ -407,6 +481,19 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
         habits: todos,
         logs: [...actual.logs, ...nuevosLogs],
         revisiones: sanearRevisiones([...actual.revisiones, ...d.revisiones.filter((r) => !semanas.has(r.semana))]),
+        // Frases y palabras: se suman favoritas, vistas y días; lo actual gana si choca.
+        frases: {
+          ...actual.frases,
+          favoritas: [...new Set([...actual.frases.favoritas, ...(d.frases?.favoritas || [])])],
+          vistas: [...actual.frases.vistas, ...(d.frases?.vistas || [])],
+          miFrase: actual.frases.miFrase || d.frases?.miFrase || '',
+        },
+        palabras: {
+          ...actual.palabras,
+          porDia: { ...(d.palabras?.porDia || {}), ...actual.palabras.porDia },
+          checkin: { ...(d.palabras?.checkin || {}), ...actual.palabras.checkin },
+          identidad: actual.palabras.identidad.length ? actual.palabras.identidad : (d.palabras?.identidad || []),
+        },
         config: {
           ...actual.config,
           recordatorios: sanearRecordatorios([...actual.config.recordatorios, ...d.config.recordatorios], new Set(todos.map((h) => h.id))),

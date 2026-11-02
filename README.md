@@ -1,4 +1,4 @@
-# Tavia Habit Tracker — versión 0.9 (diseño «Analista»)
+# Tavia Habit Tracker — versión 0.10 (frases y palabras guía)
 
 App de hábitos privada, elegante y que perdona. PWA en HTML, CSS y JavaScript puro: sin cuenta, sin servidor, sin rastreadores. Se instala en el celular o el PC y funciona sin internet.
 
@@ -30,8 +30,8 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.9.2'`
-- `js/textos.js` → `version: '0.9.2'`
+- `sw.js` → `const VERSION = 'tavia-0.10.0'`
+- `js/textos.js` → `version: '0.10.0'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 
@@ -49,6 +49,9 @@ Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar
 - **Tu año:** resumen anual tipo *Wrapped* en Progreso, con una tarjeta 1080×1920 para guardar o compartir como imagen (se crea en el teléfono con canvas).
 - **Tu manifiesto:** unas líneas propias que aparecen al abrir (una vez al día, se cierran solas o con un toque) o como una línea arriba en Hoy.
 - **Guardado:** IndexedDB. La primera vez se mudan solos los datos de localStorage; si el navegador no tiene IndexedDB, sigue con localStorage.
+
+- **Frases guía (0.10):** 100 frases con autor y fuente en `data/frases_tavia.json`, elegidas según tus rachas (inicio, construyendo, racha larga, hito, día difícil, tropiezo, regreso, descanso, día completo, identidad y revisión). Una al abrir el día y otra opcional al completarlo; tras un tropiezo o un regreso, solo frases suaves. Favoritas, colección, «Mi frase», tarjeta para compartir y filtro «solo fuente confirmada». Se amplía editando el JSON, sin tocar código.
+- **Palabras guía (0.10):** palabra del día (florece al elegirla), check-in «¿cómo llegas?» con día liviano (solo lo esencial o descanso), hasta 3 palabras de identidad y las palabras de la semana en la revisión, como observación y nunca como causa.
 
 ## Estructura
 
@@ -77,6 +80,9 @@ js/recordatorios.js Motor de avisos y archivo .ics
 js/insights.js      Patrones de Progreso y revisión semanal
 js/temas.js         Colores de acento y cuándo se ganan
 js/analisis.js      Racha global, constancia y análisis por hábito
+js/frases.js        Contexto del día, tono y selección de frases (lógica pura)
+js/palabras.js      Palabras guía y observación semanal (lógica pura)
+data/frases_tavia.json  Las frases (fuente única)
 js/anual.js         Cálculo de "Tu año"
 js/tarjeta-anual.js Dibujo de la tarjeta anual (canvas)
 js/vistas/          Hoy, detalle, editor, Progreso, Ajustes, seguridad,

@@ -4,7 +4,7 @@
 
 import { esFechaValida } from './fechas.js';
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export const COLORES = ['pino', 'lago', 'ciruela', 'arcilla', 'musgo', 'miel'];
 export const BLOQUES = ['manana', 'tarde', 'noche', 'dia'];
@@ -20,6 +20,7 @@ export const LIMITES = {
   habitos: 500, logs: 200_000,
   recordatoriosPorHabito: 5, recordatorios: 300, revisionTexto: 280, revisiones: 520,
   manifiesto: 280,
+  miFrase: 200, frasesVistas: 400, favoritas: 300, diasGuia: 800, hitosVistos: 200,
 };
 
 /** Paletas (M8). La primera es la de siempre; las demás se ganan con días registrados (ver temas.js). */
@@ -28,6 +29,15 @@ export const PALETAS = ['ambar', 'cobre', 'salvia', 'acero', 'platino'];
 const PALETAS_ANTES = { pino: 'ambar', arena: 'cobre', niebla: 'acero', ciruela: 'salvia', obsidiana: 'platino' };
 export const TEMAS = ['auto', 'claro', 'oscuro', 'negro'];
 export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
+
+/* Módulo 10: frases y palabras guía. */
+export const CONTEXTOS_FRASE = ['inicio', 'construyendo', 'racha_larga', 'hito', 'dia_dificil', 'tropiezo', 'regreso', 'descanso', 'dia_completo', 'identidad', 'revision'];
+export const ROLES_FRASE = ['filosofo', 'escritor', 'empresario', 'artista', 'deportista', 'autor', 'lider', 'proverbio'];
+export const ESTILOS_FRASE = ['suave', 'equilibrado', 'firme'];
+export const FRECUENCIAS_FRASE = ['cierre', 'dia', 'revision'];
+export const ESTADOS_ANIMO = ['energia', 'tranquilo', 'cansado', 'abrumado'];
+export const PALABRAS_GUIA = ['constancia', 'calma', 'paciencia', 'foco', 'valentia', 'disciplina', 'proposito', 'descanso', 'identidad', 'curiosidad', 'aprender', 'resiliencia', 'presencia', 'orden', 'energia', 'amabilidad'];
+export const SALTADO = '-'; // palabra o check-in "saltado" ese día (para no volver a preguntar)
 
 export const BLOQUEOS = [0, 30, 60, 300, 900]; // segundos en segundo plano antes de pedir el PIN
 export const PIN_ITERACIONES = 600_000;
@@ -58,11 +68,28 @@ export function configPorDefecto() {
     manifiesto: '',
     manifiestoModo: 'pantalla', // pantalla breve una vez al día · línea en Hoy · no mostrar
     manifiestoVisto: null, // 'YYYY-MM-DD' del último día en que se mostró la pantalla
+    // Módulo 10
+    frasesActivas: true, // apagado = modo sin frases
+    estiloFrases: 'equilibrado', // suave · equilibrado (suave y neutro) · firme
+    frecuenciaFrases: 'cierre', // cierre: del día + cierre · dia: solo la del día · revision: solo en revisiones
+    rolesFrases: [...ROLES_FRASE],
+    soloAlta: false, // solo frases con fuente confirmada
+    palabraDelDia: true,
+    checkinActivo: true,
+    idInstalacion: '', // se crea al cargar; sirve de semilla para elegir frases (nunca sale del dispositivo)
   };
 }
 
 export function datosVacios() {
-  return { schemaVersion: SCHEMA_VERSION, habits: [], logs: [], revisiones: [], config: configPorDefecto() };
+  return { schemaVersion: SCHEMA_VERSION, habits: [], logs: [], revisiones: [], frases: frasesVacias(), palabras: palabrasVacias(), config: configPorDefecto() };
+}
+
+export function frasesVacias() {
+  return { vistas: [], favoritas: [], delDia: null, cierre: null, hitosVistos: [], miFrase: '' };
+}
+
+export function palabrasVacias() {
+  return { porDia: {}, checkin: {}, minimo: null, identidad: [] };
 }
 
 /* ---------- Ayudantes de saneamiento ---------- */
@@ -146,6 +173,7 @@ export function sanearHabito(h, hoy) {
     creado: esFechaValida(h.creado) ? h.creado : hoy,
     archivado: esFechaValida(h.archivado) ? h.archivado : null,
     privado: h.privado === true,
+    esencial: h.esencial === true,
     pausas: sanearPausas(h.pausas),
     orden: Number.isFinite(h.orden) ? h.orden : 0,
   };
@@ -194,6 +222,61 @@ export function sanearConfig(c, idsValidos = null) {
     manifiesto: texto(c.manifiesto, LIMITES.manifiesto).replace(/\n{3,}/g, '\n\n'),
     manifiestoModo: MODOS_MANIFIESTO.includes(c.manifiestoModo) ? c.manifiestoModo : base.manifiestoModo,
     manifiestoVisto: esFechaValida(c.manifiestoVisto) ? c.manifiestoVisto : null,
+    frasesActivas: c.frasesActivas !== false,
+    estiloFrases: ESTILOS_FRASE.includes(c.estiloFrases) ? c.estiloFrases : base.estiloFrases,
+    frecuenciaFrases: FRECUENCIAS_FRASE.includes(c.frecuenciaFrases) ? c.frecuenciaFrases : base.frecuenciaFrases,
+    rolesFrases: Array.isArray(c.rolesFrases) ? ROLES_FRASE.filter((r) => c.rolesFrases.includes(r)) : base.rolesFrases,
+    soloAlta: c.soloAlta === true,
+    palabraDelDia: c.palabraDelDia !== false,
+    checkinActivo: c.checkinActivo !== false,
+    idInstalacion: typeof c.idInstalacion === 'string' && /^[\w-]{8,64}$/.test(c.idInstalacion) ? c.idInstalacion : '',
+  };
+}
+
+/* ---------- Frases y palabras guía (M10) ---------- */
+
+const idFrase = (v) => typeof v === 'string' && /^[\w-]{1,16}$/.test(v);
+
+function sanearMarca(x, extra = {}) {
+  if (!esObjeto(x) || !esFechaValida(x.fecha) || !idFrase(x.id) || !CONTEXTOS_FRASE.includes(x.contexto)) return null;
+  const m = { fecha: x.fecha, id: x.id, contexto: x.contexto };
+  if (extra.cerrada && x.cerrada === true) m.cerrada = true;
+  if (extra.propia && x.propia === true) m.propia = true;
+  return m;
+}
+
+export function sanearFrases(f) {
+  const base = frasesVacias();
+  if (!esObjeto(f)) return base;
+  const vistas = Array.isArray(f.vistas)
+    ? f.vistas.filter((v) => esObjeto(v) && idFrase(v.id) && esFechaValida(v.fecha)).map((v) => ({ id: v.id, fecha: v.fecha })).slice(-LIMITES.frasesVistas)
+    : [];
+  return {
+    vistas,
+    favoritas: Array.isArray(f.favoritas) ? [...new Set(f.favoritas.filter(idFrase))].slice(0, LIMITES.favoritas) : [],
+    delDia: sanearMarca(f.delDia, { cerrada: true, propia: true }),
+    cierre: sanearMarca(f.cierre),
+    hitosVistos: Array.isArray(f.hitosVistos) ? [...new Set(f.hitosVistos.filter((x) => typeof x === 'string' && /^[\w:@-]{1,90}$/.test(x)))].slice(-LIMITES.hitosVistos) : [],
+    miFrase: texto(f.miFrase, LIMITES.miFrase).replace(/\s+/g, ' '),
+  };
+}
+
+/** Un mapa fecha → valor permitido (días recientes primero, con tope). */
+function porFecha(o, validos) {
+  if (!esObjeto(o)) return {};
+  const pares = Object.entries(o).filter(([k, v]) => esFechaValida(k) && (v === SALTADO || validos.includes(v)));
+  pares.sort((a, b) => (a[0] < b[0] ? 1 : -1));
+  return Object.fromEntries(pares.slice(0, LIMITES.diasGuia));
+}
+
+export function sanearPalabras(p) {
+  const base = palabrasVacias();
+  if (!esObjeto(p)) return base;
+  return {
+    porDia: porFecha(p.porDia, PALABRAS_GUIA),
+    checkin: porFecha(p.checkin, ESTADOS_ANIMO),
+    minimo: esFechaValida(p.minimo) ? p.minimo : null,
+    identidad: Array.isArray(p.identidad) ? [...new Set(p.identidad.filter((x) => PALABRAS_GUIA.includes(x)))].slice(0, 3) : [],
   };
 }
 
@@ -248,12 +331,13 @@ export function sanearRevisiones(r) {
 
 /**
  * Lleva datos de cualquier versión anterior a SCHEMA_VERSION.
- * Cada paso es una función pura vN → vN+1. v1 → v2 agregó las revisiones semanales.
- * Para la v3: escribir pasos[2] = (d) => ({ ...d, schemaVersion: 3, … }).
+ * Cada paso es una función pura vN → vN+1. v1 → v2 agregó las revisiones semanales;
+ * v2 → v3, las frases y palabras guía (M10). Para la v4: escribir pasos[3].
  */
 const pasos = {
   0: (d) => ({ ...d, schemaVersion: 1 }), // datos sin versión: se tratan como v1
   1: (d) => ({ ...d, schemaVersion: 2, revisiones: Array.isArray(d.revisiones) ? d.revisiones : [] }), // M7: revisión semanal
+  2: (d) => ({ ...d, schemaVersion: 3, frases: esObjeto(d.frases) ? d.frases : frasesVacias(), palabras: esObjeto(d.palabras) ? d.palabras : palabrasVacias() }), // M10: frases y palabras
 };
 
 export function migrate(raw) {
@@ -290,6 +374,8 @@ export function sanearDatos(raw, hoy) {
     habits,
     logs: [...porClave.values()],
     revisiones: sanearRevisiones(d.revisiones),
+    frases: sanearFrases(d.frases),
+    palabras: sanearPalabras(d.palabras),
     config: sanearConfig(d.config, vistos),
   };
   const descartados = (habitsIn.length - habits.length) + (logsIn.length - porClave.size);
