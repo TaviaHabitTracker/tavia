@@ -191,11 +191,17 @@ export function crearAlmacen({ storage, motor = null, abrir = abrirIndexedDB, le
       return datos;
     },
 
-    /** Guarda con una pequeña espera, para agrupar varios toques seguidos. */
-    guardar(datos) {
+    /**
+     * Guarda con una pequeña espera, para agrupar varios toques seguidos.
+     * Con { ya: true } guarda en el acto (al marcar un hábito): si el sistema cierra la app
+     * justo después del toque, la transacción ya partió y el registro no se pierde.
+     */
+    guardar(datos, { ya = false } = {}) {
       pendiente = datos;
       clearTimeout(temporizador);
+      if (ya) return this.guardarYa();
       temporizador = setTimeout(() => this.guardarYa(), esperaMs);
+      return undefined;
     },
 
     /** Guarda lo pendiente de inmediato (al salir de la app o cambiar de pestaña). */

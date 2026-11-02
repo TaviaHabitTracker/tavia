@@ -3,14 +3,14 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.8.0';
+const VERSION = 'tavia-0.9.1';
 
 const ARCHIVOS = [
   './',
   './index.html',
   './styles.css',
   './manifest.json',
-  './fonts/FrauncesSoft-Variable.woff2',
+  './fonts/InstrumentSans-Variable.woff2',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -34,6 +34,7 @@ const ARCHIVOS = [
   './js/recordatorios.js',
   './js/insights.js',
   './js/temas.js',
+  './js/analisis.js',
   './js/anual.js',
   './js/tarjeta-anual.js',
   './js/vistas/hoy.js',
@@ -47,6 +48,7 @@ const ARCHIVOS = [
   './js/vistas/semana.js',
   './js/vistas/manifiesto.js',
   './js/vistas/anual.js',
+  './js/vistas/analisis.js',
 ];
 
 // Instalar: descarga todo de una vez. Si falta un archivo, no se instala (y la versión anterior sigue).

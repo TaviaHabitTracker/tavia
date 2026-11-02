@@ -245,3 +245,17 @@ test('textos: plural simple {n|uno|varios}', () => {
   assert.equal(t('anual.dias', { n: 13 }), '13 días');
   assert.equal(t('respaldo.combinado', { h: 1, l: 2 }), 'Se agregó 1 hábito y 2 registros.');
 });
+
+/* ---------- 0.9.1: el último toque no se pierde ---------- */
+
+test('guardar con { ya: true } escribe en el acto, sin esperar el temporizador', async () => {
+  const motor = idbFalso();
+  const a = crearAlmacen({ motor, legado: null, esperaMs: 60_000 });
+  await a.cargar('2026-11-02');
+  a.guardar(datosCon('Agrupado'));             // con espera: aún no escribe
+  assert.equal(motor._m.get(CLAVE), undefined);
+  const r = a.guardar(datosCon('Marcado'), { ya: true }); // al marcar: la escritura parte ya
+  assert.equal(await r, true);
+  assert.ok(motor._m.get(CLAVE).includes('Marcado'));
+  assert.equal(await a.guardarYa(), true, 'no queda nada pendiente');
+});

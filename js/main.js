@@ -92,7 +92,8 @@ async function iniciar() {
   let modelo;
   modelo = crearModelo(datos, {
     alCambiar: (cambio) => {
-      if (cambio.tipo !== 'todo') almacen.guardar(modelo.serializar());
+      // Marcar (log) se guarda en el acto; el resto agrupa toques con una pequeña espera.
+      if (cambio.tipo !== 'todo') almacen.guardar(modelo.serializar(), { ya: cambio.tipo === 'log' });
       if (cambio.tipo === 'todo' || cambio.tipo === 'importado') cache.olvidar();
       if (['log', 'habito', 'importado', 'todo'].includes(cambio.tipo)) contarDias(cambio.tipo === 'log');
       if (cambio.tipo === 'config' || cambio.tipo === 'importado') { aplicarTema(); revisarDia(); }
