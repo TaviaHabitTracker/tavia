@@ -4,24 +4,26 @@ import { el, icono, simboloTavia, vaciar } from '../dom.js';
 import { t } from '../textos.js';
 import { crearPin, esperaTrasFallos, pinValido, verificarPin } from '../cripto.js';
 import { abrirHoja } from '../ui.js';
+import { fechaLarga } from '../fechas.js';
 
 /**
- * Comprueba un PIN aplicando el límite de intentos (guardado en la configuración,
- * así recargar la página no reinicia la espera). Devuelve { ok } o { ok:false, esperaMs }.
+ * Comprueba un PIN aplicando el límite de intentos. La espera pendiente se guarda como
+ * "milisegundos que faltan" y se descuenta con el reloj interno del navegador
+ * (performance.now), que no cambia si alguien adelanta la hora del teléfono (M-1).
+ * Recargar la página no la reinicia. Devuelve { ok } o { ok:false, esperaMs }.
  */
 export async function intentarPin(ctx, pin) {
   const { modelo } = ctx;
   const c = modelo.config;
-  const ahora = Date.now();
-  if (c.pinEsperaHasta > ahora) return { ok: false, esperaMs: c.pinEsperaHasta - ahora };
+  if (c.pinEspera > 0) return { ok: false, esperaMs: c.pinEspera };
   const ok = await verificarPin(pin, c);
   if (ok) {
-    if (c.pinFallos || c.pinEsperaHasta) modelo.setConfig({ pinFallos: 0, pinEsperaHasta: 0 });
+    if (c.pinFallos || c.pinEspera) modelo.setConfig({ pinFallos: 0, pinEspera: 0 });
     return { ok: true };
   }
   const fallos = c.pinFallos + 1;
   const espera = esperaTrasFallos(fallos);
-  modelo.setConfig({ pinFallos: fallos, pinEsperaHasta: espera ? Date.now() + espera : 0 });
+  modelo.setConfig({ pinFallos: fallos, pinEspera: espera });
   return { ok: false, esperaMs: espera };
 }
 
@@ -45,10 +47,22 @@ function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
   let reloj = null;
   const esperar = (ms) => {
     clearInterval(reloj);
-    const fin = Date.now() + ms;
+    let restante = ms;
+    let antes = performance.now(); // reloj interno: no se mueve si cambian la hora del teléfono
+    let guardadoHace = 0;
     enviar.disabled = true;
     const tick = () => {
-      const s = Math.ceil((fin - Date.now()) / 1000);
+      const ahora = performance.now();
+      const paso = Math.max(0, ahora - antes);
+      antes = ahora;
+      restante = Math.max(0, restante - paso);
+      guardadoHace += paso;
+      // Se guarda cada 5 s y al terminar: si cierran la app, la espera sigue donde quedó.
+      if (restante === 0 || guardadoHace >= 5000) {
+        guardadoHace = 0;
+        if (ctx.modelo.config.pinEspera !== Math.round(restante)) ctx.modelo.setConfig({ pinEspera: Math.round(restante) }, { redibujar: false });
+      }
+      const s = Math.ceil(restante / 1000);
       if (s <= 0) { clearInterval(reloj); enviar.disabled = false; error.textContent = ''; return; }
       error.textContent = t('bloqueo.espera', { s });
     };
@@ -71,7 +85,7 @@ function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
     if (r.esperaMs) esperar(r.esperaMs);
     else error.textContent = t('bloqueo.error');
   });
-  const pendiente = ctx.modelo.config.pinEsperaHasta - Date.now();
+  const pendiente = ctx.modelo.config.pinEspera;
   if (pendiente > 0) esperar(pendiente);
   return form;
 }
@@ -126,7 +140,7 @@ export async function configurarPin(ctx) {
         boton.disabled = true;
         estado.textContent = t('pin.calculando');
         const datos = await crearPin(p1);
-        modelo.setConfig({ ...datos, pinFallos: 0, pinEsperaHasta: 0 });
+        modelo.setConfig({ ...datos, pinFallos: 0, pinEspera: 0 });
         ctx.verPrivados = false;
         cerrar();
       });
@@ -138,7 +152,7 @@ export async function configurarPin(ctx) {
 /** Quitar el PIN (pide el actual). Los hábitos privados vuelven a verse. */
 export async function quitarPin(ctx) {
   if (!(await pedirPin(ctx, t('pin.actual')))) return;
-  ctx.modelo.setConfig({ pinHash: null, pinSalt: null, pinFallos: 0, pinEsperaHasta: 0 });
+  ctx.modelo.setConfig({ pinHash: null, pinSalt: null, pinFallos: 0, pinEspera: 0 });
 }
 
 /** "Olvidé mi PIN": la única salida honesta es borrar los datos de este dispositivo. */
@@ -153,6 +167,10 @@ function olvidePin(ctx) {
       entrada.addEventListener('input', () => { boton.disabled = entrada.value.trim().toUpperCase() !== 'BORRAR'; });
       const form = el('form', { class: 'form', novalidate: true },
         el('p', { class: 'texto-ayuda' }, t('bloqueo.olvide.texto')),
+        // Antes de borrar, que se vea qué se pierde (B-1).
+        el('p', { class: 'texto-ayuda texto-ayuda--miel' }, ctx.modelo.config.ultimoRespaldo
+          ? t('bloqueo.olvide.respaldo', { fecha: fechaLarga(ctx.modelo.config.ultimoRespaldo) })
+          : t('bloqueo.olvide.sinRespaldo')),
         el('div', { class: 'campo' }, el('label', { class: 'campo__etiqueta', for: id }, t('bloqueo.olvide.escribe')), entrada),
         boton);
       form.addEventListener('submit', (e) => {

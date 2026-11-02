@@ -8,7 +8,7 @@
 // Respaldo cifrado: AES-GCM de 256 bits con clave derivada de una contraseña (PBKDF2),
 // sal e IV aleatorios incluidos en el archivo.
 
-import { PIN_ITERACIONES } from './esquema.js';
+import { ITERACIONES_MAX, PIN_ITERACIONES } from './esquema.js';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -90,9 +90,13 @@ export async function descifrar(obj, contrasena) {
   const c = obj.cifrado;
   if (c.alg !== 'AES-GCM' || c.kdf !== 'PBKDF2-SHA256') throw new Error('Formato de cifrado desconocido');
   const iter = Number(c.iter);
-  if (!Number.isInteger(iter) || iter < 100_000 || iter > 10_000_000) throw new Error('Iteraciones fuera de rango');
-  const bits = await derivarBits(contrasena, deB64(c.sal), iter);
+  // Tope de iteraciones: un archivo hostil con millones de vueltas congelaría la app (B-2).
+  if (!Number.isInteger(iter) || iter < 100_000 || iter > ITERACIONES_MAX) throw new Error('Iteraciones fuera de rango');
+  const sal = deB64(c.sal);
+  const iv = deB64(c.iv);
+  if (sal.length !== 16 || iv.length !== 12) throw new Error('Sal o IV con largo inválido');
+  const bits = await derivarBits(contrasena, sal, iter);
   const clave = await sutil().importKey('raw', bits, 'AES-GCM', false, ['decrypt']);
-  const claro = await sutil().decrypt({ name: 'AES-GCM', iv: deB64(c.iv), additionalData: AAD }, clave, deB64(obj.datos));
+  const claro = await sutil().decrypt({ name: 'AES-GCM', iv, additionalData: AAD }, clave, deB64(obj.datos));
   return dec.decode(claro);
 }

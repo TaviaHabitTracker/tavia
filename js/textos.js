@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.9.1', // igual que VERSION en sw.js
+  version: '0.9.2', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -247,10 +247,14 @@ const es = {
   'recordatorios.ics.listo': 'Archivo con {n} {n|recordatorio|recordatorios} listo.',
 
   'datos.titulo': 'Tus datos',
+  'error.titulo': 'Tavia no pudo abrir',
+  'error.texto': 'Algo falló al cargar. Tus datos siguen guardados en este dispositivo: no se borró nada.',
+  'error.recargar': 'Volver a intentar',
   'datos.exportar': 'Exportar respaldo',
   'datos.exportarCifrado': 'Exportar cifrado (con contraseña)',
   'datos.csv': 'Exportar a Excel (CSV)',
   'datos.importar': 'Importar respaldo',
+  'datos.exportar.aviso': 'El respaldo normal y el CSV se pueden leer con cualquier programa. Si anotas cosas de salud o privadas, usa el cifrado. El PIN nunca va en el respaldo.',
   'datos.ultimo': 'Último respaldo: {cuando}.',
   'datos.ultimo.nunca': 'Aún no has hecho un respaldo.',
   'datos.ultimo.hoy': 'hoy',
@@ -312,6 +316,7 @@ const es = {
   'pin.invalido': 'El PIN debe tener entre 4 y 8 dígitos.',
   'pin.guardar': 'Guardar PIN',
   'pin.quitar.confirmar': 'Quitar',
+  'pin.exportar': 'Escribe tu PIN para exportar',
   'pin.calculando': 'Protegiendo… (tarda un segundo a propósito)',
   'bloqueo.titulo': 'Tavia está bloqueada',
   'bloqueo.pin': 'PIN',
@@ -322,6 +327,8 @@ const es = {
   'bloqueo.olvide.titulo': '¿Olvidaste tu PIN?',
   'bloqueo.olvide.texto': 'No hay forma de recuperarlo: Tavia no tiene servidor ni cuenta. La única salida es borrar todos los datos de este dispositivo y empezar de cero (o importar un respaldo después).',
   'bloqueo.olvide.borrar': 'Borrar todo y empezar de cero',
+  'bloqueo.olvide.respaldo': 'Tu último respaldo es del {fecha}. Lo que hiciste después se perderá.',
+  'bloqueo.olvide.sinRespaldo': 'No tienes ningún respaldo: se perderá todo tu historial.',
   'bloqueo.olvide.escribe': 'Escribe BORRAR para confirmar',
 
   /* ---------- Módulo 7 ---------- */

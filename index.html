@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <!-- Seguridad: solo se carga código y estilos de este mismo sitio. Sin scripts en línea, sin eval. -->
+  <!-- Seguridad: todo prohibido salvo lo de este mismo sitio. Sin scripts en línea, sin eval.
+       Trusted Types: el navegador rechaza cualquier HTML o URL de script armado con texto, salvo la
+       única política "tavia" (registra sw.js). frame-ancestors y HSTS necesitan cabeceras reales:
+       GitHub Pages no las permite (ver informe de seguridad, M-4). -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types tavia 'allow-duplicates'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F3F3F1" media="(prefers-color-scheme: light)">
@@ -22,6 +25,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preload" href="fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <script src="js/rescate.js"></script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body>

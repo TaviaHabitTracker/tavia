@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.9.1';
+const VERSION = 'tavia-0.9.2';
 
 const ARCHIVOS = [
   './',
@@ -17,6 +17,7 @@ const ARCHIVOS = [
   './icons/maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
+  './js/rescate.js',
   './js/main.js',
   './js/textos.js',
   './js/fechas.js',
@@ -50,6 +51,9 @@ const ARCHIVOS = [
   './js/vistas/anual.js',
   './js/vistas/analisis.js',
 ];
+
+// Rutas absolutas de los archivos de la app (para reconocerlos en cada petición).
+const RUTAS = new Set(ARCHIVOS.map((a) => new URL(a, self.location).pathname));
 
 // Instalar: descarga todo de una vez. Si falta un archivo, no se instala (y la versión anterior sigue).
 self.addEventListener('install', (e) => {
@@ -99,13 +103,12 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Archivos: primero la caché; si no está, la red (y se guarda para la próxima vez).
+  // Solo los archivos de la app salen de la caché. Todo lo demás va directo a la red y nunca se guarda:
+  // así, si algún día hay respuestas con datos (nube), no quedan copiadas aquí (B-3).
+  const ruta = new URL(req.url).pathname;
+  if (!RUTAS.has(ruta)) return;
   e.respondWith((async () => {
     const cache = await caches.open(VERSION);
-    const guardado = await cache.match(req, { ignoreSearch: true });
-    if (guardado) return guardado;
-    const res = await fetch(req);
-    if (res.ok && res.type === 'basic') cache.put(req, res.clone());
-    return res;
+    return (await cache.match(req, { ignoreSearch: true })) || fetch(req);
   })());
 });

@@ -8,9 +8,18 @@ import { abrirHoja } from '../ui.js';
 import { csvRegistros, entregarArchivo, leerRespaldo, nombreArchivo, textoRespaldo } from '../respaldo.js';
 import { generarICS } from '../recordatorios.js';
 import { anunciar } from '../ui.js';
+import { CAMPOS_PIN } from '../esquema.js';
+import { pedirPin } from './seguridad.js';
+
+/** Con PIN activo, exportar pide el PIN: el archivo lleva también los hábitos privados (M-3). */
+async function permisoParaExportar(ctx) {
+  if (!ctx.modelo.config.pinHash) return true;
+  return pedirPin(ctx, t('pin.exportar'));
+}
 
 export async function exportar(ctx, { cifrado = false } = {}) {
   const { modelo } = ctx;
+  if (!(await permisoParaExportar(ctx))) return;
   const hoy = modelo.hoy();
   let contrasena = null;
   if (cifrado) {
@@ -28,6 +37,7 @@ export async function exportar(ctx, { cifrado = false } = {}) {
 }
 
 export async function exportarCSV(ctx) {
+  if (!(await permisoParaExportar(ctx))) return;
   const hoy = ctx.modelo.hoy();
   await entregarArchivo(nombreArchivo(hoy, 'csv'), csvRegistros(ctx.modelo.serializar()), 'text/csv;charset=utf-8');
 }
@@ -80,7 +90,10 @@ function mostrarResumen(ctx, { datos, resumen }) {
       opcion(t('respaldo.reemplazar'), t('respaldo.reemplazar.ayuda'), 'secundario', () => {
         cerrar();
         const antes = ctx.modelo.serializar();
-        ctx.modelo.reemplazar(datos, { guardar: true });
+        // La protección actual (PIN, intentos, bloqueo) se queda: un archivo no puede quitarla ni cambiarla (M-2).
+        const actual = ctx.modelo.config;
+        const seguridad = Object.fromEntries([...CAMPOS_PIN, 'bloqueoSegundos'].map((k) => [k, actual[k]]));
+        ctx.modelo.reemplazar({ ...datos, config: { ...datos.config, ...seguridad } }, { guardar: true });
         ctx.deshacer(t('respaldo.reemplazado'), () => ctx.modelo.reemplazar(antes, { guardar: true }));
       }),
     ],

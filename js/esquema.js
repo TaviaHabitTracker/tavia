@@ -31,6 +31,11 @@ export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
 
 export const BLOQUEOS = [0, 30, 60, 300, 900]; // segundos en segundo plano antes de pedir el PIN
 export const PIN_ITERACIONES = 600_000;
+/** Tope de iteraciones aceptadas (PIN y respaldo cifrado): más que esto solo sirve para congelar la app (B-2). */
+export const ITERACIONES_MAX = 2_000_000;
+export const ESPERA_PIN_MAX = 15 * 60_000;
+/** Campos de la protección con PIN. Nunca salen en un respaldo ni llegan desde uno (A-3, M-2). */
+export const CAMPOS_PIN = ['pinHash', 'pinSalt', 'pinIter', 'pinFallos', 'pinEspera'];
 
 export function configPorDefecto() {
   return {
@@ -45,7 +50,9 @@ export function configPorDefecto() {
     pinIter: PIN_ITERACIONES,
     bloqueoSegundos: 60,
     pinFallos: 0,
-    pinEsperaHasta: 0, // marca de tiempo (ms) hasta la que no se aceptan intentos
+    // Espera que falta tras fallar el PIN (ms). Se descuenta con el tiempo real que la app pasa abierta,
+    // no con la hora del teléfono: adelantar el reloj ya no la salta (hallazgo M-1).
+    pinEspera: 0,
     avisosVistos: [],
     paleta: 'ambar',
     manifiesto: '',
@@ -176,10 +183,10 @@ export function sanearConfig(c, idsValidos = null) {
     ultimoRespaldo: esFechaValida(c.ultimoRespaldo) ? c.ultimoRespaldo : null,
     pinHash: typeof c.pinHash === 'string' && /^[A-Za-z0-9+/=]{20,100}$/.test(c.pinHash) ? c.pinHash : null,
     pinSalt: typeof c.pinSalt === 'string' && /^[A-Za-z0-9+/=]{16,100}$/.test(c.pinSalt) ? c.pinSalt : null,
-    pinIter: Number.isInteger(c.pinIter) && c.pinIter >= 100_000 && c.pinIter <= 10_000_000 ? c.pinIter : PIN_ITERACIONES,
+    pinIter: Number.isInteger(c.pinIter) && c.pinIter >= 100_000 && c.pinIter <= ITERACIONES_MAX ? c.pinIter : PIN_ITERACIONES,
     bloqueoSegundos: BLOQUEOS.includes(c.bloqueoSegundos) ? c.bloqueoSegundos : base.bloqueoSegundos,
     pinFallos: Number.isInteger(c.pinFallos) && c.pinFallos >= 0 && c.pinFallos < 1000 ? c.pinFallos : 0,
-    pinEsperaHasta: Number.isFinite(c.pinEsperaHasta) && c.pinEsperaHasta > 0 ? c.pinEsperaHasta : 0,
+    pinEspera: sanearEspera(c),
     avisosVistos: Array.isArray(c.avisosVistos)
       ? [...new Set(c.avisosVistos.filter((x) => typeof x === 'string' && /^[\w.-]{1,40}$/.test(x)))].slice(0, 50)
       : [],
@@ -188,6 +195,14 @@ export function sanearConfig(c, idsValidos = null) {
     manifiestoModo: MODOS_MANIFIESTO.includes(c.manifiestoModo) ? c.manifiestoModo : base.manifiestoModo,
     manifiestoVisto: esFechaValida(c.manifiestoVisto) ? c.manifiestoVisto : null,
   };
+}
+
+/** Espera pendiente del PIN. Los datos de la 0.9 traían una hora absoluta (pinEsperaHasta): se recalcula desde los fallos. */
+function sanearEspera(c) {
+  if (Number.isFinite(c.pinEspera) && c.pinEspera > 0) return Math.min(Math.round(c.pinEspera), ESPERA_PIN_MAX);
+  const fallos = Number.isInteger(c.pinFallos) ? c.pinFallos : 0;
+  if (Number.isFinite(c.pinEsperaHasta) && c.pinEsperaHasta > 0 && fallos >= 5) return Math.min(30_000 * 2 ** (fallos - 5), ESPERA_PIN_MAX);
+  return 0;
 }
 
 /** Recordatorios: hora válida, hábito existente, sin repetidos, con tope por hábito. */

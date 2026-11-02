@@ -326,7 +326,19 @@ async function iniciar() {
       ctx.recienCompletados.clear();
       ctx.recordatoriosDescartados.clear();
       deshacer.ocultar();
-      motor.reiniciar();
+      motor.re/** Si el arranque falla, nunca queda la pantalla en blanco (M-6). No se muestran detalles internos. */
+function mostrarFallo(error) {
+  console.error('Tavia no pudo iniciar', error);
+  const vista = document.getElementById('vista');
+  if (!vista || vista.querySelector('.fallo')) return;
+  vaciar(vista);
+  vista.append(el('div', { class: 'vacio fallo', role: 'alert' },
+    el('h1', { class: 'vacio__titulo' }, t('error.titulo')),
+    el('p', { class: 'vacio__texto' }, t('error.texto')),
+    el('button', { class: 'tv-boton tv-boton--principal', type: 'button', onclick: () => location.reload() }, t('error.recargar'))));
+}
+
+iniciar().catch(mostrarFallo);
       revisarRespaldo();
       ctx.render();
     }
@@ -372,6 +384,7 @@ async function iniciar() {
 
   dibujar();
   cargado = true;
+  document.documentElement.dataset.listo = ''; // avisa a rescate.js que la app abrió bien
   mostrarManifiestoSiToca(ctx);
 
   // Atajo "Nuevo hábito" desde el ícono de la app instalada.
@@ -386,4 +399,16 @@ function leerPestana() {
   return PESTANAS.some(([id]) => id === h) ? h : 'hoy';
 }
 
-iniciar();
+/** Si el arranque falla, nunca queda la pantalla en blanco (M-6). No se muestran detalles internos. */
+function mostrarFallo(error) {
+  console.error('Tavia no pudo iniciar', error);
+  const vista = document.getElementById('vista');
+  if (!vista || vista.querySelector('.fallo')) return;
+  vaciar(vista);
+  vista.append(el('div', { class: 'vacio fallo', role: 'alert' },
+    el('h1', { class: 'vacio__titulo' }, t('error.titulo')),
+    el('p', { class: 'vacio__texto' }, t('error.texto')),
+    el('button', { class: 'tv-boton tv-boton--principal', type: 'button', onclick: () => location.reload() }, t('error.recargar'))));
+}
+
+iniciar().catch(mostrarFallo);

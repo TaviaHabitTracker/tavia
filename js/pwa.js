@@ -50,7 +50,16 @@ function registrarServiceWorker(ctx) {
     location.reload();
   });
 
-  navigator.serviceWorker.register('./sw.js').then((reg) => {
+  // Trusted Types: la única URL de script que la app arma es la del Service Worker.
+  let urlSW = './sw.js';
+  try {
+    const politica = globalThis.trustedTypes?.createPolicy('tavia', {
+      createScriptURL: (u) => { if (u !== './sw.js') throw new TypeError('URL de script no permitida'); return u; },
+    });
+    if (politica) urlSW = politica.createScriptURL('./sw.js');
+  } catch { /* la política ya existía o el navegador no la soporta */ }
+
+  navigator.serviceWorker.register(urlSW).then((reg) => {
     const avisarSiEspera = () => {
       if (reg.waiting && navigator.serviceWorker.controller) {
         ctx.avisar('aviso.actualizar', {

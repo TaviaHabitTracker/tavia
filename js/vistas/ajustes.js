@@ -260,6 +260,7 @@ function seccionDatos(ctx) {
     el('button', { class: 'tv-boton tv-boton--principal', type: 'button', data: { foco: 'exportar' }, onclick: () => exportar(ctx) }, icono('respaldo', 'tv-icono--sm'), t('datos.exportar')),
     el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'exportar-cifrado' }, onclick: () => exportar(ctx, { cifrado: true }) }, icono('candado', 'tv-icono--sm'), t('datos.exportarCifrado')),
     el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'csv' }, onclick: () => exportarCSV(ctx) }, t('datos.csv')),
+    el('p', { class: 'texto-ayuda' }, t('datos.exportar.aviso')),
     el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'importar' }, onclick: () => importar(ctx) }, icono('subir', 'tv-icono--sm'), t('datos.importar')),
     el('div', { class: 'separador' }),
     estadoPersistencia,

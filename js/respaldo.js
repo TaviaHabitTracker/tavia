@@ -3,13 +3,25 @@
 // fechas), mostrar un resumen y recibir confirmación. El cifrado llega desde cripto.js.
 
 import { APP } from './textos.js';
-import { SCHEMA_VERSION, sanearDatos } from './esquema.js';
+import { CAMPOS_PIN, SCHEMA_VERSION, configPorDefecto, sanearDatos } from './esquema.js';
 import { cifrar, descifrar, esRespaldoCifrado } from './cripto.js';
 
 export const TAMANO_MAXIMO = 10 * 1024 * 1024; // 10 MB
 
+/**
+ * Quita del respaldo todo lo del PIN (A-3): con el hash y la sal, un PIN de 4 dígitos se adivina
+ * sin conexión en minutos, y mucha gente usa el mismo PIN para otras cosas.
+ */
+export function sinPin(config) {
+  const base = configPorDefecto();
+  const limpio = { ...config };
+  for (const k of CAMPOS_PIN) limpio[k] = base[k];
+  return limpio;
+}
+
 /** Contenido del archivo de respaldo (sin cifrar). */
 export function crearRespaldo(datos, hoy) {
+  datos = { ...datos, config: sinPin(datos.config || {}) };
   return {
     app: 'tavia',
     tipo: 'respaldo',
@@ -86,6 +98,8 @@ export function validarRespaldo(crudo, hoy) {
   const fuente = esArchivo ? crudo.datos : crudo;
   if (!Array.isArray(fuente.habits) || !Array.isArray(fuente.logs)) return { ok: false, error: 'respaldo.error.formato' };
   const { datos, futuro, descartados } = sanearDatos(fuente, hoy);
+  // Un respaldo nunca trae PIN: al importar se conserva siempre la protección actual (M-2).
+  datos.config = sinPin(datos.config);
   if (futuro) return { ok: false, error: 'respaldo.error.futuro' };
   if (datos.habits.length === 0) return { ok: false, error: 'respaldo.error.vacio' };
   const fechas = datos.logs.map((l) => l.fecha).sort();
