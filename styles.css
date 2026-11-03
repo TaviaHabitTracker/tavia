@@ -632,7 +632,8 @@ body[data-privacidad] .app, body[data-privacidad] dialog { visibility: hidden; }
 }
 .anual__lista li { font: 400 14px/20px var(--font-sans); color: var(--tinta-suave); }
 
-/* =========================================================   Diseño «Analista» (0.9): grafito o papel, un solo acento,
+/* ================================================================
+   Diseño «Analista» (0.9): grafito o papel, un solo acento,
    cifras grandes y alineadas, filas limpias y el brote como pieza viva.
    ================================================================ */
 body { font-family: var(--font-sans); }
@@ -1054,6 +1055,8 @@ details.mas > summary { color: var(--acento-texto); }
   --j-tallo: #7D8F6C; --j-hoja: #86A178; --j-hoja-descanso: #A6B79A; --j-nervio: rgba(255, 255, 255, .75);
   --j-tierra: #CEC4AF; --j-semilla: #957F5A; --j-punto: #C9C3B6; --j-perla: #E39B2D; --j-aro: rgba(227, 155, 45, .5);
   --j-luz: rgba(255, 255, 255, .8); --j-brillo: #FFFFFF; --j-centro-oscuro: #3B2E2A;
+  --j-vena: rgba(70, 35, 30, .22); --j-sombra: rgba(70, 35, 30, .16); --j-lustre: rgba(255, 255, 255, .55);
+  --j-estambre: rgba(90, 50, 10, .6); --j-polen: rgba(255, 246, 220, .95); --j-capsula: #8E9A78; --j-raya: rgba(255, 255, 255, .65);
   --j-v2: #D493A2; --j-v2b: #EDC5CE; --j-v2c: #C98A3A;
   --j-v3: #DB8A66; --j-v3b: #F1C1A9; --j-v3c: #8A5316;
   --j-v4: #D6A34A; --j-v4b: #EDD497; --j-v4c: #8A5316;
@@ -1067,6 +1070,8 @@ details.mas > summary { color: var(--acento-texto); }
     --j-tallo: #6F8566; --j-hoja: #86A57A; --j-hoja-descanso: #5F6F59; --j-nervio: rgba(0, 0, 0, .3);
     --j-tierra: #3B3732; --j-semilla: #8C7A5A; --j-punto: #3A3B3F; --j-perla: #F2B66D; --j-aro: rgba(242, 182, 109, .45);
     --j-luz: rgba(255, 255, 255, .3); --j-centro-oscuro: #1A1414;
+    --j-vena: rgba(40, 20, 15, .3); --j-sombra: rgba(0, 0, 0, .22); --j-lustre: rgba(255, 255, 255, .4);
+    --j-estambre: rgba(50, 28, 8, .7); --j-polen: rgba(255, 240, 205, .9); --j-capsula: #7D8A69; --j-raya: rgba(255, 255, 255, .5);
     --j-v2: #E3A6B3; --j-v2b: #F3D3DA; --j-v2c: #E2B45E;
     --j-v3: #EE9B74; --j-v3b: #F6C3AA; --j-v3c: #F2C48A;
     --j-v4: #E9C06A; --j-v4b: #F5DDA0; --j-v4c: #B3843A;
@@ -1080,6 +1085,8 @@ details.mas > summary { color: var(--acento-texto); }
   --j-tallo: #6F8566; --j-hoja: #86A57A; --j-hoja-descanso: #5F6F59; --j-nervio: rgba(0, 0, 0, .3);
   --j-tierra: #3B3732; --j-semilla: #8C7A5A; --j-punto: #3A3B3F; --j-perla: #F2B66D; --j-aro: rgba(242, 182, 109, .45);
   --j-luz: rgba(255, 255, 255, .3); --j-centro-oscuro: #1A1414;
+  --j-vena: rgba(40, 20, 15, .3); --j-sombra: rgba(0, 0, 0, .22); --j-lustre: rgba(255, 255, 255, .4);
+  --j-estambre: rgba(50, 28, 8, .7); --j-polen: rgba(255, 240, 205, .9); --j-capsula: #7D8A69; --j-raya: rgba(255, 255, 255, .5);
   --j-v2: #E3A6B3; --j-v2b: #F3D3DA; --j-v2c: #E2B45E;
   --j-v3: #EE9B74; --j-v3b: #F6C3AA; --j-v3c: #F2C48A;
   --j-v4: #E9C06A; --j-v4b: #F5DDA0; --j-v4c: #B3843A;
@@ -1101,14 +1108,21 @@ details.mas > summary { color: var(--acento-texto); }
 
 /* Partes de las figuras (dentro de los símbolos) */
 .j-tallo { fill: none; stroke: var(--j-tallo); stroke-width: .9; stroke-linecap: round; }
-.j-nervio { fill: none; stroke: var(--j-nervio); stroke-width: .4; stroke-linecap: round; }
+.j-nervio { fill: none; stroke: var(--j-nervio); stroke-width: .25; stroke-linecap: round; }
+.j-vena { fill: none; stroke: var(--j-vena); stroke-width: .18; stroke-linecap: round; }
+.j-raya { fill: none; stroke: var(--j-raya); stroke-width: .16; stroke-linecap: round; }
+.j-sombra { fill: var(--j-sombra); }
+.j-lustre { fill: var(--j-lustre); }
+.j-estambre { fill: var(--j-estambre); }
+.j-polen { fill: var(--j-polen); }
+.j-capsula { fill: var(--j-capsula); }
 .j-hoja { fill: var(--j-hoja); }
 .j-hoja-descanso { fill: var(--j-hoja-descanso); }
-.j-petalo { fill: var(--petalo); stroke: var(--j-luz); stroke-width: .3; }
-.j-petalo2 { fill: var(--petalo2); stroke: var(--j-luz); stroke-width: .3; }
+.j-petalo { fill: var(--petalo); stroke: var(--j-luz); stroke-width: .2; }
+.j-petalo2 { fill: var(--petalo2); stroke: var(--j-luz); stroke-width: .2; }
 .j-centro { fill: var(--centro); stroke: var(--j-luz); stroke-width: .3; }
 .j-centro-oscuro { fill: var(--j-centro-oscuro); }
-.j-brillo { fill: url(#j-brillo); }
+.j-brillo { fill: var(--j-lustre); }
 .j-tierra { fill: var(--j-tierra); }
 .j-semilla { fill: var(--j-semilla); }
 .j-punto { fill: var(--j-punto); }
@@ -1195,7 +1209,6 @@ details.mas > summary { color: var(--acento-texto); }
 .jardin-tarjeta__aviso { font: 500 13px/18px var(--font-sans); background: var(--capa); color: var(--tinta); padding: var(--espacio-2) var(--espacio-3); border-radius: var(--radio-sm); }
 .jardin-tarjeta__opciones { display: grid; }
 .listo--jardin { margin-top: calc(var(--espacio-2) * -1); }
-=======
 
 /* ---------- Módulo 11: Descubrimientos de tu semana ---------- */
 .desc-lista { display: grid; gap: var(--espacio-3); }

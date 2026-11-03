@@ -88,6 +88,8 @@ export function coloresDelTema(doc = globalThis.document) {
       tierra: v('j-tierra', '#D9D2C3'), semilla: v('j-semilla', '#A8946F'), punto: v('j-punto', '#CFCBC2'),
       perla: v('j-perla', '#E9A23B'), aro: v('j-aro', '#E9A23B'), luz: v('j-luz', 'rgba(255,255,255,.7)'), brillo: v('j-brillo', '#FFFFFF'),
       'centro-oscuro': v('j-centro-oscuro', '#3B2E2A'),
+      vena: v('j-vena', 'rgba(70,35,30,.22)'), sombra: v('j-sombra', 'rgba(70,35,30,.16)'), lustre: v('j-lustre', 'rgba(255,255,255,.5)'),
+      estambre: v('j-estambre', 'rgba(90,50,10,.6)'), polen: v('j-polen', 'rgba(255,246,220,.9)'), capsula: v('j-capsula', '#8E9A78'), raya: v('j-raya', 'rgba(255,255,255,.6)'),
     },
     variantes,
   };
