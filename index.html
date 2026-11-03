@@ -11,8 +11,8 @@
         content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types tavia 'allow-duplicates'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#F3F3F1" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#18191C" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F6F1E9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17141F" media="(prefers-color-scheme: dark)">
   <meta name="description" content="Tavia: hábitos privados, elegantes y que perdonan.">
   <title>Tavia</title>
   <link rel="manifest" href="manifest.json">
@@ -31,6 +31,21 @@
 <body>
   <main id="app" class="app">
     <div class="vista" id="vista" tabindex="-1">
+      <!-- Pantalla de arranque: se reemplaza sola con el primer dibujo. -->
+      <div class="arranque" aria-hidden="true">
+        <svg class="arranque__flor" viewBox="0 0 96 96" focusable="false">
+          <defs>
+            <linearGradient id="arranque-l" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7E5BEF" stop-opacity=".92"/><stop offset=".55" stop-color="#B07CF6" stop-opacity=".86"/><stop offset="1" stop-color="#FF9BC6" stop-opacity=".9"/></linearGradient>
+            <linearGradient id="arranque-c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF7A59" stop-opacity=".95"/><stop offset=".6" stop-color="#FFA05E" stop-opacity=".92"/><stop offset="1" stop-color="#FFD38A" stop-opacity=".95"/></linearGradient>
+            <radialGradient id="arranque-p" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#FFE3B3"/><stop offset=".55" stop-color="#F2B66D"/><stop offset="1" stop-color="#C47A2C"/></radialGradient>
+          </defs>
+          <g class="flor__lat flor__lat--izq"><path class="flor__vidrio" fill="url(#arranque-l)" d="M48 74C36 63 34 42 48 26C62 42 60 63 48 74Z"/></g>
+          <g class="flor__lat flor__lat--der"><path class="flor__vidrio" fill="url(#arranque-l)" d="M48 74C36 63 34 42 48 26C62 42 60 63 48 74Z"/></g>
+          <g class="flor__centro"><path class="flor__vidrio" fill="url(#arranque-c)" d="M48 74C36 63 34 42 48 26C62 42 60 63 48 74Z"/></g>
+          <circle cx="48" cy="75" r="7" fill="url(#arranque-p)"/>
+        </svg>
+        <p class="arranque__nombre">Tavia</p>
+      </div>
       <noscript><p>Tavia necesita JavaScript para funcionar.</p></noscript>
     </div>
   </main>

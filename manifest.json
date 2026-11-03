@@ -9,14 +9,15 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#18191C",
-  "theme_color": "#18191C",
+  "background_color": "#17141F",
+  "theme_color": "#17141F",
   "categories": ["productivity", "lifestyle", "health"],
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/monocromo-96.png", "sizes": "96x96", "type": "image/png", "purpose": "monochrome" }
   ],
   "shortcuts": [
     { "name": "Hoy", "short_name": "Hoy", "url": "./#hoy", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },

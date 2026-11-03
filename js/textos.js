@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.9.2', // igual que VERSION en sw.js
+  version: '1.0.0', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -19,6 +19,7 @@ const es = {
   'hoy.volverHoy': 'Volver a hoy',
   'hoy.progreso': '{hechos} de {total} hechos',
   'hoy.todoListo': 'Todo listo por hoy.',
+  'hoy.pendientes': 'De días anteriores',
   'hoy.nadaHoy': 'Hoy no toca ningún hábito. Disfruta el día.',
   'hoy.crear': 'Crear hábito',
   'hoy.vacio.titulo': 'Empieza con un hábito pequeño',
@@ -320,6 +321,9 @@ const es = {
   'pin.calculando': 'Protegiendo… (tarda un segundo a propósito)',
   'bloqueo.titulo': 'Tavia está bloqueada',
   'bloqueo.pin': 'PIN',
+  'bloqueo.texto': 'Escribe tu PIN para seguir.',
+  'bloqueo.teclado': 'Teclado del PIN',
+  'bloqueo.borrar': 'Borrar un número',
   'bloqueo.entrar': 'Desbloquear',
   'bloqueo.error': 'PIN incorrecto.',
   'bloqueo.espera': 'Demasiados intentos. Espera {s} {s|segundo|segundos}.',

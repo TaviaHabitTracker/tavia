@@ -14,7 +14,7 @@ export const PALETA = {
 };
 
 /** Color de la barra del sistema (Android) según el tema. */
-export const BARRA = { claro: '#F3F3F1', oscuro: '#18191C', negro: '#000000' };
+export const BARRA = { claro: '#F6F1E9', oscuro: '#17141F', negro: '#000000' };
 
 /** Lista para Ajustes: cada paleta con si está ganada y cuántos días faltan. */
 export function paletas(diasRegistrados) {

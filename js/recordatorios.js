@@ -63,7 +63,7 @@ async function notificar(ctx, { habito, clave }) {
   const cuerpo = habito.privado ? '' : t('recordatorio.cuerpo');
   try {
     const reg = await navigator.serviceWorker?.getRegistration();
-    const op = { body: cuerpo, tag: clave, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', data: { url: './#hoy' } };
+    const op = { body: cuerpo, tag: clave, icon: 'icons/icon-192.png', badge: 'icons/monocromo-96.png', data: { url: './#hoy' } };
     if (reg) await reg.showNotification(titulo, op);
     else new Notification(titulo, op);
   } catch { /* el sistema no dejó mostrar el aviso */ }

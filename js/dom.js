@@ -80,6 +80,7 @@ const ICONOS = {
   subir: [['path', { d: 'M12 15V4M7.5 8.5 12 4l4.5 4.5M5 19h14' }]],
   calendario: [['rect', { x: 4, y: 5, width: 16, height: 15, rx: 3 }], ['path', { d: 'M8 3v4M16 3v4M4 10h16M12 13v4M10 15h4' }]],
   analisis: [['path', { d: 'M4 19h16M7 16v-5M12 16V7M17 16v-3' }]],
+  borrar: [['path', { d: 'M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6-7z' }], ['path', { d: 'M12 9.5l5 5M17 9.5l-5 5' }]],
   brote: [['path', { d: 'M12 21v-9' }], ['path', { d: 'M12 14c-4 0-6.5-2.4-6.5-6.5 4 0 6.5 2.4 6.5 6.5z' }], ['path', { d: 'M12 12c0-3.6 2.1-5.8 5.8-5.8 0 3.6-2.1 5.8-5.8 5.8z' }]],
 
   /* Íconos de hábito (mismo grosor y estilo). El hábito guarda un emoji; aquí se dibuja su versión propia. */
@@ -130,7 +131,68 @@ export function vibrar(ms = 12) {
 /** ¿El usuario pidió menos movimiento? */
 export const menosMovimiento = () => globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-/** Símbolo de Tavia: el brote (tallo, dos hojas y una yema) dentro de un anillo abierto. Decorativo. */
+/* ---------- La flor de Tavia: tres pétalos de vidrio y una perla ámbar ----------
+   Laterales de violeta a rosa, central de coral a dorado. Todo SVG propio, sin imágenes.
+   Los pétalos laterales giran desde la base (48, 74) con CSS: cerrados ("dormidos") o abiertos. */
+const PETALO = 'M48 74C36 63 34 42 48 26C62 42 60 63 48 74Z';
+const BRILLO_PETALO = 'M43.5 64C39 56 39.5 45 45.5 35';
+let floresCreadas = 0;
+
+function nodoSvg(tag, attrs, padre) {
+  const n = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (padre) padre.append(n);
+  return n;
+}
+
+function degradado(defs, id, tipo, paradas, attrs = {}) {
+  const g = nodoSvg(tipo, { id, ...attrs }, defs);
+  for (const [offset, color, opacidad = 1] of paradas) nodoSvg('stop', { offset, 'stop-color': color, 'stop-opacity': opacidad }, g);
+}
+
+function petalo(padre, clase, relleno) {
+  const g = nodoSvg('g', { class: clase }, padre);
+  nodoSvg('path', { d: PETALO, fill: `url(#${relleno})`, class: 'flor__vidrio' }, g);
+  nodoSvg('path', { d: BRILLO_PETALO, class: 'flor__brillo' }, g);
+  return g;
+}
+
+/**
+ * Dibuja la flor. `prefijo` da las clases de estado (brote__hoja--on, brote__yema, brote__flor…)
+ * que usan los estilos y las pruebas. `laterales`: [izq, der] abiertos o no; `centro`: 'flor' | 'yema'.
+ */
+export function flor({ clase, prefijo = 'flor', laterales = [true, true], nuevas = [false, false], centro = 'flor', centroNuevo = false, halo = false } = {}) {
+  const id = `tv-flor-${++floresCreadas}`;
+  const svg = nodoSvg('svg', { viewBox: '0 0 96 96', class: clase, 'aria-hidden': 'true', focusable: 'false' });
+  const defs = nodoSvg('defs', {}, svg);
+  degradado(defs, `${id}-l`, 'linearGradient', [['0', '#7E5BEF', 0.92], ['.55', '#B07CF6', 0.86], ['1', '#FF9BC6', 0.9]], { x1: '0', y1: '1', x2: '0', y2: '0' });
+  degradado(defs, `${id}-c`, 'linearGradient', [['0', '#FF7A59', 0.95], ['.6', '#FFA05E', 0.92], ['1', '#FFD38A', 0.95]], { x1: '0', y1: '1', x2: '0', y2: '0' });
+  degradado(defs, `${id}-p`, 'radialGradient', [['0', '#FFE3B3'], ['.55', '#F2B66D'], ['1', '#C47A2C']], { cx: '.38', cy: '.35', r: '.7' });
+  degradado(defs, `${id}-h`, 'radialGradient', [['0', '#F2B66D', 0.45], ['.6', '#FF7A59', 0.12], ['1', '#9B6BFF', 0]]);
+  if (halo) nodoSvg('circle', { cx: 48, cy: 52, r: 44, fill: `url(#${id}-h)`, class: 'flor__halo' }, svg);
+
+  ['izq', 'der'].forEach((lado, i) => {
+    const on = laterales[i];
+    const c = [`${prefijo}__hoja`, `flor__lat`, `flor__lat--${lado}`];
+    if (on) c.push(`${prefijo}__hoja--on`);
+    if (on && nuevas[i]) c.push(`${prefijo}__hoja--nueva`);
+    petalo(svg, c.join(' '), `${id}-l`);
+  });
+
+  if (centro === 'flor') {
+    const g = nodoSvg('g', { class: `${prefijo}__flor${centroNuevo ? ` ${prefijo}__flor--nueva` : ''}` }, svg);
+    petalo(g, 'flor__centro', `${id}-c`);
+  } else {
+    petalo(svg, `${prefijo}__yema flor__centro flor__centro--yema`, `${id}-c`);
+  }
+
+  const perla = nodoSvg('g', { class: 'flor__perla' }, svg);
+  nodoSvg('circle', { cx: 48, cy: 75, r: 7, fill: `url(#${id}-p)` }, perla);
+  nodoSvg('circle', { cx: 45.6, cy: 72.6, r: 2, class: 'flor__perla-luz' }, perla);
+  return svg;
+}
+
+/** Trazos del símbolo antiguo: los usa solo la tarjeta anual (dibujo en canvas). */
 export const TRAZOS_SIMBOLO = [
   'M77 34A33 33 0 1 1 62 18.5',
   'M48 78V42',
@@ -138,16 +200,7 @@ export const TRAZOS_SIMBOLO = [
   'M48 56c8 0 16-4 19-15-10 0-17 5-19 15z',
   'M48 42c-5-5-5-13 0-21 5 8 5 16 0 21z',
 ];
-export function simboloTavia(clase = 'vacio__simbolo') {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', '0 0 96 96');
-  svg.setAttribute('class', clase);
-  svg.setAttribute('aria-hidden', 'true');
-  TRAZOS_SIMBOLO.forEach((d, i) => {
-    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    p.setAttribute('d', d);
-    if (i >= 2) p.setAttribute('class', 'simbolo__hoja');
-    svg.append(p);
-  });
-  return svg;
+/** Símbolo de Tavia: la flor abierta con su halo. Decorativo. `dormida` la muestra en calma (bloqueo). */
+export function simboloTavia(clase = 'vacio__simbolo', { dormida = false } = {}) {
+  return flor({ clase: `simbolo ${clase}${dormida ? ' simbolo--dormida' : ''}`, prefijo: 'simbolo', halo: true });
 }

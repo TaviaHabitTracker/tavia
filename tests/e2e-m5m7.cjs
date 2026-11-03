@@ -87,7 +87,7 @@ async function ocultarYVolver(p) {
   await p.getByRole('button', { name: 'Ajustes' }).click();
   await p.locator('label.segmento', { hasText: 'Oscuro' }).click();
   assert.equal(await p.evaluate(() => document.documentElement.dataset.theme), 'oscuro');
-  assert.equal(await p.evaluate(() => document.querySelector('meta[name="theme-color"]').content), '#18191C');
+  assert.equal(await p.evaluate(() => document.querySelector('meta[name="theme-color"]').content), '#17141F');
   await p.clock.runFor(400);
   await p.reload(); await p.waitForSelector('h1');
   assert.equal(await p.evaluate(() => document.documentElement.dataset.theme), 'oscuro');

@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.9.2';
+const VERSION = 'tavia-1.0.0';
 
 const ARCHIVOS = [
   './',
@@ -17,6 +17,7 @@ const ARCHIVOS = [
   './icons/maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
+  './icons/monocromo-96.png',
   './js/rescate.js',
   './js/main.js',
   './js/textos.js',

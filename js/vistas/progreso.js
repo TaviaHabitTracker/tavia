@@ -120,6 +120,9 @@ function mapaGlobal(ctx, habitos, hoy, inicio) {
     grid.append(celda);
   }
 
+  // Orden de aparición escalonada (solo visual).
+  grid.querySelectorAll('.celda').forEach((c, i) => c.style.setProperty('--i', String(i)));
+
   // Teclado: una sola parada de tabulación; flechas para moverse entre días.
   const activas = celdas.filter((c) => !c.disabled);
   if (activas.length) activas[activas.length - 1].tabIndex = 0;

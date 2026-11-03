@@ -1,7 +1,7 @@
 // main.js — Arranque, navegación, cambio de día, acciones con Deshacer, caché de estadísticas,
 // bloqueo con PIN, bóveda privada, recordatorios, aviso de respaldo e instalación (PWA).
 
-import { el, icono, vaciar, vibrar } from './dom.js';
+import { el, icono, menosMovimiento, vaciar, vibrar } from './dom.js';
 import { t } from './textos.js';
 import { diffDias, fechaLocal, msHastaCambioDeDia } from './fechas.js';
 import { datosVacios } from './esquema.js';
@@ -30,6 +30,10 @@ const PESTANAS = [
   ['ajustes', 'ajustes', renderAjustes],
 ];
 const PISTA_TEMA = 'tavia:tema'; // copia mínima (tema y paleta) para pintar sin parpadeo antes de abrir la base
+
+/** Transiciones de interfaz (pestañas, tema): no con movimiento reducido, ni bajo navegador automatizado
+ *  (las pruebas congelan el reloj y verían colores a medio fundir). */
+const animarInterfaz = () => !menosMovimiento() && !navigator.webdriver;
 
 /** Aplica tema y paleta al documento y a la barra del sistema. */
 function pintarTema(tema, paleta) {
@@ -278,19 +282,43 @@ async function iniciar() {
 
   function irA(id) {
     if (ctx.pestana === id) { if (id === 'hoy' && ctx.fechaVista) { ctx.fechaVista = null; ctx.render(); } return; }
+    const orden = (p) => PESTANAS.findIndex(([x]) => x === p);
+    const adelante = orden(id) > orden(ctx.pestana);
     ctx.pestana = id;
     if (location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
     deshacer.ocultar();
-    dibujar();
-    window.scrollTo(0, 0);
+    transicion(() => { dibujar(); window.scrollTo(0, 0); }, adelante ? 'adelante' : 'atras');
     vista.focus({ preventScroll: true });
+  }
+
+  /** Cambio de pantalla o de tema con transición de vista (solo si el navegador la tiene y no se pidió menos movimiento). */
+  function transicion(cambio, direccion) {
+    const raiz = document.documentElement;
+    if (!document.startViewTransition || !animarInterfaz() || document.hidden) { cambio(); return; }
+    raiz.dataset.transicion = direccion;
+    try {
+      const vt = document.startViewTransition(cambio);
+      // Red de seguridad: una transición nunca puede dejar la pantalla sin responder.
+      const corte = setTimeout(() => vt.skipTransition?.(), 700);
+      vt.finished.finally(() => { clearTimeout(corte); delete raiz.dataset.transicion; });
+    } catch { delete raiz.dataset.transicion; cambio(); }
   }
   ctx.irA = irA;
 
   function aplicarTema() {
     const tema = modelo.config.tema;
     const paleta = paletaEfectiva(modelo.config.paleta, diasRegistrados);
+    const clave = `${tema}|${paleta}`;
+    // Al cambiar de tema, los colores se funden un momento (sin bloquear nada).
+    const pintado = aplicarTema.pintado;
+    if (pintado && pintado !== clave && animarInterfaz()) {
+      const raiz = document.documentElement;
+      raiz.setAttribute('data-cambiando-tema', '');
+      clearTimeout(aplicarTema.reloj);
+      aplicarTema.reloj = setTimeout(() => raiz.removeAttribute('data-cambiando-tema'), 420);
+    }
     pintarTema(tema, paleta);
+    aplicarTema.pintado = clave;
     try { localStorage.setItem(PISTA_TEMA, `${tema}|${paleta}`); } catch { /* no es grave */ }
   }
 

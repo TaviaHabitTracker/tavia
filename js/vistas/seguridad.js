@@ -1,6 +1,6 @@
 // vistas/seguridad.js — Pantalla de bloqueo, pedir PIN (bóveda privada) y configurar el PIN.
 
-import { el, icono, simboloTavia, vaciar } from '../dom.js';
+import { el, icono, simboloTavia, vaciar, vibrar } from '../dom.js';
 import { t } from '../textos.js';
 import { crearPin, esperaTrasFallos, pinValido, verificarPin } from '../cripto.js';
 import { abrirHoja } from '../ui.js';
@@ -39,11 +39,26 @@ function campoPin(id, etiqueta, extra = {}) {
 }
 
 /** Formulario de PIN reutilizable: muestra errores y la cuenta regresiva de espera. */
-function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
+function formularioPin(ctx, { id, etiqueta, boton, alAcertar, teclado = false }) {
   const error = el('p', { class: 'error-campo', role: 'alert' });
-  const campo = campoPin(id, etiqueta, { 'data-autofoco': '' });
+  const campo = campoPin(id, etiqueta, { 'data-autofoco': '', ...(teclado ? { inputmode: 'none' } : {}) });
   const entrada = campo.querySelector('input');
   const enviar = el('button', { class: 'tv-boton tv-boton--principal tv-boton--ancho', type: 'submit' }, boton);
+  // Con teclado propio: el campo real queda encima de las perlas (sigue aceptando un teclado físico).
+  let perlas = null;
+  const actualizar = () => {
+    if (!perlas) return;
+    const n = entrada.value.length;
+    vaciar(perlas);
+    for (let i = 0; i < Math.max(4, n); i++) perlas.append(el('span', { class: 'pin-perla', data: { llena: i < n ? '' : null } }));
+  };
+  if (teclado) {
+    campo.classList.add('campo--perlas');
+    perlas = el('div', { class: 'pin-perlas', aria: { hidden: 'true' } });
+    campo.insertBefore(perlas, entrada);
+    entrada.addEventListener('input', actualizar);
+    actualizar();
+  }
   let reloj = null;
   const esperar = (ms) => {
     clearInterval(reloj);
@@ -69,12 +84,29 @@ function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
     tick();
     reloj = setInterval(tick, 1000);
   };
-  const form = el('form', { class: 'form', novalidate: true }, campo, error, enviar);
+  const pulsar = (tecla) => {
+    if (tecla === 'borrar') entrada.value = entrada.value.slice(0, -1);
+    else if (entrada.value.length < 8) entrada.value += tecla;
+    vibrar(6);
+    error.textContent = '';
+    entrada.removeAttribute('aria-invalid');
+    actualizar();
+  };
+  const tecladoPin = teclado ? el('div', { class: 'pin-teclado', role: 'group', aria: { label: t('bloqueo.teclado') } },
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', null, '0', 'borrar'].map((k) => (k === null
+      ? el('span', { class: 'pin-tecla pin-tecla--hueco', aria: { hidden: 'true' } })
+      : el('button', {
+        class: `pin-tecla${k === 'borrar' ? ' pin-tecla--borrar' : ''}`, type: 'button', tabindex: '-1',
+        aria: k === 'borrar' ? { label: t('bloqueo.borrar') } : null,
+        onclick: () => pulsar(k),
+      }, k === 'borrar' ? icono('borrar') : k)))) : null;
+  const form = el('form', { class: `form${teclado ? ' form--pin' : ''}`, novalidate: true }, campo, error, tecladoPin, enviar);
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (enviar.disabled) return;
     const pin = entrada.value;
     entrada.value = '';
+    actualizar();
     error.textContent = ''; // así el lector de pantalla vuelve a anunciar el resultado
     enviar.disabled = true;
     const r = await intentarPin(ctx, pin);
@@ -82,6 +114,11 @@ function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
     if (r.ok) { clearInterval(reloj); alAcertar(); return; }
     entrada.setAttribute('aria-invalid', 'true');
     entrada.focus();
+    // Temblor suave (sin rojo): se repite en cada fallo.
+    form.removeAttribute('data-error');
+    void form.offsetWidth;
+    form.setAttribute('data-error', '');
+    vibrar(30);
     if (r.esperaMs) esperar(r.esperaMs);
     else error.textContent = t('bloqueo.error');
   });
@@ -93,11 +130,12 @@ function formularioPin(ctx, { id, etiqueta, boton, alAcertar }) {
 /** Pantalla completa de bloqueo. Oculta todo lo demás hasta que el PIN sea correcto. */
 export function renderBloqueo(contenedor, ctx, alDesbloquear) {
   vaciar(contenedor);
-  const simbolo = simboloTavia();
-  const form = formularioPin(ctx, { id: 'pin-bloqueo', etiqueta: t('bloqueo.pin'), boton: t('bloqueo.entrar'), alAcertar: alDesbloquear });
+  const simbolo = simboloTavia('bloqueo__simbolo', { dormida: true });
+  const form = formularioPin(ctx, { id: 'pin-bloqueo', etiqueta: t('bloqueo.pin'), boton: t('bloqueo.entrar'), alAcertar: alDesbloquear, teclado: true });
   contenedor.append(el('div', { class: 'bloqueo__caja', role: 'dialog', aria: { modal: 'true', labelledby: 'bloqueo-titulo' } },
     simbolo,
     el('h1', { class: 'vacio__titulo', id: 'bloqueo-titulo' }, t('bloqueo.titulo')),
+    el('p', { class: 'vacio__texto' }, t('bloqueo.texto')),
     form,
     el('button', { class: 'tv-boton tv-boton--sutil', type: 'button', onclick: () => olvidePin(ctx) }, t('bloqueo.olvide')),
   ));

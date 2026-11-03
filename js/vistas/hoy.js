@@ -1,6 +1,6 @@
 // vistas/hoy.js — La pantalla Hoy: hace una sola cosa, marcar lo de hoy.
 
-import { el, icono, iconoHabito, menosMovimiento, simboloTavia } from '../dom.js';
+import { el, flor, icono, iconoHabito, menosMovimiento, simboloTavia } from '../dom.js';
 import { t } from '../textos.js';
 import { BLOQUES } from '../esquema.js';
 import { fechaLarga, inicioSemana, sumarDias } from '../fechas.js';
@@ -31,20 +31,31 @@ export function renderHoy(raiz, ctx) {
   raiz.append(cabecera(ctx, fecha, hoy, vivos.length > 0, hayPrivados));
   if (vivos.length) raiz.append(panelDia(ctx, fecha, hoy, prog, vivos));
   raiz.append(ctx.contenedorAvisos);
+  // Lo de días anteriores (rescates, revisión, recordatorios) va después de los hábitos de hoy:
+  // la pantalla abre con lo que se puede marcar, no con pendientes.
+  const despues = [];
   if (fecha === hoy) {
     const { manifiesto, manifiestoModo } = modelo.config;
     if (manifiesto && manifiestoModo === 'linea') raiz.append(el('blockquote', { class: 'manifiesto-linea', aria: { label: t('manifiesto.titulo') } }, manifiesto));
     const ajuste = modelo.revisionDe(sumarDias(inicioSemana(hoy), -7))?.ajuste;
     if (ajuste && vivos.length) raiz.append(el('p', { class: 'ajuste-semana' }, icono('lapiz', 'tv-icono--sm'), t('semana.ajusteActual', { ajuste })));
-    for (const extra of [tarjetaSemana(ctx, hoy, vivos), tarjetaRecordatorios(ctx), rescates(ctx, hoy)]) if (extra) raiz.append(extra);
+    for (const extra of [tarjetaRecordatorios(ctx), rescates(ctx, hoy), tarjetaSemana(ctx, hoy, vivos)]) if (extra) despues.push(extra);
   }
+  const cerrarCon = () => {
+    if (!despues.length) return;
+    raiz.append(el('section', { class: 'pendientes', aria: { labelledby: 'titulo-pendientes' } },
+      el('h2', { class: 'tv-bloque__nombre pendientes__titulo', id: 'titulo-pendientes' }, t('hoy.pendientes')),
+      despues));
+  };
 
   if (vivos.length === 0) {
     raiz.append(vacio(ctx));
+    cerrarCon();
     return;
   }
   if (vistas.length === 0) {
     raiz.append(el('p', { class: 'mensaje-dia' }, t('hoy.nadaHoy')));
+    cerrarCon();
     return;
   }
 
@@ -78,6 +89,7 @@ export function renderHoy(raiz, ctx) {
   if (fecha === hoy && prog.total > 0 && prog.hechos === prog.total) {
     raiz.append(el('p', { class: 'listo' }, t('hoy.todoListo')));
   }
+  cerrarCon();
 }
 
 function cabecera(ctx, fecha, hoy, hayHabitos, hayPrivados) {
@@ -122,42 +134,28 @@ function cabecera(ctx, fecha, hoy, hayHabitos, hayPrivados) {
 
 /* ---------- Panel del día: el brote, cuatro cifras y la semana ---------- */
 
-const SVG = 'http://www.w3.org/2000/svg';
-function svgNodo(tag, attrs, padre) {
-  const n = document.createElementNS(SVG, tag);
-  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
-  if (padre) padre.append(n);
-  return n;
-}
-
 /**
- * El brote del día: el anillo avanza con cada hábito; la primera hoja se enciende al empezar,
- * la segunda a mitad del día y la yema se abre en flor al completarlo todo.
+ * El brote del día: una flor de tres pétalos. El pétalo izquierdo se abre al empezar,
+ * el derecho a mitad del día; la yema central crece con cada hábito y florece al completarlo todo.
+ * Sin anillo de progreso: la forma misma cuenta cuánto llevas.
  */
 export function dibujarBrote(fraccion, { antes = fraccion, clase = 'brote' } = {}) {
-  const svg = svgNodo('svg', { viewBox: '0 0 96 96', class: clase, 'aria-hidden': 'true' });
-  svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__pista' }, svg);
-  const anillo = svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__anillo', pathLength: 100, transform: 'rotate(-90 48 48)', 'stroke-dasharray': `${antes * 100} 100` }, svg);
-  svgNodo('path', { d: 'M48 80V42', class: 'brote__tallo' }, svg);
-  const hojas = [
-    ['M48 66C40 66 31 62 28 51c10 0 18 5 20 15z', fraccion > 0, antes > 0],
-    ['M48 58c8 0 16-4 19-15-10 0-17 5-19 15z', fraccion >= 0.5, antes >= 0.5],
-  ];
-  for (const [d, on, estaba] of hojas) {
-    svgNodo('path', { d, class: `brote__hoja${on ? ' brote__hoja--on' : ''}${on && !estaba ? ' brote__hoja--nueva' : ''}` }, svg);
-  }
   const completo = fraccion >= 1;
-  if (completo) {
-    const flor = svgNodo('g', { class: `brote__flor${antes < 1 ? ' brote__flor--nueva' : ''}` }, svg);
-    for (const r of [-38, 0, 38]) svgNodo('path', { d: 'M48 42c-5-5-5-13 0-21 5 8 5 16 0 21z', transform: `rotate(${r} 48 42)` }, flor);
-  } else {
-    svgNodo('path', { d: 'M48 42c-5-5-5-13 0-21 5 8 5 16 0 21z', class: 'brote__yema' }, svg);
-  }
-  // El anillo se desliza desde donde estaba (si no se pidió menos movimiento).
-  if (antes !== fraccion) {
-    if (menosMovimiento()) anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`);
-    else requestAnimationFrame(() => requestAnimationFrame(() => anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`)));
-  }
+  const svg = flor({
+    clase: `${clase}${completo ? ' brote--completo' : ''}${fraccion === 0 ? ' brote--dormido' : ''}`,
+    prefijo: 'brote',
+    laterales: [fraccion > 0, fraccion >= 0.5],
+    nuevas: [antes <= 0, antes < 0.5],
+    centro: completo ? 'flor' : 'yema',
+    centroNuevo: antes < 1,
+    halo: true,
+  });
+  // La yema crece desde donde estaba (si no se pidió menos movimiento).
+  const fijar = (f) => svg.style.setProperty('--f', String(Math.min(Math.max(f, 0), 1)));
+  if (antes !== fraccion && !menosMovimiento()) {
+    fijar(antes);
+    requestAnimationFrame(() => requestAnimationFrame(() => fijar(fraccion)));
+  } else fijar(fraccion);
   return svg;
 }
 
@@ -188,6 +186,7 @@ function panelDia(ctx, fecha, hoy, prog, vivos) {
       const alto = d.pct === null ? 0 : Math.round(d.pct * 100);
       const barra = el('span', { class: 'semana-barras__barra', aria: { hidden: 'true' } });
       barra.style.setProperty('--h', `${alto}%`);
+      barra.style.setProperty('--f', String(alto / 100));
       const etiqueta = d.futuro ? nombres[i] : d.pct === null ? t('hoy.semana.libre', { dia: nombres[i] }) : t('hoy.semana.dia', { dia: nombres[i], hechos: d.hechos, total: d.total });
       return el('button', {
         class: 'semana-barras__dia', type: 'button', disabled: d.futuro,
@@ -205,10 +204,10 @@ function panelDia(ctx, fecha, hoy, prog, vivos) {
         aria: { valuemin: 0, valuemax: prog.total, valuenow: prog.hechos, label: t('hoy.progreso', prog) },
       }, dibujarBrote(fraccion, { antes })),
       el('dl', { class: 'kpis' },
-        cifra(String(prog.hechos), t(fecha === hoy ? 'hoy.kpi.hoy' : 'hoy.kpi.dia'), { sufijo: `/${prog.total}`, clase: 'tv-progreso__texto' }),
+        cifra(String(prog.hechos), t(fecha === hoy ? 'hoy.kpi.hoy' : 'hoy.kpi.dia'), { sufijo: `/${prog.total}`, clase: 'tv-progreso__texto kpi--principal' }),
         cifra(num(racha), t('hoy.kpi.racha', { n: racha })),
         cifra(indice ? String(indice.valor) : '—', t('hoy.kpi.constancia'), {
-          extra: cambio ? el('span', { class: `kpi__cambio${cambio < 0 ? ' kpi__cambio--baja' : ''}` }, ` ${cambio > 0 ? '+' : '−'}${Math.abs(cambio)}`) : null,
+          extra: cambio > 0 ? el('span', { class: 'kpi__cambio' }, ` +${cambio}`) : null,
         }),
         cifra(pctSemana === null ? '—' : String(Math.round(pctSemana * 100)), t('hoy.kpi.semana'), { sufijo: pctSemana === null ? null : '%' }),
       ),
@@ -369,7 +368,7 @@ function rescates(ctx, hoy) {
     }
     if (tarjetas.length >= 3) break;
   }
-  return tarjetas.length ? el('div', { class: 'avisos' }, tarjetas) : null;
+  return tarjetas.length ? el('div', { class: 'avisos avisos--rescate' }, tarjetas) : null;
 }
 
 /** Domingo y lunes: invitación a la revisión semanal (si no está hecha). */
