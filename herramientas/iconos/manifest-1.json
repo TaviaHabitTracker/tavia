@@ -1,0 +1,31 @@
+{
+  "id": "./icono-prueba-1",
+  "name": "Tavia · Brote negro",
+  "short_name": "Tavia",
+  "lang": "es",
+  "start_url": "./icono-1.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#18191C",
+  "theme_color": "#18191C",
+  "icons": [
+    {
+      "src": "img/brutal-1-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/brutal-1-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/brutal-1-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

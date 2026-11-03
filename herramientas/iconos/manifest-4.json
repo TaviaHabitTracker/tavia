@@ -1,0 +1,31 @@
+{
+  "id": "./icono-prueba-4",
+  "name": "Tavia · Sello",
+  "short_name": "Tavia",
+  "lang": "es",
+  "start_url": "./icono-4.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#18191C",
+  "theme_color": "#18191C",
+  "icons": [
+    {
+      "src": "img/brutal-4-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/brutal-4-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/brutal-4-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
