@@ -1,8 +1,8 @@
 {
  "version": 1,
  "idioma": "es",
- "actualizado": "2026-11-02",
- "nota": "Traducciones propias. «adaptada» = traducción libre o paráfrasis. Confianza «Media» = fuente por confirmar antes de publicar.",
+ "actualizado": "2026-11-03",
+ "nota": "Traducciones propias. «adaptada» = traducción libre o paráfrasis. Todas las fuentes revisadas el 3 de noviembre de 2026.",
  "reglas": {
   "maxPorDia": 2,
   "sinRepetirDias": 60,
@@ -170,12 +170,12 @@
   {
    "id": "f004",
    "contexto": "inicio",
-   "texto": "He tenido miedo cada día de mi vida, y nunca dejé que eso me impidiera hacer lo que quería.",
-   "autor": "Georgia O'Keeffe",
-   "rol": "artista",
-   "fuente": "Atribuida; citada en biografías y entrevistas",
+   "texto": "Ten paciencia con todo lo que no está resuelto en tu corazón… vive ahora las preguntas.",
+   "autor": "Rainer Maria Rilke",
+   "rol": "escritor",
+   "fuente": "Cartas a un joven poeta, 1903",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -206,9 +206,9 @@
    "texto": "Sin compromiso nunca empezarás; sin constancia nunca terminarás.",
    "autor": "Denzel Washington",
    "rol": "artista",
-   "fuente": "Discursos y entrevistas",
+   "fuente": "Discurso en los NAACP Image Awards, 2017",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
@@ -226,11 +226,11 @@
    "id": "f009",
    "contexto": "inicio",
    "texto": "El mejor momento para plantar un árbol fue hace veinte años. El segundo mejor es hoy.",
-   "autor": "Proverbio chino",
+   "autor": "Dicho popular",
    "rol": "proverbio",
-   "fuente": "Tradición popular, autor incierto",
+   "fuente": "Autor anónimo; documentado desde 1967 (The Plain Dealer)",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -294,9 +294,9 @@
    "texto": "Tuve que trabajar duro; quien trabaje igual de duro llegará igual de lejos.",
    "autor": "Johann Sebastian Bach",
    "rol": "artista",
-   "fuente": "Atribuida; citada en biografías",
+   "fuente": "Citado por J. N. Forkel, Sobre la vida, el arte y la obra de J. S. Bach, 1802",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
@@ -316,9 +316,9 @@
    "texto": "La inspiración es para aficionados; el resto simplemente aparecemos y nos ponemos a trabajar.",
    "autor": "Chuck Close",
    "rol": "artista",
-   "fuente": "Entrevistas",
+   "fuente": "Entrevista con Joe Fig, 2006 (Inside the Painter's Studio, 2009)",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
@@ -346,23 +346,23 @@
   {
    "id": "f020",
    "contexto": "construyendo",
-   "texto": "Avanzo despacio, pero nunca retrocedo.",
-   "autor": "Abraham Lincoln",
-   "rol": "lider",
-   "fuente": "Atribuida",
+   "texto": "La gota horada la piedra.",
+   "autor": "Ovidio",
+   "rol": "escritor",
+   "fuente": "Pónticas, IV.10",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
    "id": "f021",
    "contexto": "construyendo",
-   "texto": "Sigo practicando porque creo que estoy progresando.",
+   "texto": "Siento que hago progresos cada día.",
    "autor": "Pau Casals",
    "rol": "artista",
-   "fuente": "Anécdota ampliamente citada (a los 90 años)",
+   "fuente": "Carta citada en The New York Times, 1946",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -415,9 +415,9 @@
    "texto": "Solo los disciplinados son libres en la vida.",
    "autor": "Eliud Kipchoge",
    "rol": "deportista",
-   "fuente": "Entrevistas",
+   "fuente": "Discurso en la Oxford Union, 2017",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
@@ -445,23 +445,23 @@
   {
    "id": "f029",
    "contexto": "racha_larga",
-   "texto": "La disciplina es el puente entre las metas y los logros.",
+   "texto": "La disciplina es el puente entre los pensamientos y los logros.",
    "autor": "Jim Rohn",
    "rol": "autor",
-   "fuente": "Atribuida; conferencias",
+   "fuente": "7 Strategies for Wealth & Happiness, 1985",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
    "id": "f030",
    "contexto": "racha_larga",
-   "texto": "Hoy es la victoria sobre ti mismo de ayer.",
+   "texto": "Mil días de práctica para forjar; diez mil para pulir.",
    "autor": "Miyamoto Musashi",
    "rol": "deportista",
-   "fuente": "Atribuida (El libro de los cinco anillos)",
+   "fuente": "El libro de los cinco anillos, Libro del Agua",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
@@ -478,12 +478,12 @@
   {
    "id": "f032",
    "contexto": "racha_larga",
-   "texto": "La mentalidad Mamba consiste en intentar ser la mejor versión de ti mismo.",
-   "autor": "Kobe Bryant",
-   "rol": "deportista",
-   "fuente": "The Mamba Mentality, 2018",
+   "texto": "Somos lo que hacemos repetidamente. La excelencia no es un acto, sino un hábito.",
+   "autor": "Will Durant",
+   "rol": "escritor",
+   "fuente": "Historia de la filosofía, 1926 (resumiendo a Aristóteles)",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
@@ -500,12 +500,12 @@
   {
    "id": "f034",
    "contexto": "hito",
-   "texto": "No es la montaña lo que conquistamos, sino a nosotros mismos.",
-   "autor": "Edmund Hillary",
-   "rol": "lider",
-   "fuente": "Atribuida",
+   "texto": "¿Hemos vencido a un enemigo? A nadie, sino a nosotros mismos.",
+   "autor": "George Mallory",
+   "rol": "deportista",
+   "fuente": "The Alpine Journal, 1918",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
@@ -632,12 +632,12 @@
   {
    "id": "f046",
    "contexto": "racha_larga",
-   "texto": "El talento es más barato que la sal. Lo que separa al talentoso del exitoso es mucho trabajo duro.",
+   "texto": "El talento es una mercancía terriblemente barata, más barata que la sal de mesa.",
    "autor": "Stephen King",
    "rol": "escritor",
-   "fuente": "Atribuida; entrevistas",
+   "fuente": "Danse Macabre, 1981",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
@@ -676,12 +676,12 @@
   {
    "id": "f050",
    "contexto": "racha_larga",
-   "texto": "Odiaba cada minuto de entrenamiento, pero decía: no renuncies, sufre ahora y vive el resto de tu vida como un campeón.",
+   "texto": "Odiaba cada minuto, pero me decía: sufre ahora y vive el resto de tu vida como un campeón.",
    "autor": "Muhammad Ali",
    "rol": "deportista",
-   "fuente": "Atribuida; citada en biografías",
+   "fuente": "Citado en Newsweek, 1978",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "firme"
   },
   {
@@ -753,12 +753,12 @@
   {
    "id": "f057",
    "contexto": "tropiezo",
-   "texto": "Para mí, fracasar es no intentarlo.",
-   "autor": "Sara Blakely",
-   "rol": "empresario",
-   "fuente": "Entrevistas",
+   "texto": "Nuestra mayor gloria no está en no caer nunca, sino en levantarnos cada vez que caemos.",
+   "autor": "Oliver Goldsmith",
+   "rol": "escritor",
+   "fuente": "El ciudadano del mundo, 1762",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -841,12 +841,12 @@
   {
    "id": "f065",
    "contexto": "regreso",
-   "texto": "Todavía estoy aprendiendo.",
-   "autor": "Miguel Ángel",
-   "rol": "artista",
-   "fuente": "Atribuida (a los 87 años)",
+   "texto": "Si fallas, vuelve otra vez.",
+   "autor": "Marco Aurelio",
+   "rol": "filosofo",
+   "fuente": "Meditaciones, V.9",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -863,12 +863,12 @@
   {
    "id": "f067",
    "contexto": "regreso",
-   "texto": "Nadie se baña dos veces en el mismo río.",
+   "texto": "A los que se bañan en los mismos ríos les llegan aguas siempre distintas.",
    "autor": "Heráclito",
    "rol": "filosofo",
-   "fuente": "Fragmento B91 (atribuido)",
+   "fuente": "Fragmento B12",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "neutro"
   },
   {
@@ -907,12 +907,12 @@
   {
    "id": "f071",
    "contexto": "regreso",
-   "texto": "La naturaleza no se apresura, y sin embargo todo se cumple.",
-   "autor": "Lao Tse",
+   "texto": "Es como hacer una montaña: si echo aunque sea un cesto de tierra, avanzo yo.",
+   "autor": "Confucio",
    "rol": "filosofo",
-   "fuente": "Atribuida; no figura en el Tao Te Ching",
+   "fuente": "Analectas, IX",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {
@@ -998,9 +998,9 @@
    "texto": "Termina cada día y déjalo ir. Has hecho lo que pudiste. Mañana es un nuevo día.",
    "autor": "Ralph Waldo Emerson",
    "rol": "escritor",
-   "fuente": "Carta (atribuida), 1863",
+   "fuente": "Carta a su hija Ellen, 1854",
    "tipo": "adaptada",
-   "confianza": "Media",
+   "confianza": "Alta",
    "tono": "suave"
   },
   {

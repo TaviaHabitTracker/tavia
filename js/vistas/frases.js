@@ -398,7 +398,7 @@ export function seccionFrases(ctx) {
       segmentos('cuando', FRECUENCIAS_FRASE, c.frecuenciaFrases, 'frecuenciaFrases', t('ajustes.frases.cuando'), true),
       el('div', { class: 'separador' }),
       roles,
-      ...interruptor('frases-alta', 'soloAlta', t('ajustes.frases.soloAlta'), total ? t('ajustes.frases.soloAlta.ayuda', { m: medias, n: total }) : null),
+      ...interruptor('frases-alta', 'soloAlta', t('ajustes.frases.soloAlta'), total ? t(medias ? 'ajustes.frases.soloAlta.ayuda' : 'ajustes.frases.soloAlta.todas', { m: medias, n: total }) : null),
       el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'coleccion' }, onclick: () => abrirColeccion(ctx) },
         icono('estrella', 'tv-icono--sm'), t('frase.coleccion.abrir'), nFav ? el('span', { class: 'insignia' }, String(nFav)) : null),
       el('div', { class: 'separador' }),

@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.12.1', // igual que VERSION en sw.js
+  version: '0.12.2', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -561,6 +561,7 @@ const es = {
   'ajustes.frases.rol.proverbio': 'Proverbios',
   'ajustes.frases.soloAlta': 'Solo frases con fuente confirmada',
   'ajustes.frases.soloAlta.ayuda': '{m} de {n} frases son atribuciones conocidas cuya fuente exacta falta confirmar. Con esto activo, no aparecen.',
+  'ajustes.frases.soloAlta.todas': 'Las {n} frases tienen su fuente revisada. Este filtro sirve si más adelante se agregan frases sin confirmar.',
   'ajustes.frases.miFrase': 'Mi frase',
   'ajustes.frases.miFrase.ph': 'Escribe una frase tuya, con tus palabras.',
   'ajustes.frases.miFrase.ayuda': 'Aparece los lunes y cuando no hay una frase que encaje. Se muestra como tuya, sin autor. Hasta {max} caracteres.',
