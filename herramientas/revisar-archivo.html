@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Misma CSP que la app. La única política Trusted Types ("tavia") solo crea la URL del worker. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types tavia 'allow-duplicates'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="light dark">
+  <title>Revisar un archivo · Tavia</title>
+  <link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="revisar-archivo.css">
+  <script type="module" src="revisar-archivo.js"></script>
+</head>
+<body>
+  <main class="pagina">
+    <p class="volver"><a href="../">← Volver a Tavia</a></p>
+    <h1>Revisar un archivo exportado</h1>
+    <p class="lead">Elige el archivo que exportaste de otra app de hábitos y te muestro qué trae: cuántas filas, qué columnas y qué formato de fechas. Todavía no importa nada a Tavia.</p>
+    <p class="privado">El archivo se lee solo en este teléfono o computador. No se sube a ningún lado y no queda guardado.</p>
+
+    <div class="acciones">
+      <input class="oculto" id="archivo" type="file">
+      <label class="boton boton--principal" for="archivo">Elegir archivo</label>
+      <input class="oculto" id="carpeta" type="file" webkitdirectory multiple>
+      <label class="boton" for="carpeta" id="etiqueta-carpeta">Elegir carpeta descomprimida</label>
+    </div>
+
+    <div class="estado" id="estado" role="status" aria-live="polite"></div>
+    <div class="progreso" id="caja-progreso" hidden>
+      <progress id="progreso" max="1"></progress>
+      <button class="boton" type="button" id="cancelar">Cancelar</button>
+    </div>
+    <section id="resultado" aria-label="Resultado"></section>
+
+    <p class="nota">Página de prueba del importador (versión de desarrollo). Los nombres de otras apps son marcas de sus dueños.</p>
+  </main>
+</body>
+</html>

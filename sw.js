@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.13.1';
+const VERSION = 'tavia-0.13.2';
 
 const ARCHIVOS = [
   './',
@@ -40,6 +40,12 @@ const ARCHIVOS = [
   './js/importar/zip.js',
   './js/importar/fechas.js',
   './js/importar/leer.js',
+  './js/importar/diagnostico.js',
+  './js/importar/worker.js',
+  './js/importar/cliente.js',
+  './herramientas/revisar-archivo.html',
+  './herramientas/revisar-archivo.css',
+  './herramientas/revisar-archivo.js',
   './js/recordatorios.js',
   './js/insights.js',
   './js/estadistica.js',
@@ -77,6 +83,7 @@ const ARCHIVOS = [
 
 // Rutas absolutas de los archivos de la app (para reconocerlos en cada petición).
 const RUTAS = new Set(ARCHIVOS.map((a) => new URL(a, self.location).pathname));
+const INDICE = new URL('./index.html', self.location).pathname;
 
 // Instalar: descarga todo de una vez. Si falta un archivo, no se instala (y la versión anterior sigue).
 self.addEventListener('install', (e) => {
@@ -118,10 +125,12 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== self.location.origin) return; // Tavia no carga nada de afuera
 
   // Navegación: siempre la página de la app (sirve aunque no haya internet).
+  // Excepción: otra página propia precacheada (herramientas/revisar-archivo.html) se sirve tal cual.
   if (req.mode === 'navigate') {
     e.respondWith((async () => {
       const cache = await caches.open(VERSION);
-      return (await cache.match('./index.html')) || fetch(req);
+      const pagina = url.pathname.endsWith('.html') && url.pathname !== INDICE && RUTAS.has(url.pathname) ? url.pathname : './index.html';
+      return (await cache.match(pagina)) || fetch(req);
     })());
     return;
   }
