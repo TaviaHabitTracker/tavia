@@ -224,11 +224,12 @@ async function ocultarYVolver(p) {
   assert.equal(await p.locator('.tarjeta-habito', { hasText: 'Meditar' }).count(), 0);
   paso('bóveda privada: oculta en Hoy y Progreso hasta mostrarla con el PIN');
 
-  /* Insights */
-  assert.match(await p.locator('.insights').textContent(), /Tu mejor día es el/);
-  assert.match(await p.locator('.insights').textContent(), /Marcas la mayoría de tus hábitos/);
+  /* Insights → Descubrimientos (M11 reemplaza «Lo que dicen tus datos»; sus pruebas están en e2e-m11.cjs) */
+  await p.locator('section.desc').waitFor();
+  await p.locator('.desc-tarjeta, .desc-vacio').first().waitFor({ timeout: 10000 });
+  assert.match(await p.locator('section.desc h2').textContent(), /Descubrimientos/);
   await p.screenshot({ path: `${CAPT}/m7-progreso.png`, fullPage: true });
-  paso('insights: mejor día y hora fuerte');
+  paso('Progreso: sección Descubrimientos en lugar de insights');
 
   assert.deepEqual(p.errores, []);
   paso('sin errores de consola');

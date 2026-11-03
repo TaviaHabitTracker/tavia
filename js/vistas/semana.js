@@ -8,6 +8,7 @@ import { resumenSemana } from '../insights.js';
 import { porcentaje } from '../formato.js';
 import { bloqueRevision, fraseRevision } from './frases.js';
 import { bloquePalabrasSemana } from './palabras.js';
+import { bloqueRevisionDesc } from './descubrimientos.js';
 
 export function abrirRevision(ctx, lunes) {
   const { modelo } = ctx;
@@ -35,6 +36,7 @@ export function abrirRevision(ctx, lunes) {
           el('section', {}, el('h3', { class: 'campo__etiqueta' }, t('semana.funciono')), lista(r.funciono)),
           el('section', {}, el('h3', { class: 'campo__etiqueta' }, t('semana.costo')), lista(r.costo))),
         bloquePalabrasSemana(ctx, lunes),
+        bloqueRevisionDesc(ctx),
         identidad,
         campo('sem-funciono', t('semana.p.funciono'), previa?.funciono),
         campo('sem-nofunciono', t('semana.p.noFunciono'), previa?.noFunciono),

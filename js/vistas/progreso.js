@@ -6,10 +6,10 @@ import { t } from '../textos.js';
 import { diffDias, fechaLarga, inicioSemana, sumarDias } from '../fechas.js';
 import { diaDeHabito, diaGlobal, nivelCalor, porcentajePeriodo } from '../estadisticas.js';
 import { fechaCorta, porcentaje, textoRacha } from '../formato.js';
-import { calcularInsights } from '../insights.js';
 import { abrirRevision } from './semana.js';
 import { abrirAnual } from './anual.js';
 import { renderJardin } from './jardin.js';
+import { seccionDescubrimientos } from './descubrimientos.js';
 
 const DIAS = 30;
 
@@ -85,7 +85,7 @@ export function renderProgreso(raiz, ctx) {
     ));
   }
 
-  raiz.append(seccionInsights(ctx, habitos, hoy));
+  raiz.append(seccionDescubrimientos(ctx)); // M11: reemplaza «Lo que dicen tus datos»
   raiz.append(seccionAnual(ctx, hoy));
   raiz.append(seccionSemanas(ctx, hoy));
 
@@ -192,21 +192,6 @@ function tarjetaHabito(ctx, h, hoy) {
       dias > 0 ? tira : null,
     ),
   );
-}
-
-/** Lo que dicen tus datos: mejor día, hábito ancla y hora fuerte. */
-function seccionInsights(ctx, habitos, hoy) {
-  const i = calcularInsights(habitos, hoy, ctx.modelo.logDe);
-  const dias = t('dias.largo');
-  const items = [];
-  if (i?.mejorDia) items.push(t('insights.dia', { dia: dias[i.mejorDia.dia], pct: porcentaje(i.mejorDia.pct), promedio: porcentaje(i.mejorDia.promedio), peor: dias[i.mejorDia.peorDia] }));
-  if (i?.ancla) items.push(t('insights.ancla', { nombre: i.ancla.habito.nombre, con: porcentaje(i.ancla.con), sin: porcentaje(i.ancla.sin) }));
-  if (i?.hora) items.push(t('insights.hora', { franja: t(`insights.franja.${i.hora.franja}`), pct: porcentaje(i.hora.pct), hora: String(i.hora.pico).padStart(2, '0') }));
-  return el('section', { class: 'seccion', aria: { labelledby: 'titulo-insights' } },
-    el('h2', { class: 'seccion__titulo', id: 'titulo-insights' }, t('insights.titulo')),
-    items.length
-      ? el('div', { class: 'tarjeta' }, el('ul', { class: 'insights' }, items.map((x) => el('li', {}, x))), el('p', { class: 'texto-ayuda' }, t('insights.nota')))
-      : el('p', { class: 'texto-ayuda' }, t('insights.pocos')));
 }
 
 /** Tu año en Tavia (M8): la tarjeta anual para guardar o compartir. */

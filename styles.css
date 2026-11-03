@@ -1042,7 +1042,6 @@ details.mas > summary { color: var(--acento-texto); }
 @media (prefers-reduced-motion: reduce) {
   .petalos { display: none; }
 }
-=======
 /* ================================================================
    Jardín anual (Progreso → Jardín). Sin rojo y sin flores marchitas: un día sin flor es tierra tranquila.
    Usa el tema de la app (claro, oscuro, negro) y el acento ganado como color dominante (variante v1).
@@ -1196,3 +1195,83 @@ details.mas > summary { color: var(--acento-texto); }
 .jardin-tarjeta__aviso { font: 500 13px/18px var(--font-sans); background: var(--capa); color: var(--tinta); padding: var(--espacio-2) var(--espacio-3); border-radius: var(--radio-sm); }
 .jardin-tarjeta__opciones { display: grid; }
 .listo--jardin { margin-top: calc(var(--espacio-2) * -1); }
+=======
+
+/* ---------- Módulo 11: Descubrimientos de tu semana ---------- */
+.desc-lista { display: grid; gap: var(--espacio-3); }
+.desc-tarjeta { position: relative; gap: 10px; animation: tv-aparecer 500ms ease-out; }
+.desc-tarjeta__cabecera { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; min-height: 24px; padding-right: 36px; }
+.desc-tarjeta__cabecera:not(:has(.desc-menu)) { padding-right: 0; }
+.desc-tarjeta__cabecera .tarjeta-frase__ceja { margin-right: auto; }
+.desc-tarjeta__frase { margin: 0; font: 400 16px/23px var(--font-sans); color: var(--tinta); text-wrap: pretty; }
+.desc-tarjeta__acciones { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 -8px -6px; }
+.desc-tarjeta__acciones .tv-boton, .desc-accion .tv-boton, .desc-menu__lista .tv-boton { min-height: 44px; }
+.desc-tarjeta__acciones [aria-pressed="true"] { color: var(--acento-texto); font-weight: 600; }
+.desc-tarjeta__acciones [aria-pressed="true"] .tv-icono path { fill: currentColor; }
+.desc-nuevo, .desc-pista {
+  display: inline-flex; align-items: center; min-height: 20px; padding: 0 8px; border-radius: var(--radio-pill);
+  font: 600 11px/20px var(--font-sans); white-space: nowrap;
+}
+.desc-nuevo { background: var(--acento); color: var(--sobre-acento); }
+.desc-pista { border: 1px dashed var(--linea-fuerte); color: var(--tinta-suave); }
+.desc-pista--clara { border-style: solid; border-color: var(--acento-texto); color: var(--acento-texto); }
+.desc-pista::before { content: '◐'; margin-right: 4px; font-size: 10px; }
+.desc-pista--clara::before { content: '●'; }
+.desc-accion { display: grid; gap: 6px; justify-items: start; padding: 10px 12px; border-radius: var(--radio-md); background: var(--capa); }
+.desc-accion .texto-ayuda { margin: 0; }
+
+.desc-menu { position: absolute; top: 12px; right: 12px; }
+.desc-menu > summary { list-style: none; cursor: pointer; min-width: 44px; min-height: 44px; margin: -8px -8px 0 0; display: grid; place-items: center; font-size: 20px; color: var(--tinta-suave); border-radius: var(--radio-pill); }
+.desc-menu > summary::-webkit-details-marker { display: none; }
+.desc-menu__lista {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; display: grid; min-width: 220px; padding: 6px;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-md); box-shadow: var(--sombra-2);
+}
+.desc-menu__lista .tv-boton { justify-content: flex-start; width: 100%; }
+
+.desc-grafico { margin: 0; display: grid; gap: 4px; }
+.desc-grafico__svg { display: block; width: 100%; max-width: 420px; height: auto; overflow: visible; }
+.desc-grafico__base { stroke: var(--linea); stroke-width: 1; }
+.desc-grafico__barra { fill: var(--calor-1); transform-box: fill-box; transform-origin: bottom; animation: desc-crecer 520ms cubic-bezier(.2, .8, .2, 1) both; }
+.desc-grafico__barra--marcada { fill: var(--acento); }
+.desc-grafico__marca { fill: var(--tinta); }
+.desc-grafico__eje { fill: var(--tinta-tenue); font: 500 10px/1 var(--font-sans); }
+.desc-grafico__eje--marcado { fill: var(--tinta); font-weight: 700; }
+@keyframes desc-crecer { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.desc-tabla { font: 400 13px/18px var(--font-sans); color: var(--tinta-suave); }
+.desc-tabla > summary { cursor: pointer; min-height: 32px; display: inline-flex; align-items: center; color: var(--tinta-suave); }
+.desc-tabla table { width: 100%; border-collapse: collapse; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.desc-tabla th, .desc-tabla td { padding: 4px 6px; text-align: left; border-bottom: 1px solid var(--linea); font-weight: 400; }
+.desc-tabla thead th { font-weight: 600; color: var(--tinta); }
+.desc-tabla tr[data-marcada] th, .desc-tabla tr[data-marcada] td { font-weight: 700; color: var(--tinta); }
+.desc-tabla tr[data-marcada] th::after { content: ' ●'; color: var(--acento-texto); }
+
+.desc-resumen { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--radio-md); background: var(--acento-suave); color: var(--tinta); }
+.desc-resumen[data-tono="neutro"] { background: var(--capa); }
+.desc-resumen p { margin: 0; font: 500 15px/21px var(--font-sans); }
+.desc-resumen .tv-icono { flex: none; color: var(--acento-texto); }
+.desc-vacio { padding: 12px 0; }
+
+.desc-comparador { gap: 0; }
+.desc-comparador > summary { list-style: none; cursor: pointer; min-height: 44px; display: flex; align-items: center; font: 600 15px/20px var(--font-sans); }
+.desc-comparador > summary::-webkit-details-marker { display: none; }
+.desc-comparador > summary::after { content: '＋'; margin-left: auto; color: var(--acento-texto); }
+.desc-comparador[open] > summary::after { content: '－'; }
+.desc-comparador__cuerpo { display: grid; gap: var(--espacio-3); padding-top: var(--espacio-2); }
+.desc-comparador__campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--espacio-3); }
+.desc-linea { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.desc-linea--0 { stroke: var(--acento); }
+.desc-linea--1 { stroke: var(--tinta-suave); stroke-dasharray: 5 4; }
+.desc-punto--0 { fill: var(--acento); }
+.desc-punto--1 { fill: var(--tinta-suave); }
+.desc-leyenda { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font: 500 13px/18px var(--font-sans); }
+.desc-leyenda__item--0 { color: var(--acento-texto); }
+.desc-leyenda__item--1 { color: var(--tinta-suave); }
+
+.desc-como { gap: var(--espacio-3); }
+.desc-como p { margin: 0; }
+.desc-como .desc-pista { justify-self: start; }
+.desc-revision { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--radio-md); background: var(--capa); }
+.desc-revision p { margin: 0; }
+.desc-ajustes > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }

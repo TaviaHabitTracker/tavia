@@ -14,6 +14,7 @@ import { abrirManifiesto, sugerirManifiesto } from './manifiesto.js';
 import { num } from '../formato.js';
 import { seccionFrases } from './frases.js';
 import { seccionPalabras } from './palabras.js';
+import { seccionAjustesDesc } from './descubrimientos.js';
 
 export function renderAjustes(raiz, ctx) {
   const { modelo } = ctx;
@@ -27,6 +28,7 @@ export function renderAjustes(raiz, ctx) {
     seccionFrases(ctx),
     seccionPalabras(ctx)));
   raiz.append(seccionJardin(ctx));
+  raiz.append(seccionAjustesDesc(ctx));
 
   const idFin = 'ajuste-fin-dia';
   const select = el('select', { class: 'entrada entrada--corta', id: idFin, data: { foco: 'fin-dia' } },

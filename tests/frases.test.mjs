@@ -364,7 +364,8 @@ test('observación semanal: describe, con al menos 2 días y 10 puntos de difere
 test('migración v2 → v3: agrega frases y palabras vacías sin tocar lo anterior', () => {
   const v2 = { schemaVersion: 2, habits: [habito('a', { nombre: 'Leer' })], logs: [], revisiones: [], config: { tema: 'oscuro' } };
   const { datos } = migrate(v2);
-  assert.equal(datos.schemaVersion, 3);
+  assert.equal(datos.schemaVersion, SCHEMA_VERSION); // pasa por la v3 (frases) y sigue hasta la actual
+  assert.ok(datos.frases && datos.palabras);
   const s = sanearDatos(v2, HOY).datos;
   assert.equal(s.schemaVersion, SCHEMA_VERSION);
   assert.equal(s.config.tema, 'oscuro');

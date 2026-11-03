@@ -1,4 +1,4 @@
-# Tavia Habit Tracker — versión 0.10 (frases y palabras guía)
+# Tavia Habit Tracker — versión 0.12 (Descubrimientos de tu semana)
 
 App de hábitos privada, elegante y que perdona. PWA en HTML, CSS y JavaScript puro: sin cuenta, sin servidor, sin rastreadores. Se instala en el celular o el PC y funciona sin internet.
 
@@ -30,15 +30,15 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.11.0'`
-- `js/textos.js` → `version: '0.11.0'`
+- `sw.js` → `const VERSION = 'tavia-0.12.0'`
+- `js/textos.js` → `version: '0.12.0'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 
 ## Lo que trae
 
 - **Hoy:** un toque por hábito, bloques Mañana / Día / Noche, rescate de días olvidados, modo Ritual (un hábito a la vez, a pantalla completa).
-- **Progreso:** mapa de 30 días, puntaje que perdona, rachas con congeladores, «Lo que dicen tus datos» (mejor día, hábito ancla, hora fuerte) y revisión semanal.
+- **Progreso:** mapa de 30 días, puntaje que perdona, rachas con congeladores, Descubrimientos y revisión semanal.
 - **Recordatorios:** aviso del sistema con la app abierta, tarjeta «Ya pasó la hora de…» al abrirla, y archivo `.ics` para el calendario del teléfono (el único que avisa siempre con la app cerrada).
 - **Tus datos:** respaldo JSON, respaldo cifrado (AES-GCM con contraseña), CSV para Excel e importación con resumen, Combinar o Reemplazar, y Deshacer. Aviso si pasan más de 14 días sin respaldo.
 - **Seguridad:** PIN de 4 a 8 dígitos (guardado como hash PBKDF2 con sal, nunca en claro), bloqueo automático, espera creciente tras 5 intentos, y bóveda de hábitos privados.
@@ -53,6 +53,8 @@ Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar
 
 - **Frases guía (0.10):** 100 frases con autor y fuente en `data/frases_tavia.json`, elegidas según tus rachas (inicio, construyendo, racha larga, hito, día difícil, tropiezo, regreso, descanso, día completo, identidad y revisión). Una al abrir el día y otra opcional al completarlo; tras un tropiezo o un regreso, solo frases suaves. Favoritas, colección, «Mi frase», tarjeta para compartir y filtro «solo fuente confirmada». Se amplía editando el JSON, sin tocar código.
 - **Palabras guía (0.10):** palabra del día (florece al elegirla), check-in «¿cómo llegas?» con día liviano (solo lo esencial o descanso), hasta 3 palabras de identidad y las palabras de la semana en la revisión, como observación y nunca como causa.
+
+- **Descubrimientos de tu semana (0.12):** hasta 3 observaciones por semana calculadas en el teléfono (sin IA, sin servidor): día más constante, rachas y volver, resumen de la semana, franja del día por hábito (con «mover recordatorio» de un toque), hábitos que suelen ir juntos, tendencia, después del descanso, hábitos de cantidad, palabras guía, bloques y mes más constante. Cada una con gráfico accesible (texto y tabla), «¿Cómo se calculó?» (ventana, intervalo de Wilson, Fisher con Bonferroni, mitades), «Pista clara / inicial», Guardar, Ocultar tipo y No volver a mostrar. Comparador de dos hábitos. Privados y hábitos de salud (💊 💉 🩺 ⚖️) quedan fuera hasta incluirlos en Ajustes. Con datos al azar, menos del 3 % de las semanas muestra un patrón (prueba con 1.000 usuarios × 12 semanas).
 
 ## Estructura
 
@@ -83,6 +85,8 @@ js/temas.js         Colores de acento y cuándo se ganan
 js/analisis.js      Racha global, constancia y análisis por hábito
 js/frases.js        Contexto del día, tono y selección de frases (lógica pura)
 js/palabras.js      Palabras guía y observación semanal (lógica pura)
+js/estadistica.js   Wilson, Fisher exacto, Bonferroni, mediana (lógica pura)
+js/descubrimientos.js  Detectores, umbrales y selección semanal (lógica pura)
 data/frases_tavia.json  Las frases (fuente única)
 js/anual.js         Cálculo de "Tu año"
 js/tarjeta-anual.js Dibujo de la tarjeta anual (canvas)
@@ -94,9 +98,9 @@ tests/              Pruebas automáticas (no se publican en la app)
 ## Pruebas automáticas (opcional)
 
 ```
-TZ=America/Santiago node --test tests/*.test.mjs     # 79 pruebas de lógica
+TZ=America/Santiago node --test tests/*.test.mjs     # 186 pruebas de lógica (~45 s)
 python -m http.server 8765 &                         # en otra terminal
-node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs && node tests/e2e-m9.cjs   # 64 pruebas en el navegador (requiere Playwright)
+node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs && node tests/e2e-m9.cjs && node tests/e2e-m10.cjs && node tests/e2e-m11.cjs   # 64 pruebas en el navegador (requiere Playwright)
 ```
 
 ## Datos

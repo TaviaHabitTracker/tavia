@@ -4,7 +4,7 @@
 
 import {
   BLOQUES, COLORES, FINES_DE_DIA, LIMITES, SCHEMA_VERSION, TIPOS,
-  numero, sanearConfig, sanearFrecuencia, sanearFrases, sanearHabito, sanearMeta, sanearPalabras, sanearRecordatorios, sanearRevisiones,
+  numero, sanearConfig, sanearDescubrimientos, sanearFrecuencia, sanearFrases, sanearHabito, sanearMeta, sanearPalabras, sanearRecordatorios, sanearRevisiones,
 } from './esquema.js';
 import { diaLogico, esFechaValida, horaLocal, sumarDias } from './fechas.js';
 import { puedeCongelar } from './estadisticas.js';
@@ -86,6 +86,7 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
   let semanales = []; // revisiones semanales (M7)
   let frases = sanearFrases(null); // M10: frase del día, vistas, favoritas, Mi frase
   let palabras = sanearPalabras(null); // M10: palabra del día, check-in, mínimo, palabras de identidad
+  let descubrimientos = sanearDescubrimientos(null); // M11: descubrimientos de cada semana, guardados y "no volver a mostrar"
   let nuevaInstalacion = false;
   /** Índice de registros: habitId → (fecha → log). Lectura O(1). */
   let indice = new Map();
@@ -101,6 +102,7 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
     semanales = (d.revisiones || []).map((r) => ({ ...r }));
     frases = sanearFrases(structuredClone(d.frases ?? null));
     palabras = sanearPalabras(structuredClone(d.palabras ?? null));
+    descubrimientos = sanearDescubrimientos(structuredClone(d.descubrimientos ?? null), new Set(d.habits.map((h) => h.id)));
     // Id de instalación: semilla local para elegir frases (nunca sale del dispositivo).
     if (!config.idInstalacion) { config = { ...config, idInstalacion: nuevoId() }; nuevaInstalacion = true; }
     indice = new Map(habits.map((h) => [h.id, new Map()]));
@@ -145,6 +147,12 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
   /** Aplica un cambio a las frases o palabras, siempre saneado. */
   const cambiarFrases = (fn, redibujar = true) => { frases = sanearFrases(fn(structuredClone(frases))); avisar({ tipo: 'guia', redibujar }); };
   const cambiarPalabras = (fn, redibujar = true) => { palabras = sanearPalabras(fn(structuredClone(palabras))); avisar({ tipo: 'guia', redibujar }); };
+  const cambiarDesc = (fn, redibujar = true) => {
+    const antes = descubrimientos;
+    descubrimientos = sanearDescubrimientos(fn(structuredClone(descubrimientos)), new Set(habits.map((h) => h.id)));
+    avisar({ tipo: 'descubrimientos', redibujar });
+    return () => { descubrimientos = antes; avisar({ tipo: 'descubrimientos' }); };
+  };
   const anotarVista = (f, id, fecha) => {
     if (!f.vistas.some((v) => v.id === id && v.fecha === fecha)) f.vistas.push({ id, fecha });
     // Solo sirven los últimos 120 días (60 de repetición + margen).
@@ -216,6 +224,8 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
       habits.splice(i, 1);
       indice.delete(id);
       config = { ...config, recordatorios: config.recordatorios.filter((r) => r.habitId !== id) };
+      // Descubrimientos: los no guardados de ese hábito se borran; los guardados quedan sin nombre.
+      descubrimientos = sanearDescubrimientos(descubrimientos, new Set(habits.map((h) => h.id)));
       avisar({ tipo: 'habito', id });
     },
 
@@ -438,6 +448,48 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
       cambiarPalabras((p) => { p.identidad = Array.isArray(ids) ? ids : []; return p; });
     },
 
+    /* ---------- Descubrimientos (M11) ---------- */
+
+    get descubrimientos() { return descubrimientos; },
+    /** Guarda la selección de una semana (una sola vez por semana: abrir la app de nuevo no la cambia). */
+    fijarSemanaDesc(semana, nuevos) {
+      if (!esFechaValida(semana)) return;
+      cambiarDesc((d) => {
+        const ids = new Set(d.items.map((x) => x.id));
+        d.items.push(...nuevos.filter((x) => !ids.has(x.id)));
+        // Fuera lo vencido hace más de un año que no se guardó (el archivo no crece sin fin).
+        const corte = sumarDias(semana, -371);
+        d.items = d.items.filter((x) => x.estado === 'guardado' || x.semana >= corte);
+        d.semana = semana;
+        return d;
+      }, false);
+    },
+    /** nuevo → visto · guardado · oculto. Devuelve una función para deshacer. */
+    estadoDesc(id, estado) {
+      if (!descubrimientos.items.some((x) => x.id === id)) return null;
+      return cambiarDesc((d) => { for (const x of d.items) if (x.id === id) x.estado = estado; return d; });
+    },
+    marcarVistosDesc(ids) {
+      const set = new Set(ids);
+      if (!descubrimientos.items.some((x) => set.has(x.id) && x.estado === 'nuevo')) return;
+      cambiarDesc((d) => { for (const x of d.items) if (set.has(x.id) && x.estado === 'nuevo') x.estado = 'visto'; return d; }, false);
+    },
+    /** "No volver a mostrar este": se oculta y su firma (tipo + hábitos) no vuelve. */
+    noMostrarDesc(id, firma) {
+      return cambiarDesc((d) => {
+        for (const x of d.items) if (x.id === id) x.estado = 'oculto';
+        if (!d.noMostrar.includes(firma)) d.noMostrar.push(firma);
+        return d;
+      });
+    },
+    accionDescHecha(id, hecha = true) {
+      cambiarDesc((d) => { for (const x of d.items) if (x.id === id && x.accion) { if (hecha) x.accion.hecha = true; else delete x.accion.hecha; } return d; }, false);
+    },
+    /** Olvida lo calculado (por ejemplo, tras cambiar los ajustes): se recalcula esta semana. */
+    reiniciarSemanaDesc() {
+      cambiarDesc((d) => { d.items = d.items.filter((x) => x.semana !== d.semana || x.estado === 'guardado'); d.semana = null; return d; }, false);
+    },
+
     /** Datos listos para guardar o exportar. */
     serializar() {
       const logs = [];
@@ -450,6 +502,7 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
         revisiones: semanales.map((r) => ({ ...r })),
         frases: structuredClone(frases),
         palabras: structuredClone(palabras),
+        descubrimientos: structuredClone(descubrimientos),
         config: { ...config, recordatorios: config.recordatorios.map((r) => ({ ...r })) },
       };
     },
@@ -493,6 +546,12 @@ export function crearModelo(datos, { reloj = () => new Date(), alCambiar = () =>
           porDia: { ...(d.palabras?.porDia || {}), ...actual.palabras.porDia },
           checkin: { ...(d.palabras?.checkin || {}), ...actual.palabras.checkin },
           identidad: actual.palabras.identidad.length ? actual.palabras.identidad : (d.palabras?.identidad || []),
+        },
+        // Descubrimientos: se queda lo actual y se suman los guardados del respaldo.
+        descubrimientos: {
+          ...actual.descubrimientos,
+          items: [...actual.descubrimientos.items, ...(d.descubrimientos?.items || []).filter((x) => x.estado === 'guardado' && !actual.descubrimientos.items.some((y) => y.id === x.id))],
+          noMostrar: [...new Set([...actual.descubrimientos.noMostrar, ...(d.descubrimientos?.noMostrar || [])])],
         },
         config: {
           ...actual.config,

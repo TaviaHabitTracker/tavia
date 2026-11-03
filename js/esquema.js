@@ -4,7 +4,7 @@
 
 import { esFechaValida } from './fechas.js';
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const COLORES = ['pino', 'lago', 'ciruela', 'arcilla', 'musgo', 'miel'];
 export const BLOQUES = ['manana', 'tarde', 'noche', 'dia'];
@@ -21,7 +21,13 @@ export const LIMITES = {
   recordatoriosPorHabito: 5, recordatorios: 300, revisionTexto: 280, revisiones: 520,
   manifiesto: 280,
   miFrase: 200, frasesVistas: 400, favoritas: 300, diasGuia: 800, hitosVistos: 200,
+  descItems: 300, descNoMostrar: 200, descClave: 40, descTexto: 300, descBarras: 60,
 };
+
+/* Módulo 11: Descubrimientos de tu semana. */
+export const TIPOS_DESC = ['g1', 'g2', 'g3', 'g4', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8'];
+export const ESTADOS_DESC = ['nuevo', 'visto', 'guardado', 'oculto'];
+export const EJES_DESC = ['dias', 'bloques', 'rachas', 'franjas', 'par', 'semanas', 'descanso', 'meses'];
 
 /** Paletas (M8). La primera es la de siempre; las demás se ganan con días registrados (ver temas.js). */
 export const PALETAS = ['ambar', 'cobre', 'salvia', 'acero', 'platino'];
@@ -99,11 +105,21 @@ export function configPorDefecto() {
     checkinActivo: true,
     idInstalacion: '', // se crea al cargar; sirve de semilla para elegir frases (nunca sale del dispositivo)
     jardin: jardinPorDefecto(),
+    descubrimientos: descConfigPorDefecto(), // M11
   };
 }
 
+/** Ajustes de los Descubrimientos (M11). Privados y sensibles quedan fuera salvo que se incluyan a mano. */
+export function descConfigPorDefecto() {
+  return { activado: true, tiposApagados: [], excluidos: [], incluidos: [] };
+}
+
+export function descubrimientosVacios() {
+  return { items: [], noMostrar: [], semana: null };
+}
+
 export function datosVacios() {
-  return { schemaVersion: SCHEMA_VERSION, habits: [], logs: [], revisiones: [], frases: frasesVacias(), palabras: palabrasVacias(), config: configPorDefecto() };
+  return { schemaVersion: SCHEMA_VERSION, habits: [], logs: [], revisiones: [], frases: frasesVacias(), palabras: palabrasVacias(), descubrimientos: descubrimientosVacios(), config: configPorDefecto() };
 }
 
 export function frasesVacias() {
@@ -253,6 +269,90 @@ export function sanearConfig(c, idsValidos = null) {
     checkinActivo: c.checkinActivo !== false,
     idInstalacion: typeof c.idInstalacion === 'string' && /^[\w-]{8,64}$/.test(c.idInstalacion) ? c.idInstalacion : '',
     jardin: sanearJardin(c.jardin),
+    descubrimientos: sanearDescConfig(c.descubrimientos, idsValidos),
+  };
+}
+
+/* ---------- Descubrimientos (M11) ---------- */
+
+const listaIds = (v, idsValidos) => (Array.isArray(v) ? [...new Set(v.filter((x) => idValido(x) && (!idsValidos || idsValidos.has(x))))].slice(0, LIMITES.habitos) : []);
+
+export function sanearDescConfig(c, idsValidos = null) {
+  const base = descConfigPorDefecto();
+  if (!esObjeto(c)) return base;
+  return {
+    activado: c.activado !== false,
+    tiposApagados: Array.isArray(c.tiposApagados) ? TIPOS_DESC.filter((x) => c.tiposApagados.includes(x)) : [],
+    excluidos: listaIds(c.excluidos, idsValidos),
+    incluidos: listaIds(c.incluidos, idsValidos),
+  };
+}
+
+/** Objeto plano y pequeño: solo números finitos, booleanos, null y textos cortos (sin anidar, salvo `meses`). */
+function plano(o, maxClaves = 30) {
+  if (!esObjeto(o)) return {};
+  const out = {};
+  for (const [k, v] of Object.entries(o).slice(0, maxClaves)) {
+    if (!/^\w{1,24}$/.test(k)) continue;
+    if (typeof v === 'number' && Number.isFinite(v)) out[k] = v;
+    else if (typeof v === 'boolean' || v === null) out[k] = v;
+    else if (typeof v === 'string') out[k] = texto(v, LIMITES.descTexto);
+  }
+  return out;
+}
+
+function sanearGrafico(g) {
+  if (!esObjeto(g) || !EJES_DESC.includes(g.eje) || !Array.isArray(g.barras)) return null;
+  const barras = g.barras.slice(0, LIMITES.descBarras)
+    .filter((b) => Array.isArray(b) && b.length === 2 && b.every((x) => Number.isFinite(x) && x >= 0 && x <= 1e6))
+    .map(([x, n]) => [x, n]);
+  const out = { eje: g.eje, barras, resaltado: Number.isInteger(g.resaltado) && g.resaltado >= -1 && g.resaltado < barras.length ? g.resaltado : -1 };
+  if (Array.isArray(g.meses)) out.meses = g.meses.filter((m) => typeof m === 'string' && /^\d{4}-\d{2}$/.test(m)).slice(0, LIMITES.descBarras);
+  return out;
+}
+
+const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+function sanearAccion(a) {
+  if (!esObjeto(a)) return null;
+  if (a.tipo === 'recordatorio' && HHMM.test(a.desde) && HHMM.test(a.hora)) return { tipo: 'recordatorio', desde: a.desde, hora: a.hora, ...(a.hecha === true ? { hecha: true } : {}) };
+  return null;
+}
+
+export function sanearDescItem(x, idsValidos = null) {
+  if (!esObjeto(x) || !idValido(x.id) || !TIPOS_DESC.includes(x.tipo) || !esFechaValida(x.semana)) return null;
+  const habitIds = Array.isArray(x.habitIds) ? x.habitIds.filter(idValido).slice(0, 2) : [];
+  const estado = ESTADOS_DESC.includes(x.estado) ? x.estado : 'visto';
+  // Hábito borrado: si no estaba guardado, el descubrimiento se va; si estaba guardado, queda sin nombre.
+  if (idsValidos && habitIds.some((id) => !idsValidos.has(id)) && estado !== 'guardado') return null;
+  return {
+    id: x.id,
+    tipo: x.tipo,
+    habitIds,
+    clave: texto(x.clave, LIMITES.descClave),
+    semana: x.semana,
+    params: plano(x.params, 16),
+    evidencia: plano(x.evidencia, 30),
+    grafico: sanearGrafico(x.grafico),
+    accion: sanearAccion(x.accion),
+    estado,
+    creadoEl: esFechaValida(x.creadoEl) ? x.creadoEl : x.semana,
+    caducaEl: esFechaValida(x.caducaEl) ? x.caducaEl : x.semana,
+  };
+}
+
+export function sanearDescubrimientos(d, idsValidos = null) {
+  const base = descubrimientosVacios();
+  if (!esObjeto(d)) return base;
+  const vistos = new Set();
+  const items = [];
+  for (const x of Array.isArray(d.items) ? d.items.slice(-LIMITES.descItems * 2) : []) {
+    const s = sanearDescItem(x, idsValidos);
+    if (s && !vistos.has(s.id)) { vistos.add(s.id); items.push(s); }
+  }
+  return {
+    items: items.slice(-LIMITES.descItems),
+    noMostrar: Array.isArray(d.noMostrar) ? [...new Set(d.noMostrar.filter((x) => typeof x === 'string' && /^[\w|+-]{1,140}$/.test(x)))].slice(-LIMITES.descNoMostrar) : [],
+    semana: esFechaValida(d.semana) ? d.semana : null,
   };
 }
 
@@ -355,12 +455,13 @@ export function sanearRevisiones(r) {
 /**
  * Lleva datos de cualquier versión anterior a SCHEMA_VERSION.
  * Cada paso es una función pura vN → vN+1. v1 → v2 agregó las revisiones semanales;
- * v2 → v3, las frases y palabras guía (M10). Para la v4: escribir pasos[3].
+ * v2 → v3, las frases y palabras guía (M10); v3 → v4, los Descubrimientos (M11). Para la v5: escribir pasos[4].
  */
 const pasos = {
   0: (d) => ({ ...d, schemaVersion: 1 }), // datos sin versión: se tratan como v1
   1: (d) => ({ ...d, schemaVersion: 2, revisiones: Array.isArray(d.revisiones) ? d.revisiones : [] }), // M7: revisión semanal
   2: (d) => ({ ...d, schemaVersion: 3, frases: esObjeto(d.frases) ? d.frases : frasesVacias(), palabras: esObjeto(d.palabras) ? d.palabras : palabrasVacias() }), // M10: frases y palabras
+  3: (d) => ({ ...d, schemaVersion: 4, descubrimientos: esObjeto(d.descubrimientos) ? d.descubrimientos : descubrimientosVacios() }), // M11: solo agrega
 };
 
 export function migrate(raw) {
@@ -399,6 +500,7 @@ export function sanearDatos(raw, hoy) {
     revisiones: sanearRevisiones(d.revisiones),
     frases: sanearFrases(d.frases),
     palabras: sanearPalabras(d.palabras),
+    descubrimientos: sanearDescubrimientos(d.descubrimientos, vistos),
     config: sanearConfig(d.config, vistos),
   };
   const descartados = (habitsIn.length - habits.length) + (logsIn.length - porClave.size);
