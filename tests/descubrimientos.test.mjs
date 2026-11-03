@@ -360,3 +360,36 @@ test('el día de la semana del gráfico usa lunes = 0', () => {
   assert.equal(diaSemana('2026-11-02'), 0);
   assert.equal(UMBRALES.ventana, 90);
 });
+
+/* ---------- Compartir y aviso semanal ---------- */
+
+test('tarjeta para compartir: solo frase genérica, sin nombres de hábitos ni cifras', async () => {
+  const { fraseCompartible, datosTarjetaDesc } = await import('../js/tarjeta-desc.js');
+  let vistas = 0;
+  for (const patron of ['dia', 'franja', 'par', 'tendencia', 'descanso', 'palabra']) {
+    const d = usuario({ semilla: 1004, patron, habitos: 3, p: 0.55 });
+    d.habits.forEach((h, i) => { h.nombre = `Secreto${i}`; });
+    const m = modeloDe(d);
+    for (const c of calcular(m).candidatos) {
+      const f = fraseCompartible(c);
+      if (!f) continue;
+      vistas++;
+      assert.ok(!/Secreto|\d/.test(f), `${c.tipo}: «${f}»`);
+      assert.ok(!/Secreto|\d/.test(JSON.stringify(datosTarjetaDesc(c)).replace(/"(dia|formato)":[^,}]*/g, '')));
+    }
+  }
+  assert.ok(vistas >= 6);
+  assert.equal(fraseCompartible({ tipo: 'p3', params: { sentido: 'baja' } }), null, 'una baja no se comparte');
+  assert.equal(fraseCompartible({ tipo: 'g3', params: {} }), null);
+  assert.equal(fraseCompartible({ tipo: 'p6', params: { palabra: '<img onerror=x>' } }), null);
+  assert.equal(fraseCompartible({ tipo: 'g1', params: { dia: 1 } }), 'Mi día más constante: el martes.');
+});
+
+test('aviso «Tu semana está lista»: apagado de fábrica y sin contenido del descubrimiento', () => {
+  const s = sanearDatos({ schemaVersion: 3, habits: [], logs: [], config: {} }, HOY).datos;
+  assert.equal(s.config.descubrimientos.notificarRevision, false);
+  assert.equal(sanearDatos({ schemaVersion: 4, habits: [], logs: [], config: { descubrimientos: { notificarRevision: true } } }, HOY).datos.config.descubrimientos.notificarRevision, true);
+  assert.ok(!/\{/.test(t('desc.aviso.titulo') + t('desc.aviso.cuerpo')), 'sin variables: no lleva datos');
+  const src = readFileSync(new URL('../js/tarjeta-desc.js', import.meta.url), 'utf8');
+  for (const prohibido of ['fetch(', 'XMLHttpRequest', 'sendBeacon', 'innerHTML', '.nombre']) assert.ok(!src.includes(prohibido), prohibido);
+});

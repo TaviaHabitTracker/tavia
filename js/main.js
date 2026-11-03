@@ -25,6 +25,7 @@ import { iniciarPWA } from './pwa.js';
 import { BARRA, PALETA, paletaEfectiva } from './temas.js';
 import { mostrarManifiestoSiToca } from './vistas/manifiesto.js';
 import { cargarFrases } from './frases.js';
+import { prepararSemana } from './vistas/descubrimientos.js';
 
 const PESTANAS = [
   ['hoy', 'hoy', renderHoy],
@@ -351,6 +352,7 @@ async function iniciar() {
       ctx.render();
     }
     motor.revisar();
+    prepararSemana(ctx); // M11: la semana se calcula una vez (en tiempo ocioso); si ya está, no hace nada
     clearTimeout(temporizadorDia);
     temporizadorDia = setTimeout(revisarDia, msHastaCambioDeDia(new Date(), modelo.config.finDelDia));
   }

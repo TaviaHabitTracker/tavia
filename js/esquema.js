@@ -111,7 +111,7 @@ export function configPorDefecto() {
 
 /** Ajustes de los Descubrimientos (M11). Privados y sensibles quedan fuera salvo que se incluyan a mano. */
 export function descConfigPorDefecto() {
-  return { activado: true, tiposApagados: [], excluidos: [], incluidos: [] };
+  return { activado: true, tiposApagados: [], excluidos: [], incluidos: [], notificarRevision: false };
 }
 
 export function descubrimientosVacios() {
@@ -285,6 +285,7 @@ export function sanearDescConfig(c, idsValidos = null) {
     tiposApagados: Array.isArray(c.tiposApagados) ? TIPOS_DESC.filter((x) => c.tiposApagados.includes(x)) : [],
     excluidos: listaIds(c.excluidos, idsValidos),
     incluidos: listaIds(c.incluidos, idsValidos),
+    notificarRevision: c.notificarRevision === true, // aviso «Tu semana está lista» (apagado de fábrica)
   };
 }
 

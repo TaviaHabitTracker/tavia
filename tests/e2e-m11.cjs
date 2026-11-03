@@ -144,6 +144,27 @@ async function abrir(b, { d = datos(), ancho = 390, oscuro = false, movimiento =
     paso('mover recordatorio con un toque');
   }
 
+  /* 7b. Compartir: frase genérica, PNG sin metadatos y nombre genérico */
+  const conCompartir = p.locator('.desc-tarjeta').filter({ has: p.getByRole('button', { name: 'Compartir' }) }).first();
+  await conCompartir.getByRole('button', { name: 'Compartir' }).click();
+  const hojaShare = p.locator('dialog[data-hoja="desc-compartir"]');
+  await hojaShare.locator('canvas').waitFor();
+  const alt = await hojaShare.locator('canvas').getAttribute('aria-label');
+  assert.match(alt, /^Tarjeta de Tavia: Mi /);
+  assert.doesNotMatch(alt, /Leer|Caminar|Pastilla|\d/);
+  const [descarga] = await Promise.all([p.waitForEvent('download'), hojaShare.getByRole('button', { name: 'Descargar imagen' }).click()]);
+  assert.equal(descarga.suggestedFilename(), 'tavia-descubrimiento.png');
+  const bytes = require('node:fs').readFileSync(await descarga.path());
+  const chunks = [];
+  for (let i = 8; i < bytes.length;) { const n = bytes.readUInt32BE(i); chunks.push(bytes.toString('ascii', i + 4, i + 8)); i += 12 + n; }
+  assert.deepEqual([...new Set(chunks)].filter((c) => !['IHDR', 'IDAT', 'IEND'].includes(c)), [], `sin metadatos (${chunks})`);
+  assert.equal(bytes.readUInt32BE(16), 1080);
+  await hojaShare.locator('label.segmento', { hasText: 'Historia' }).click();
+  assert.equal(await hojaShare.locator('canvas').getAttribute('height'), '1920');
+  await hojaShare.screenshot({ path: `${CAPT}/m11-compartir.png` });
+  await p.keyboard.press('Escape');
+  paso('compartir: frase sin nombres ni cifras, PNG 1080 sin metadatos y nombre genérico');
+
   /* 8. Comparador de dos hábitos */
   await p.locator('.desc-comparador summary').click();
   await p.locator('.desc-comparador .desc-grafico').waitFor();
@@ -156,6 +177,7 @@ async function abrir(b, { d = datos(), ancho = 390, oscuro = false, movimiento =
   await p.getByRole('button', { name: 'Ajustes' }).click();
   const sec = p.locator('#descubrimientos');
   await sec.waitFor();
+  assert.equal(await sec.locator('#desc-aviso').isChecked(), false, 'aviso semanal apagado de fábrica');
   await sec.locator('summary', { hasText: 'Hábitos que entran' }).click();
   assert.equal(await sec.locator('#desc-h-pastilla').isChecked(), false);
   assert.equal(await sec.locator('#desc-h-leer').isChecked(), true);

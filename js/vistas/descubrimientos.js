@@ -6,7 +6,10 @@
 import { el, icono } from '../dom.js';
 import { t } from '../textos.js';
 import { inicioSemana, sumarDias } from '../fechas.js';
-import { abrirHoja } from '../ui.js';
+import { abrirHoja, anunciar } from '../ui.js';
+import { pedirPermiso } from '../recordatorios.js';
+import { prepararFuentes } from '../tarjeta-anual.js';
+import { ANCHO, FORMATOS, NOMBRE_ARCHIVO, colores as coloresTarjeta, datosTarjetaDesc, dibujarTarjetaDesc, fraseCompartible } from '../tarjeta-desc.js';
 import { fechaCorta, num, porcentaje, textoRacha } from '../formato.js';
 import { nuevoId } from '../modelo.js';
 import { TIPOS_DESC } from '../esquema.js';
@@ -21,6 +24,7 @@ const BLOQUES_DESC = ['manana', 'tarde', 'noche', 'dia'];
 
 const enOcio = (fn) => (globalThis.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 50));
 let calculando = false;
+const esperando = new Set(); // quienes quieren redibujarse cuando termine el cálculo en curso
 
 /** Lunes de la semana cuya selección toca mostrar. Se calcula con los datos hasta ayer. */
 const semanaActual = (ctx) => inicioSemana(ctx.modelo.hoy());
@@ -33,7 +37,9 @@ export function prepararSemana(ctx, alListo = () => {}) {
   const { modelo } = ctx;
   const cfg = modelo.config.descubrimientos;
   const semana = semanaActual(ctx);
-  if (!cfg.activado || modelo.descubrimientos.semana === semana || calculando) return;
+  if (!cfg.activado || modelo.descubrimientos.semana === semana) return;
+  esperando.add(alListo);
+  if (calculando) return;
   calculando = true;
   enOcio(() => {
     try {
@@ -47,14 +53,33 @@ export function prepararSemana(ctx, alListo = () => {}) {
       });
       const elegidos = seleccionar(candidatos, { semana, historial: modelo.descubrimientos.items, noMostrar: modelo.descubrimientos.noMostrar, plan: PLAN_ACTUAL });
       modelo.fijarSemanaDesc(semana, elegidos.map((c) => aItem(c, semana, nuevoId())));
-      // Sin redibujar toda la pantalla (no corta animaciones como la flor del Jardín): solo la sección.
-      alListo();
+      if (elegidos.length) avisarSemana(ctx, semana);
     } catch (e) {
       console.warn('Descubrimientos', e); // nunca rompe la app: solo no hay descubrimientos esta vez
     } finally {
       calculando = false;
+      // Sin redibujar toda la pantalla (no corta animaciones como la flor del Jardín): solo lo que esperaba.
+      const lista = [...esperando];
+      esperando.clear();
+      for (const fn of lista) { try { fn(); } catch { /* una vista que ya no está */ } }
     }
   });
+}
+
+/**
+ * Aviso opcional «Tu semana está lista» (apagado de fábrica). Nunca dice qué se descubrió.
+ * Solo si la app no está a la vista: si la estás mirando, no hace falta avisar.
+ */
+async function avisarSemana(ctx, semana) {
+  if (!ctx.modelo.config.descubrimientos.notificarRevision) return;
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  if (globalThis.document?.visibilityState === 'visible') return;
+  const op = { body: t('desc.aviso.cuerpo'), tag: `tavia-semana-${semana}`, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', data: { url: './#progreso' } };
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration();
+    if (reg) await reg.showNotification(t('desc.aviso.titulo'), op);
+    else new Notification(t('desc.aviso.titulo'), op);
+  } catch { /* el sistema no dejó mostrar el aviso */ }
 }
 
 /* ---------- Qué se muestra ---------- */
@@ -216,7 +241,9 @@ export function tarjeta(ctx, x, { compacta = false } = {}) {
         const volver = modelo.estadoDesc(x.id, guardado ? 'visto' : 'guardado');
         if (!guardado && volver) ctx.deshacer(t('desc.guardadoAviso'), volver);
       },
-    }, icono('estrella', 'tv-icono--sm'), guardado ? t('desc.guardado') : t('desc.guardar')));
+    }, icono('estrella', 'tv-icono--sm'), guardado ? t('desc.guardado') : t('desc.guardar')),
+    fraseCompartible(x) ? el('button', { class: 'tv-boton tv-boton--sutil tv-boton--chico', type: 'button', data: { foco: `${id}-compartir` }, onclick: () => abrirCompartir(ctx, x) },
+      icono('compartir', 'tv-icono--sm'), t('desc.compartir')) : null);
   return el('article', { class: 'tarjeta desc-tarjeta', aria: { labelledby: `${id}-t` }, data: { tipo: x.tipo, desc: x.id } },
     el('header', { class: 'desc-tarjeta__cabecera' },
       el('span', { class: 'tarjeta-frase__ceja' }, icono('chispa', 'tv-icono--xs'), titulo(x)),
@@ -274,6 +301,62 @@ function ocultarTipo(ctx, x) {
 function noMostrar(ctx, x) {
   const volver = ctx.modelo.noMostrarDesc(x.id, firmaBase(x));
   if (volver) ctx.deshacer(t('desc.ocultado'), volver);
+}
+
+/* ---------- Compartir (tarjeta sin nombres ni cifras) ---------- */
+
+async function abrirCompartir(ctx, x) {
+  await prepararFuentes();
+  let formato = 'retrato';
+  abrirHoja({
+    titulo: t('desc.share.hoja'),
+    etiqueta: 'desc-compartir',
+    clase: 'tv-hoja--anual',
+    contenido: () => {
+      const lienzo = el('canvas', { class: 'anual__lienzo desc-share__lienzo', width: String(ANCHO), height: String(FORMATOS.retrato), role: 'img' });
+      const dibujar = () => {
+        const d = datosTarjetaDesc(x, formato);
+        dibujarTarjetaDesc(lienzo, d, coloresTarjeta());
+        lienzo.setAttribute('aria-label', t('desc.share.alt', { frase: d.frase }));
+        lienzo.dataset.formato = formato;
+      };
+      const grupo = el('fieldset', { class: 'segmentos' },
+        el('legend', { class: 'campo__etiqueta' }, t('tarjeta.formato')),
+        Object.keys(FORMATOS).map((f) => el('label', { class: 'segmento' },
+          el('input', { type: 'radio', name: 'desc-formato', value: f, checked: f === formato }),
+          el('span', {}, t(`tarjeta.formato.${f}`)))));
+      grupo.addEventListener('change', (e) => { formato = e.target.value; dibujar(); });
+      const png = () => new Promise((ok, mal) => lienzo.toBlob((b) => (b ? ok(b) : mal(new Error('vacío'))), 'image/png'));
+      const puede = typeof File !== 'undefined' && navigator.canShare?.({ files: [new File([''], NOMBRE_ARCHIVO, { type: 'image/png' })] });
+      const compartir = el('button', { class: 'tv-boton tv-boton--principal tv-boton--ancho', type: 'button' }, icono('compartir', 'tv-icono--sm'), t('tarjeta.compartir'));
+      compartir.addEventListener('click', async () => {
+        compartir.disabled = true;
+        try { await navigator.share({ files: [new File([await png()], NOMBRE_ARCHIVO, { type: 'image/png' })] }); } catch (e) { if (e?.name !== 'AbortError') ctx.mostrarError(t('anual.error')); } finally { compartir.disabled = false; }
+      });
+      const descargar = el('button', { class: 'tv-boton tv-boton--secundario tv-boton--ancho', type: 'button', data: { foco: 'desc-descargar' } }, icono('respaldo', 'tv-icono--sm'), t('tarjeta.descargar'));
+      descargar.addEventListener('click', async () => {
+        descargar.disabled = true;
+        try {
+          const url = URL.createObjectURL(await png());
+          const a = el('a', { href: url, download: NOMBRE_ARCHIVO, rel: 'noopener' });
+          document.body.append(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 10_000);
+          anunciar(t('tarjeta.lista'));
+        } catch { ctx.mostrarError(t('anual.error')); } finally { descargar.disabled = false; }
+      });
+      dibujar();
+      return [
+        el('div', { class: 'anual__marco' }, lienzo),
+        el('p', { class: 'texto-ayuda' }, t('desc.share.nunca')),
+        grupo,
+        puede ? compartir : null,
+        descargar,
+        el('p', { class: 'texto-ayuda' }, t('anual.local')),
+      ];
+    },
+  });
 }
 
 /* ---------- ¿Cómo se calculó? ---------- */
@@ -500,6 +583,15 @@ export function seccionAjustesDesc(ctx) {
     el('p', { class: 'texto-ayuda' }, t('ajustes.desc.ayuda')),
   ];
   if (cfg.activado) {
+    const aviso = el('p', { class: 'texto-ayuda', role: 'status' }, t('ajustes.desc.aviso.ayuda'));
+    hijos.push(interruptor('desc-aviso', t('ajustes.desc.aviso'), cfg.notificarRevision && globalThis.Notification?.permission === 'granted', async (v) => {
+      if (!v) { fijar({ notificarRevision: false }); return; }
+      const permiso = await pedirPermiso();
+      if (permiso === 'granted') { fijar({ notificarRevision: true }); return; }
+      const casilla = document.getElementById('desc-aviso');
+      if (casilla) casilla.checked = false;
+      aviso.textContent = t('ajustes.desc.aviso.denegado');
+    }), aviso);
     hijos.push(el('details', { class: 'desc-ajustes' },
       el('summary', { class: 'campo__etiqueta' }, t('ajustes.desc.tipos')),
       TIPOS_DESC.map((tipo) => interruptor(`desc-tipo-${tipo}`, t(`ajustes.desc.tipo.${tipo}`), !cfg.tiposApagados.includes(tipo), (v) => {

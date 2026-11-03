@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.12.2', // igual que VERSION en sw.js
+  version: '0.13.0', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -731,7 +731,29 @@ const es = {
   'desc.comparador.sinDatos': 'sin datos',
   'desc.comparador.fila': '{semana}: {a} · {b}',
 
+  'desc.compartir': 'Compartir',
+  'desc.share.hoja': 'Compartir descubrimiento',
+  'desc.share.nunca': 'La imagen solo lleva esta frase: sin nombres de hábitos, cifras, fechas ni tu nombre.',
+  'desc.share.ceja': 'Mi descubrimiento',
+  'desc.share.pie': 'Calculado en mi teléfono',
+  'desc.share.g1': 'Mi día más constante: el {dia}.',
+  'desc.share.g2': 'Volver también cuenta: cuando un día no se da, suelo retomar pronto.',
+  'desc.share.franja': 'Mi momento del día: la {franja}.',
+  'desc.share.p2': 'Algunos de mis hábitos suelen ir de la mano.',
+  'desc.share.p3': 'Estas semanas estoy más constante.',
+  'desc.share.p4': 'Después de descansar, suelo seguir igual o más constante.',
+  'desc.share.p5': 'Sigo registrando, día a día.',
+  'desc.share.p6': 'Mi palabra: {palabra}.',
+  'desc.share.p7': 'Lo que más fluye: mis hábitos {bloque}.',
+  'desc.share.p8': 'Mi mes más constante: {mes}.',
+  'desc.share.alt': 'Tarjeta de Tavia: {frase}',
+  'desc.aviso.titulo': 'Tu semana está lista',
+  'desc.aviso.cuerpo': 'Tavia tiene algo nuevo para ti en Progreso.',
+
   'ajustes.desc': 'Descubrimientos',
+  'ajustes.desc.aviso': 'Avisarme cuando mi semana esté lista',
+  'ajustes.desc.aviso.ayuda': 'El aviso no dice qué descubriste. Como los recordatorios, solo llega con Tavia abierta o en segundo plano.',
+  'ajustes.desc.aviso.denegado': 'El navegador no permite avisos. Puedes activarlos en sus ajustes.',
   'ajustes.desc.activado': 'Mostrar Descubrimientos',
   'ajustes.desc.ayuda': 'Observaciones que Tavia calcula en este teléfono a partir de tus registros. Nada sale de aquí y no hay IA.',
   'ajustes.desc.tipos': 'Tipos de descubrimiento',
