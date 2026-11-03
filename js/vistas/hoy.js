@@ -94,6 +94,12 @@ export function renderHoy(raiz, ctx) {
     const cierre = tarjetaCierre(ctx, { completo });
     if (cierre) raiz.append(cierre);
     else if (completo) raiz.append(el('p', { class: 'listo' }, t('hoy.todoListo')));
+    // El día florece también en el jardín: un enlace discreto a su flor.
+    if (completo) {
+      raiz.append(el('p', { class: 'listo listo--jardin' },
+        el('button', { class: 'tv-boton tv-boton--sutil tv-boton--chico', type: 'button', data: { foco: 'ver-flor' }, onclick: () => ctx.verJardin() },
+          icono('brote', 'tv-icono--sm'), t('hoy.verFlor'))));
+    }
   }
 }
 

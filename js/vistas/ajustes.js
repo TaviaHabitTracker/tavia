@@ -2,7 +2,7 @@
 
 import { el, icono, iconoHabito } from '../dom.js';
 import { APP, t } from '../textos.js';
-import { BLOQUEOS, FINES_DE_DIA, LIMITES, MODOS_MANIFIESTO, TEMAS } from '../esquema.js';
+import { BLOQUEOS, FINES_DE_DIA, HEMISFERIOS, LIMITES, MODOS_MANIFIESTO, TEMAS, UMBRALES_JARDIN } from '../esquema.js';
 import { diffDias, fechaLarga } from '../fechas.js';
 import { pausaActual } from '../calculos.js';
 import { confirmar } from '../ui.js';
@@ -26,6 +26,7 @@ export function renderAjustes(raiz, ctx) {
     el('h2', { class: 'seccion__titulo' }, t('ajustes.frases')),
     seccionFrases(ctx),
     seccionPalabras(ctx)));
+  raiz.append(seccionJardin(ctx));
 
   const idFin = 'ajuste-fin-dia';
   const select = el('select', { class: 'entrada entrada--corta', id: idFin, data: { foco: 'fin-dia' } },
@@ -273,4 +274,39 @@ function seccionDatos(ctx) {
     botonPersistir,
     el('p', { class: 'texto-ayuda' }, t('datos.persistente.ayuda')),
   );
+}
+
+/** Jardín anual: estaciones, cuándo florece un día, movimiento, vibración y sonido. */
+function seccionJardin(ctx) {
+  const { modelo } = ctx;
+  const j = modelo.config.jardin;
+  const fijar = (cambio) => modelo.setConfig({ jardin: { ...modelo.config.jardin, ...cambio } });
+
+  const hemisferio = el('fieldset', { class: 'segmentos' },
+    el('legend', { class: 'campo__etiqueta' }, t('jardin.ajustes.hemisferio')),
+    HEMISFERIOS.map((v) => el('label', { class: 'segmento' },
+      el('input', { type: 'radio', name: 'jardin-hemisferio', value: v, checked: j.hemisferio === v, data: { foco: `jardin-hem-${v}` } }),
+      el('span', {}, t(`jardin.ajustes.hemisferio.${v}`)))));
+  hemisferio.addEventListener('change', (e) => fijar({ hemisferio: e.target.value }));
+
+  const idUmbral = 'jardin-umbral';
+  const umbral = el('select', { class: 'entrada entrada--corta', id: idUmbral, data: { foco: 'jardin-umbral' } },
+    UMBRALES_JARDIN.map((n) => el('option', { value: String(n), selected: j.umbral === n }, n === 100 ? t('jardin.ajustes.umbral.todo') : t('jardin.ajustes.umbral.op', { n }))));
+  umbral.addEventListener('change', () => fijar({ umbral: Number(umbral.value) }));
+
+  const interruptor = (clave) => {
+    const id = `jardin-${clave}`;
+    const input = el('input', { type: 'checkbox', role: 'switch', id, checked: j[clave], data: { foco: id } });
+    input.addEventListener('change', () => fijar({ [clave]: input.checked }));
+    return el('label', { class: 'interruptor', for: id }, el('span', {}, t(`jardin.ajustes.${clave}`)), input);
+  };
+
+  return seccion(t('jardin.ajustes'),
+    hemisferio,
+    el('div', { class: 'campo' },
+      el('label', { class: 'campo__etiqueta', for: idUmbral }, t('jardin.ajustes.umbral')),
+      umbral,
+      el('p', { class: 'texto-ayuda' }, t('jardin.ajustes.umbral.ayuda'))),
+    interruptor('animaciones'), interruptor('vibracion'), interruptor('sonido'),
+    el('p', { class: 'texto-ayuda' }, t('jardin.ajustes.ayuda')));
 }

@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.10.0';
+const VERSION = 'tavia-0.11.0';
 
 const ARCHIVOS = [
   './',
@@ -42,6 +42,10 @@ const ARCHIVOS = [
   './data/frases_tavia.json',
   './js/anual.js',
   './js/tarjeta-anual.js',
+  './js/jardin.js',
+  './js/jardin-disposicion.js',
+  './js/jardin-arte.js',
+  './js/tarjeta-jardin.js',
   './js/vistas/hoy.js',
   './js/vistas/detalle.js',
   './js/vistas/editor.js',
@@ -56,6 +60,8 @@ const ARCHIVOS = [
   './js/vistas/analisis.js',
   './js/vistas/frases.js',
   './js/vistas/palabras.js',
+  './js/vistas/jardin.js',
+  './js/vistas/jardin-tarjeta.js',
 ];
 
 // Rutas absolutas de los archivos de la app (para reconocerlos en cada petición).

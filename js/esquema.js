@@ -29,6 +29,27 @@ export const PALETAS = ['ambar', 'cobre', 'salvia', 'acero', 'platino'];
 const PALETAS_ANTES = { pino: 'ambar', arena: 'cobre', niebla: 'acero', ciruela: 'salvia', obsidiana: 'platino' };
 export const TEMAS = ['auto', 'claro', 'oscuro', 'negro'];
 export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
+/* Jardín anual: solo ajustes. El jardín se calcula siempre desde los registros. */
+export const HEMISFERIOS = ['sur', 'norte'];
+export const UMBRALES_JARDIN = [100, 90, 80, 75, 60, 50]; // % del día para que cuente como flor
+
+export function jardinPorDefecto() {
+  return { hemisferio: 'sur', umbral: 100, animaciones: true, vibracion: true, sonido: false, semilla: null };
+}
+
+/** Ajustes del jardín. Un valor raro vuelve al de fábrica; la semilla es un hex de 32 caracteres o nada. */
+export function sanearJardin(j) {
+  const base = jardinPorDefecto();
+  if (!esObjeto(j)) return base;
+  return {
+    hemisferio: HEMISFERIOS.includes(j.hemisferio) ? j.hemisferio : base.hemisferio,
+    umbral: UMBRALES_JARDIN.includes(j.umbral) ? j.umbral : base.umbral,
+    animaciones: j.animaciones !== false,
+    vibracion: j.vibracion !== false,
+    sonido: j.sonido === true,
+    semilla: typeof j.semilla === 'string' && /^[0-9a-f]{32}$/.test(j.semilla) ? j.semilla : null,
+  };
+}
 
 /* Módulo 10: frases y palabras guía. */
 export const CONTEXTOS_FRASE = ['inicio', 'construyendo', 'racha_larga', 'hito', 'dia_dificil', 'tropiezo', 'regreso', 'descanso', 'dia_completo', 'identidad', 'revision'];
@@ -77,6 +98,7 @@ export function configPorDefecto() {
     palabraDelDia: true,
     checkinActivo: true,
     idInstalacion: '', // se crea al cargar; sirve de semilla para elegir frases (nunca sale del dispositivo)
+    jardin: jardinPorDefecto(),
   };
 }
 
@@ -230,6 +252,7 @@ export function sanearConfig(c, idsValidos = null) {
     palabraDelDia: c.palabraDelDia !== false,
     checkinActivo: c.checkinActivo !== false,
     idInstalacion: typeof c.idInstalacion === 'string' && /^[\w-]{8,64}$/.test(c.idInstalacion) ? c.idInstalacion : '',
+    jardin: sanearJardin(c.jardin),
   };
 }
 

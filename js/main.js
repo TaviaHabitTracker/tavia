@@ -9,6 +9,7 @@ import { crearAlmacen } from './storage.js';
 import { crearModelo } from './modelo.js';
 import { estadoDelDia } from './calculos.js';
 import { crearCache } from './estadisticas.js';
+import { crearCacheJardin } from './jardin.js';
 import { crearMotor } from './recordatorios.js';
 import { fechaCorta, num } from './formato.js';
 import { anunciar, crearDeshacer, renderAvisos } from './ui.js';
@@ -59,6 +60,7 @@ async function iniciar() {
   const avisos = new Map(); // clave → { accion?, vars? }
   const contenedorAvisos = el('div', { class: 'avisos' });
   const cache = crearCache();
+  const cacheJardin = crearCacheJardin(); // jardín anual: solo se recalcula la semana que cambió
   const hashInicial = location.hash.replace('#', '');
 
   let renderPendiente = false;
@@ -96,6 +98,8 @@ async function iniciar() {
       // Marcar (log) se guarda en el acto; el resto agrupa toques con una pequeña espera.
       if (cambio.tipo !== 'todo') almacen.guardar(modelo.serializar(), { ya: cambio.tipo === 'log' });
       if (cambio.tipo === 'todo' || cambio.tipo === 'importado') cache.olvidar();
+      if (cambio.tipo === 'log' && cambio.fecha) cacheJardin.olvidarFecha(cambio.fecha);
+      else if (['habito', 'todo', 'importado'].includes(cambio.tipo)) cacheJardin.olvidar();
       if (['log', 'habito', 'importado', 'todo'].includes(cambio.tipo)) contarDias(cambio.tipo === 'log');
       if (cambio.tipo === 'config' || cambio.tipo === 'importado') { aplicarTema(); revisarDia(); }
       if (cambio.tipo === 'guia' || cambio.tipo === 'importado') ctx.alCambiarGuia?.(); // hojas abiertas (colección)
@@ -103,6 +107,7 @@ async function iniciar() {
     },
   });
   ctx.modelo = modelo;
+  ctx.cacheJardin = cacheJardin;
   // El id de instalación se crea en la primera carga: se guarda en el acto para que la frase del día no cambie.
   if (modelo.nuevaInstalacion) almacen.guardar(modelo.serializar(), { ya: true });
 
@@ -207,6 +212,11 @@ async function iniciar() {
       if (modelo.habitos().length === 1) almacen.pedirPersistencia();
       if (ctx.pestana !== 'hoy') irA('hoy');
     }
+  };
+  ctx.verJardin = () => {
+    ctx.vistaProgreso = 'jardin';
+    ctx.jardinVista = { mes: Number(modelo.hoy().slice(5, 7)) };
+    irA('progreso');
   };
   ctx.verFecha = (fecha) => {
     ctx.fechaVista = fecha;
@@ -329,24 +339,14 @@ async function iniciar() {
   function revisarDia() {
     const d = modelo.hoy();
     if (d !== diaActual) {
+      // Cambio de año con el jardín abierto: vuelve a la vista del año nuevo.
+      if (d.slice(0, 4) !== diaActual.slice(0, 4)) ctx.jardinVista = null;
       diaActual = d;
       ctx.fechaVista = null;
       ctx.recienCompletados.clear();
       ctx.recordatoriosDescartados.clear();
       deshacer.ocultar();
-      motor.re/** Si el arranque falla, nunca queda la pantalla en blanco (M-6). No se muestran detalles internos. */
-function mostrarFallo(error) {
-  console.error('Tavia no pudo iniciar', error);
-  const vista = document.getElementById('vista');
-  if (!vista || vista.querySelector('.fallo')) return;
-  vaciar(vista);
-  vista.append(el('div', { class: 'vacio fallo', role: 'alert' },
-    el('h1', { class: 'vacio__titulo' }, t('error.titulo')),
-    el('p', { class: 'vacio__texto' }, t('error.texto')),
-    el('button', { class: 'tv-boton tv-boton--principal', type: 'button', onclick: () => location.reload() }, t('error.recargar'))));
-}
-
-iniciar().catch(mostrarFallo);
+      motor.reiniciar();
       revisarRespaldo();
       ctx.render();
     }

@@ -632,8 +632,7 @@ body[data-privacidad] .app, body[data-privacidad] dialog { visibility: hidden; }
 }
 .anual__lista li { font: 400 14px/20px var(--font-sans); color: var(--tinta-suave); }
 
-/* ================================================================
-   Diseño «Analista» (0.9): grafito o papel, un solo acento,
+/* =========================================================   Diseño «Analista» (0.9): grafito o papel, un solo acento,
    cifras grandes y alineadas, filas limpias y el brote como pieza viva.
    ================================================================ */
 body { font-family: var(--font-sans); }
@@ -1043,3 +1042,157 @@ details.mas > summary { color: var(--acento-texto); }
 @media (prefers-reduced-motion: reduce) {
   .petalos { display: none; }
 }
+=======
+/* ================================================================
+   Jardín anual (Progreso → Jardín). Sin rojo y sin flores marchitas: un día sin flor es tierra tranquila.
+   Usa el tema de la app (claro, oscuro, negro) y el acento ganado como color dominante (variante v1).
+   Las figuras son <symbol> reutilizados con <use>; la variante llega como variables CSS heredadas.
+   ================================================================ */
+:root {
+  --j-fondo: #F5F2EB; --j-ambiente: #FFFFFF;
+  --j-cama: #E9E3D6; --j-cama-verano: #ECE2CC; --j-cama-otono: #EADCCB; --j-cama-invierno: #E3E3DE; --j-cama-primavera: #E2E8D6;
+  --j-amb-verano: #FFF3DB; --j-amb-otono: #FBE9DA; --j-amb-invierno: #EEF2F7; --j-amb-primavera: #F1F7E6;
+  --j-tallo: #7D8F6C; --j-hoja: #86A178; --j-hoja-descanso: #A6B79A; --j-nervio: rgba(255, 255, 255, .75);
+  --j-tierra: #CEC4AF; --j-semilla: #957F5A; --j-punto: #C9C3B6; --j-perla: #E39B2D; --j-aro: rgba(227, 155, 45, .5);
+  --j-luz: rgba(255, 255, 255, .8); --j-brillo: #FFFFFF; --j-centro-oscuro: #3B2E2A;
+  --j-v2: #D493A2; --j-v2b: #EDC5CE; --j-v2c: #C98A3A;
+  --j-v3: #DB8A66; --j-v3b: #F1C1A9; --j-v3c: #8A5316;
+  --j-v4: #D6A34A; --j-v4b: #EDD497; --j-v4c: #8A5316;
+  --j-v5: #A98BBE; --j-v5b: #D9C8E6; --j-v5c: #C98A3A;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="claro"]) {
+    --j-fondo: #1C1D20; --j-ambiente: #2C2A27;
+    --j-cama: #27282B; --j-cama-verano: #2C2925; --j-cama-otono: #2C2624; --j-cama-invierno: #24272C; --j-cama-primavera: #252A25;
+    --j-amb-verano: #3A3226; --j-amb-otono: #392C26; --j-amb-invierno: #262C35; --j-amb-primavera: #29322A;
+    --j-tallo: #6F8566; --j-hoja: #86A57A; --j-hoja-descanso: #5F6F59; --j-nervio: rgba(0, 0, 0, .3);
+    --j-tierra: #3B3732; --j-semilla: #8C7A5A; --j-punto: #3A3B3F; --j-perla: #F2B66D; --j-aro: rgba(242, 182, 109, .45);
+    --j-luz: rgba(255, 255, 255, .3); --j-centro-oscuro: #1A1414;
+    --j-v2: #E3A6B3; --j-v2b: #F3D3DA; --j-v2c: #E2B45E;
+    --j-v3: #EE9B74; --j-v3b: #F6C3AA; --j-v3c: #F2C48A;
+    --j-v4: #E9C06A; --j-v4b: #F5DDA0; --j-v4c: #B3843A;
+    --j-v5: #C3A6D8; --j-v5b: #E2D2EE; --j-v5c: #F2B66D;
+  }
+}
+:root[data-theme="oscuro"], :root[data-theme="negro"] {
+  --j-fondo: #1C1D20; --j-ambiente: #2C2A27;
+  --j-cama: #27282B; --j-cama-verano: #2C2925; --j-cama-otono: #2C2624; --j-cama-invierno: #24272C; --j-cama-primavera: #252A25;
+  --j-amb-verano: #3A3226; --j-amb-otono: #392C26; --j-amb-invierno: #262C35; --j-amb-primavera: #29322A;
+  --j-tallo: #6F8566; --j-hoja: #86A57A; --j-hoja-descanso: #5F6F59; --j-nervio: rgba(0, 0, 0, .3);
+  --j-tierra: #3B3732; --j-semilla: #8C7A5A; --j-punto: #3A3B3F; --j-perla: #F2B66D; --j-aro: rgba(242, 182, 109, .45);
+  --j-luz: rgba(255, 255, 255, .3); --j-centro-oscuro: #1A1414;
+  --j-v2: #E3A6B3; --j-v2b: #F3D3DA; --j-v2c: #E2B45E;
+  --j-v3: #EE9B74; --j-v3b: #F6C3AA; --j-v3c: #F2C48A;
+  --j-v4: #E9C06A; --j-v4b: #F5DDA0; --j-v4c: #B3843A;
+  --j-v5: #C3A6D8; --j-v5b: #E2D2EE; --j-v5c: #F2B66D;
+}
+:root[data-theme="negro"] {
+  --j-fondo: #08080A; --j-ambiente: #1D1B19;
+  --j-cama: #141416; --j-cama-verano: #191714; --j-cama-otono: #191513; --j-cama-invierno: #131518; --j-cama-primavera: #141814;
+  --j-amb-verano: #2A2419; --j-amb-otono: #291F1B; --j-amb-invierno: #1A1F27; --j-amb-primavera: #1C241D;
+  --j-tierra: #2A2723; --j-punto: #26272A;
+}
+
+/* Variantes de color: v1 es el acento del tema (sale el doble). */
+.v1 { --petalo: var(--acento); --petalo2: var(--calor-2); --centro: var(--miel); }
+.v2 { --petalo: var(--j-v2); --petalo2: var(--j-v2b); --centro: var(--j-v2c); }
+.v3 { --petalo: var(--j-v3); --petalo2: var(--j-v3b); --centro: var(--j-v3c); }
+.v4 { --petalo: var(--j-v4); --petalo2: var(--j-v4b); --centro: var(--j-v4c); }
+.v5 { --petalo: var(--j-v5); --petalo2: var(--j-v5b); --centro: var(--j-v5c); }
+
+/* Partes de las figuras (dentro de los símbolos) */
+.j-tallo { fill: none; stroke: var(--j-tallo); stroke-width: .9; stroke-linecap: round; }
+.j-nervio { fill: none; stroke: var(--j-nervio); stroke-width: .4; stroke-linecap: round; }
+.j-hoja { fill: var(--j-hoja); }
+.j-hoja-descanso { fill: var(--j-hoja-descanso); }
+.j-petalo { fill: var(--petalo); stroke: var(--j-luz); stroke-width: .3; }
+.j-petalo2 { fill: var(--petalo2); stroke: var(--j-luz); stroke-width: .3; }
+.j-centro { fill: var(--centro); stroke: var(--j-luz); stroke-width: .3; }
+.j-centro-oscuro { fill: var(--j-centro-oscuro); }
+.j-brillo { fill: url(#j-brillo); }
+.j-tierra { fill: var(--j-tierra); }
+.j-semilla { fill: var(--j-semilla); }
+.j-punto { fill: var(--j-punto); }
+.j-perla { fill: var(--j-perla); stroke: var(--j-luz); stroke-width: .3; }
+.j-aro { fill: none; stroke: var(--j-aro); stroke-width: .35; }
+.j-stop-brillo { stop-color: var(--j-brillo); stop-opacity: .8; }
+.j-stop-brillo--fin { stop-opacity: 0; }
+.j-stop-ambiente { stop-color: var(--j-ambiente); stop-opacity: .9; }
+.j-stop-ambiente--fin { stop-opacity: 0; }
+
+/* Estados tenues: sin sembrar y por venir */
+.j-futuro { opacity: .5; }
+.j-sin_sembrar { opacity: .32; }
+
+/* Lienzo */
+.jardin-defs, .jardin-sonda { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+.vista-progreso { margin-bottom: var(--espacio-1); }
+.vista-progreso__cuerpo { display: grid; gap: var(--espacio-3); }
+.jardin { gap: var(--espacio-3); }
+.jardin__titulo { font: 600 18px/24px var(--font-sans); letter-spacing: -0.01em; }
+.jardin__resumen { font: 500 14px/20px var(--font-sans); color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.jardin__nav { display: flex; gap: var(--espacio-1); }
+.jardin__lienzo { touch-action: pan-y; }
+.jardin__svg { display: block; width: 100%; height: auto; border-radius: var(--radio-md); overflow: visible; }
+.estacion-verano { --j-ambiente: var(--j-amb-verano); }
+.estacion-otono { --j-ambiente: var(--j-amb-otono); }
+.estacion-invierno { --j-ambiente: var(--j-amb-invierno); }
+.estacion-primavera { --j-ambiente: var(--j-amb-primavera); }
+.j-fondo { fill: var(--j-fondo); }
+.j-ambiente { fill: url(#j-ambiente); }
+.j-cama { fill: var(--j-cama); }
+.j-macizo.estacion-verano, .jardin__mes.estacion-verano { --j-cama: var(--j-cama-verano); }
+.j-macizo.estacion-otono, .jardin__mes.estacion-otono { --j-cama: var(--j-cama-otono); }
+.j-macizo.estacion-invierno, .jardin__mes.estacion-invierno { --j-cama: var(--j-cama-invierno); }
+.j-macizo.estacion-primavera, .jardin__mes.estacion-primavera { --j-cama: var(--j-cama-primavera); }
+.j-etiqueta { font: 600 4.4px/1 var(--font-sans); fill: var(--tinta-suave); letter-spacing: .02em; }
+.j-etiqueta--dia { font-size: 2.4px; text-anchor: middle; fill: var(--tinta-tenue); }
+.j-numero { font: 500 1.6px/1 var(--font-sans); fill: var(--tinta-tenue); font-variant-numeric: tabular-nums; }
+.j-macizo, .j-dia[role="button"] { cursor: pointer; outline: none; }
+.j-macizo:focus-visible .j-cama { stroke: var(--foco); stroke-width: .8; }
+.j-celda { fill: transparent; }
+.j-dia[role="button"]:hover .j-celda { fill: var(--capa); fill-opacity: .55; }
+.j-dia:focus-visible .j-celda { stroke: var(--foco); stroke-width: .45; }
+.j-halo { fill: var(--acento); fill-opacity: .12; stroke: var(--acento); stroke-opacity: .55; stroke-width: .4; }
+
+/* Movimiento: solo transform y opacidad. Entrada ≤ 600 ms. Sin movimiento todo se ve igual de bien. */
+.jardin--entrada .j-macizo { animation: j-entrar 260ms var(--curva-suave) both; animation-delay: calc(var(--i) * 28ms); }
+.jardin--entrada .j-dia { animation: j-entrar 240ms var(--curva-suave) both; animation-delay: calc(var(--i) * 11ms); }
+.j-nace { transform-box: fill-box; transform-origin: 50% 100%; animation: j-crecer 900ms var(--curva-rebote) 320ms both; }
+.jardin--viento .j-balanceo { transform-box: fill-box; transform-origin: 50% 100%; animation: j-viento 5.5s ease-in-out infinite alternate; animation-delay: calc(var(--d) * -0.6s); }
+.jardin--quieto .j-balanceo, .jardin--repitiendo .j-balanceo { animation-play-state: paused; }
+.jardin--repitiendo .j-dia-figura { transition: opacity 220ms ease; }
+.j-oculta { opacity: 0; }
+@keyframes j-entrar { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+@keyframes j-crecer { from { opacity: 0; transform: scale(.15); } to { opacity: 1; transform: none; } }
+@keyframes j-viento { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+
+/* Leyenda, herramientas, frase y lista */
+.jardin__leyenda { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 2px var(--espacio-3); list-style: none; margin: 0; padding: 0; font: 500 12px/16px var(--font-sans); color: var(--tinta-suave); }
+.jardin__leyenda li { display: flex; align-items: center; gap: 6px; min-height: 26px; }
+.jardin__leyenda-figura { width: 28px; height: 28px; flex: none; overflow: visible; }
+.jardin__herramientas, .jardin__controles { display: flex; flex-wrap: wrap; gap: var(--espacio-2); }
+.jardin__pie { display: grid; gap: var(--espacio-3); }
+.jardin__frase { margin: 0; padding-left: var(--espacio-3); border-left: 2px solid var(--acento); }
+.jardin__frase blockquote { margin: 0; font: italic 500 15px/22px var(--font-sans); }
+.jardin__frase figcaption { font: 500 12px/16px var(--font-sans); color: var(--tinta-suave); }
+.jardin__frase figcaption::before { content: '— '; }
+.jardin__tabla { width: 100%; border-collapse: collapse; font: 400 13px/18px var(--font-sans); font-variant-numeric: tabular-nums; }
+.jardin__tabla th, .jardin__tabla td { padding: 6px 4px; border-bottom: 1px solid var(--linea); text-align: right; }
+.jardin__tabla th:first-child { text-align: left; }
+.jardin__tabla thead th { font-weight: 600; color: var(--tinta-suave); }
+
+/* Ficha de un día */
+.jardin-dia__estado { font: 600 17px/24px var(--font-sans); }
+.jardin-dia__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espacio-2); }
+.jardin-dia__lista li { display: grid; grid-template-columns: 20px 1fr; align-items: center; column-gap: var(--espacio-2); font: 400 15px/20px var(--font-sans); color: var(--tinta-suave); }
+.jardin-dia__lista .jardin-dia__hecho { color: var(--tinta); }
+.jardin-dia__marca { color: var(--acento-texto); display: inline-flex; }
+.jardin-dia__nota { grid-column: 2; font: 400 13px/18px var(--font-sans); color: var(--tinta-suave); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Tarjeta «Mi jardín» */
+.jardin-tarjeta__lienzo { aspect-ratio: 4 / 5; }
+.jardin-tarjeta__lienzo[data-formato="historia"] { aspect-ratio: 9 / 16; }
+.jardin-tarjeta__aviso { font: 500 13px/18px var(--font-sans); background: var(--capa); color: var(--tinta); padding: var(--espacio-2) var(--espacio-3); border-radius: var(--radio-sm); }
+.jardin-tarjeta__opciones { display: grid; }
+.listo--jardin { margin-top: calc(var(--espacio-2) * -1); }

@@ -9,6 +9,7 @@ import { fechaCorta, porcentaje, textoRacha } from '../formato.js';
 import { calcularInsights } from '../insights.js';
 import { abrirRevision } from './semana.js';
 import { abrirAnual } from './anual.js';
+import { renderJardin } from './jardin.js';
 
 const DIAS = 30;
 
@@ -42,15 +43,30 @@ export function renderProgreso(raiz, ctx) {
     if (st.mejor > 0 && (!mejor || st.mejor > mejor.n)) mejor = { n: st.mejor, unidad: st.unidad, nombre: h.nombre };
   }
 
-  raiz.append(el('section', { class: 'seccion', aria: { labelledby: 'titulo-30' } },
-    el('div', { class: 'tarjeta' },
+  // Mapa de calor o Jardín: la misma información, dos formas de mirarla.
+  ctx.vistaProgreso ??= 'calor';
+  const selector = el('fieldset', { class: 'segmentos vista-progreso' },
+    el('legend', { class: 'solo-lector' }, t('progreso.vista')),
+    ['calor', 'jardin'].map((v) => el('label', { class: 'segmento' },
+      el('input', { type: 'radio', name: 'vista-progreso', value: v, checked: ctx.vistaProgreso === v, data: { foco: `vista-${v}` } }),
+      el('span', {}, t(`progreso.vista.${v}`)))));
+  selector.addEventListener('change', (e) => { ctx.vistaProgreso = e.target.value; ctx.render(); });
+  const principal = el('div', { class: 'vista-progreso__cuerpo' });
+  if (ctx.vistaProgreso === 'jardin') renderJardin(principal, ctx, habitos);
+  else {
+    principal.append(el('div', { class: 'tarjeta' },
       el('div', { class: 'cabecera__fila' },
         el('h2', { class: 'titulo-tarjeta', id: 'titulo-30' }, t('progreso.30dias')),
         el('span', { class: 'cifra__valor' }, pct30 === null ? '—' : porcentaje(pct30)),
       ),
       mapaGlobal(ctx, habitos, hoy, inicio),
       leyenda(),
-    ),
+    ));
+  }
+
+  raiz.append(el('section', { class: 'seccion', aria: { label: t(`progreso.vista.${ctx.vistaProgreso}`) } },
+    selector,
+    principal,
     el('div', { class: 'cifras' },
       el('div', { class: 'cifra tarjeta' },
         el('span', { class: 'cifra__valor' }, pctMes === null ? '—' : porcentaje(pctMes)),

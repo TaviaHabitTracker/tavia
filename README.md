@@ -30,8 +30,8 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.10.0'`
-- `js/textos.js` → `version: '0.10.0'`
+- `sw.js` → `const VERSION = 'tavia-0.11.0'`
+- `js/textos.js` → `version: '0.11.0'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 
@@ -46,6 +46,7 @@ Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar
 - **El brote:** en Hoy, un anillo con un tallo que echa hojas a medida que cumples los hábitos del día y florece al completarlos. Al lado, hábitos de hoy, días seguidos, índice de constancia y % de la semana; la semana es tocable.
 - **Análisis de racha:** por hábito (desde Progreso o el detalle): racha actual y mejor, índice de constancia en el tiempo (se recorre con el dedo o las flechas), cuánto tardas en volver tras fallar, historial de rachas, cumplimiento por día de la semana y una lectura en una frase.
 - **Íconos propios:** un set SVG del mismo trazo; los emojis antiguos se muestran con su ícono equivalente.
+- **Jardín anual (0.11):** en Progreso, «Mapa de calor | Jardín». Cada día cumplido planta una flor (5 especies propias en SVG y la flor insignia de Tavia para las rachas de 30, 60, 100 y 365 días). Los días sin flor son tierra que descansa: sin rojo ni flores marchitas. Vista del año y del mes, «Ver cómo creció», teclado y lista accesible. Tarjeta «Mi jardín» (1080×1350 o 1080×1920) privada de fábrica: sin nombres, fechas ni hábitos privados, y PNG sin metadatos. Se ajusta en Ajustes → Jardín.
 - **Tu año:** resumen anual tipo *Wrapped* en Progreso, con una tarjeta 1080×1920 para guardar o compartir como imagen (se crea en el teléfono con canvas).
 - **Tu manifiesto:** unas líneas propias que aparecen al abrir (una vez al día, se cierran solas o con un toque) o como una línea arriba en Hoy.
 - **Guardado:** IndexedDB. La primera vez se mudan solos los datos de localStorage; si el navegador no tiene IndexedDB, sigue con localStorage.
