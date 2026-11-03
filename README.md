@@ -90,6 +90,9 @@ js/descubrimientos.js  Detectores, umbrales y selección semanal (lógica pura)
 data/frases_tavia.json  Las frases (fuente única)
 js/anual.js         Cálculo de "Tu año"
 js/tarjeta-anual.js Dibujo de la tarjeta anual (canvas)
+js/importar/        Importador desde otras apps (en construcción): lectores seguros de
+                    zip, CSV, JSON y fechas, resumen y worker
+herramientas/       «Revisar un archivo»: prueba del importador, sin importar nada
 js/vistas/          Hoy, detalle, editor, Progreso, Ajustes, seguridad,
                     datos, Ritual, revisión semanal, manifiesto y Tu año
 tests/              Pruebas automáticas (no se publican en la app)
@@ -100,7 +103,7 @@ tests/              Pruebas automáticas (no se publican en la app)
 ```
 TZ=America/Santiago node --test tests/*.test.mjs     # 186 pruebas de lógica (~45 s)
 python -m http.server 8765 &                         # en otra terminal
-node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs && node tests/e2e-m9.cjs && node tests/e2e-m10.cjs && node tests/e2e-m11.cjs   # 64 pruebas en el navegador (requiere Playwright)
+node tests/e2e.cjs && node tests/e2e-m2m4.cjs && node tests/e2e-m5m7.cjs && node tests/e2e-m8.cjs && node tests/e2e-m9.cjs && node tests/e2e-m10.cjs && node tests/e2e-m11.cjs && node tests/e2e-importar.cjs   # 64 pruebas en el navegador (requiere Playwright)
 ```
 
 ## Datos

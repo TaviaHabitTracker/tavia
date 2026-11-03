@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.12.2', // igual que VERSION en sw.js
+  version: '0.12.3', // igual que VERSION en sw.js
 };
 
 const es = {

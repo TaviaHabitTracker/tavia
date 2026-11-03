@@ -299,3 +299,38 @@ test('los errores llevan solo un código, nunca contenido del archivo', async ()
     assert.ok(!JSON.stringify(e.datos).includes('secreto'));
   }
 });
+
+/* ---------- Resumen y cliente (sin worker en Node: usa el hilo principal) ---------- */
+
+test('diagnóstico: estructura sin contenido de celdas', async () => {
+  const { diagnosticar } = await import('../js/importar/diagnostico.js');
+  const csv = 'fecha;hábito;valor;nota\r\n2026-01-01;Secreto;1,5;mi nota privada\r\n2026-01-02;Leer;2;\r\n';
+  const zip = await crearZip([{ ruta: 'exp/Registros.csv', datos: csv }, { ruta: 'exp/info.json', datos: '{"version":3,"habitos":[{"id":1}]}' }]);
+  const r = diagnosticar(await abrirBytes(zip));
+  const [c, j] = r.archivos;
+  assert.deepEqual([c.delimitador, c.filas, c.totalColumnas, c.codificacion], [';', 2, 4, 'utf-8']);
+  assert.deepEqual(c.columnas[0].fecha, { formato: 'iso', ambiguo: false, conHora: false });
+  assert.equal(c.columnas[2].decimal.separador, ',');
+  assert.equal(c.columnas[3].vacias, 1);
+  assert.equal(j.forma.tipo, 'objeto');
+  assert.deepEqual(j.forma.claves.map((k) => k.nombre), ['version', 'habitos']);
+  const texto = JSON.stringify(r);
+  assert.ok(!texto.includes('Secreto') && !texto.includes('mi nota privada'), 'no debe incluir celdas');
+});
+
+test('diagnóstico: un archivo dañado dentro del zip no tumba a los demás', async () => {
+  const { diagnosticar } = await import('../js/importar/diagnostico.js');
+  const zip = await crearZip([{ ruta: 'bueno.csv', datos: 'a,b\n1,2\n' }, { ruta: 'malo.csv', datos: 'a\n"abierta\n' }]);
+  const r = diagnosticar(await abrirBytes(zip));
+  assert.equal(r.archivos[0].filas, 1);
+  assert.equal(r.archivos[1].error, 'csv_comilla_abierta');
+});
+
+test('cliente: sin Worker lee en el hilo principal y devuelve códigos', async () => {
+  const { crearLector } = await import('../js/importar/cliente.js');
+  const lector = crearLector({ usarWorker: false });
+  const r = await lector.abrir(new File([fixture('normal.zip')], 'x.zip'));
+  assert.equal(r.tipo, 'zip');
+  assert.equal(r.archivos.length, 3);
+  await assert.rejects(lector.abrir(new File([fixture('bomba.zip')], 'x.zip')), (e) => e.codigo === 'zip_bomba');
+});
