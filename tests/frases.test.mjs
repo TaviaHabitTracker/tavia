@@ -33,8 +33,10 @@ const ctx = (hs, r, op = {}) => elegirContexto(senales({ habitos: hs, hoy: HOY, 
 
 /* ---------- El archivo ---------- */
 
-test('el archivo trae 100 frases válidas, 11 contextos y ids únicos', () => {
-  assert.equal(DATOS.frases.length, 100);
+test('el archivo trae al menos 100 frases válidas, 11 contextos y ids únicos', () => {
+  assert.equal(DATOS.frases.length, ARCHIVO.frases.length);
+  assert.ok(DATOS.frases.length >= 100);
+  assert.equal(new Set(DATOS.frases.map((f) => f.texto)).size, DATOS.frases.length, 'sin textos repetidos');
   assert.equal(DATOS.descartadas, 0);
   assert.equal(new Set(DATOS.frases.map((f) => f.contexto)).size, 11);
   for (const f of DATOS.frases) assert.ok(f.autor && f.fuente, f.id);
@@ -88,7 +90,7 @@ test('cargarFrases sin red devuelve lista vacía', async () => {
   const d = await cargarFrases('x', async () => { throw new Error('sin internet'); });
   assert.equal(d.frases.length, 0);
   const d2 = await cargarFrases('x', async () => ({ ok: true, json: async () => ARCHIVO }));
-  assert.equal(d2.frases.length, 100);
+  assert.equal(d2.frases.length, ARCHIVO.frases.length);
 });
 
 /* ---------- Contexto ---------- */

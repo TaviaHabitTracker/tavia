@@ -145,11 +145,11 @@ const idFrase = async (p, sel = '[data-tarjeta="frase"]') => {
   await col.waitFor();
   assert.equal(await col.locator('.coleccion__item').count(), 1);
   await col.locator('label.segmento', { hasText: 'Todas' }).click();
-  assert.equal(await col.locator('.coleccion__item').count(), 100);
+  assert.equal(await col.locator('.coleccion__item').count(), ARCHIVO.frases.length);
   assert.equal(await col.locator('.frase__marca--miel').count(), ARCHIVO.frases.filter((f) => f.confianza === 'Media').length);
   await p.screenshot({ path: `${CAPT}/m10-coleccion.png` });
   await col.getByRole('button', { name: 'Cerrar' }).first().click();
-  paso('colección: tus favoritas, las 100 por contexto y la marca «fuente por confirmar»');
+  paso('colección: tus favoritas, todas por contexto y la marca «fuente por confirmar»');
 
   /* 8. Tarjeta compartible: canvas con la frase completa */
   await p.getByRole('button', { name: 'Hoy', exact: true }).click();

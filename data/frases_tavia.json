@@ -2,7 +2,7 @@
  "version": 1,
  "idioma": "es",
  "actualizado": "2026-11-03",
- "nota": "Traducciones propias. «adaptada» = traducción libre o paráfrasis. Todas las fuentes revisadas el 3 de noviembre de 2026.",
+ "nota": "Traducciones propias. «adaptada» = traducción libre o paráfrasis. Fuentes revisadas el 3 de noviembre de 2026.",
  "reglas": {
   "maxPorDia": 2,
   "sinRepetirDias": 60,
@@ -1233,6 +1233,116 @@
    "tipo": "adaptada",
    "confianza": "Alta",
    "tono": "neutro"
+  },
+  {
+   "id": "f101",
+   "contexto": "tropiezo",
+   "texto": "Si te equivocas, no tengas miedo de corregirte.",
+   "autor": "Confucio",
+   "rol": "filosofo",
+   "fuente": "Analectas, I.8",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f102",
+   "contexto": "tropiezo",
+   "texto": "El fracaso es solo la oportunidad de volver a empezar con más inteligencia.",
+   "autor": "Henry Ford",
+   "rol": "empresario",
+   "fuente": "Mi vida y obra, 1922",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f103",
+   "contexto": "tropiezo",
+   "texto": "¿No es bonito pensar que mañana es un día nuevo, todavía sin ningún error?",
+   "autor": "L. M. Montgomery",
+   "rol": "escritor",
+   "fuente": "Ana de las Tejas Verdes, 1908, cap. 21",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f104",
+   "contexto": "tropiezo",
+   "texto": "¿Resultados? ¡He obtenido muchísimos! Conozco varios miles de cosas que no funcionan.",
+   "autor": "Thomas Edison",
+   "rol": "empresario",
+   "fuente": "Citado en Edison: His Life and Inventions, 1910",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f105",
+   "contexto": "tropiezo",
+   "texto": "No puedo volver a ayer, porque entonces era otra persona.",
+   "autor": "Lewis Carroll",
+   "rol": "escritor",
+   "fuente": "Alicia en el país de las maravillas, 1865, cap. 10",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f106",
+   "contexto": "regreso",
+   "texto": "Volver a la raíz es la calma.",
+   "autor": "Lao Tse",
+   "rol": "filosofo",
+   "fuente": "Tao Te Ching, cap. 16",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f107",
+   "contexto": "regreso",
+   "texto": "Caminante, no hay camino: se hace camino al andar.",
+   "autor": "Antonio Machado",
+   "rol": "escritor",
+   "fuente": "Campos de Castilla, 1912 («Proverbios y cantares», XXIX)",
+   "tipo": "textual",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f108",
+   "contexto": "regreso",
+   "texto": "Debemos aprender a despertar de nuevo y mantenernos despiertos, con una espera infinita del amanecer.",
+   "autor": "Henry David Thoreau",
+   "rol": "escritor",
+   "fuente": "Walden, 1854, «Dónde viví y para qué»",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f109",
+   "contexto": "regreso",
+   "texto": "La esperanza es esa cosa con plumas que se posa en el alma.",
+   "autor": "Emily Dickinson",
+   "rol": "escritor",
+   "fuente": "Poema «Hope is the thing with feathers», publicado en 1891",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
+  },
+  {
+   "id": "f110",
+   "contexto": "regreso",
+   "texto": "Ten paciencia y resiste: algún día este dolor te será útil.",
+   "autor": "Ovidio",
+   "rol": "escritor",
+   "fuente": "Amores, III.11",
+   "tipo": "adaptada",
+   "confianza": "Alta",
+   "tono": "suave"
   }
  ]
 }
