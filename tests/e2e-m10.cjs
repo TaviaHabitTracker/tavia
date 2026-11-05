@@ -47,6 +47,9 @@ async function abrir(b, datos, { hora = '2026-10-27T10:00:00', movimiento = 'no-
   await p.addInitScript((d) => { if (!sessionStorage.getItem('s')) { sessionStorage.setItem('s', '1'); localStorage.setItem('tavia:data', d); } }, JSON.stringify(datos));
   await p.goto(URL_APP);
   await p.waitForSelector('h1');
+  // Desde 0.14.2 «Tu día» es una línea que se abre al tocarla.
+  const cerrada = p.locator('details[data-tarjeta="guia"]:not([open]) > summary');
+  if (await cerrada.count()) await cerrada.click();
   return p;
 }
 const idFrase = async (p, sel = '[data-tarjeta="frase"]') => {

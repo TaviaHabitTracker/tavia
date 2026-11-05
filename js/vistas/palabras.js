@@ -130,7 +130,16 @@ export function tarjetaGuia(ctx) {
       if (ofrecerLiviano) { ctx.livianoResuelto = hoy; ctx.render(); }
     },
   }, t('guia.saltar'));
-  return el('section', { class: 'guia', data: { tarjeta: 'guia' }, aria: { label: t('guia.titulo') } }, ...filas, saltar);
+  // Un día difícil: la oferta de un día liviano se muestra abierta (es apoyo, no una pregunta más).
+  if (ofrecerLiviano && !preguntarPalabra) return el('section', { class: 'guia', data: { tarjeta: 'guia' }, aria: { label: t('guia.titulo') } }, ...filas, saltar);
+  // Minimalista: una sola línea que se abre al tocarla. Los hábitos quedan a la vista.
+  const resumen = preguntarAnimo && preguntarPalabra ? t('guia.resumen.ambos') : preguntarAnimo ? t('guia.animo') : t('guia.palabra');
+  const tarjeta = el('details', { class: 'guia guia--compacta', data: { tarjeta: 'guia' }, open: ctx.guiaAbierta === hoy },
+    el('summary', { class: 'guia__resumen', data: { foco: 'guia-abrir' } },
+      icono('chispa', 'tv-icono--sm'), el('span', { class: 'guia__resumen-texto' }, resumen), el('span', { class: 'guia__flecha', aria: { hidden: 'true' } }, '›')),
+    el('div', { class: 'guia__cuerpo' }, ...filas, saltar));
+  tarjeta.addEventListener('toggle', () => { ctx.guiaAbierta = tarjeta.open ? hoy : null; });
+  return tarjeta;
 }
 
 function elegir(ctx, hoy, p) {

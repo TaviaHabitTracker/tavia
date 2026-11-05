@@ -1425,3 +1425,17 @@ details.mas > summary { color: var(--acento-texto); }
 #vista:not([data-entrada]) .tarjeta-frase,
 #vista:not([data-entrada]) .desc-tarjeta,
 #vista:not([data-entrada]) .desc-grafico__barra { animation: none; }
+
+/* «Tu día» compacto: una línea que se abre al tocarla (0.14.2) */
+.guia--compacta { gap: 0; padding: 0; animation: none; }
+.guia--compacta > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  min-height: 52px; padding: 0 16px; border-radius: 18px; font: 600 15px/20px var(--font-sans); color: var(--tinta);
+}
+.guia--compacta > summary::-webkit-details-marker { display: none; }
+.guia--compacta > summary .tv-icono { color: var(--acento-texto); flex: none; }
+.guia__resumen-texto { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.guia__flecha { font-size: 22px; line-height: 1; color: var(--tinta-tenue); transition: transform 200ms var(--curva-suave); }
+.guia--compacta[open] .guia__flecha { transform: rotate(90deg); }
+.guia__cuerpo { display: grid; gap: 16px; padding: 4px 16px 10px; }
+.guia--compacta[open] .guia__cuerpo { animation: tv-aparecer 220ms ease-out; }

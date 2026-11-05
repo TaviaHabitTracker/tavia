@@ -41,15 +41,10 @@ export function renderHoy(raiz, ctx) {
     const guia = tarjetaGuia(ctx);
     if (guia) raiz.append(guia);
   }
+  // Minimalista: arriba solo lo que pide hacer algo ahora (avisos de recordatorios y rescates);
+  // la lista de hábitos va enseguida y lo demás (frase, revisión, manifiesto) queda debajo.
   if (fecha === hoy) {
-    const { manifiesto, manifiestoModo } = modelo.config;
-    if (manifiesto && manifiestoModo === 'linea') raiz.append(el('blockquote', { class: 'manifiesto-linea', aria: { label: t('manifiesto.titulo') } }, manifiesto));
-    const ajuste = modelo.revisionDe(sumarDias(inicioSemana(hoy), -7))?.ajuste;
-    if (ajuste && vivos.length) raiz.append(el('p', { class: 'ajuste-semana' }, icono('lapiz', 'tv-icono--sm'), t('semana.ajusteActual', { ajuste })));
-    for (const extra of [tarjetaSemana(ctx, hoy, vivos), tarjetaRecordatorios(ctx), rescates(ctx, hoy)]) if (extra) raiz.append(extra);
-    // Frase del día: discreta y cerrable, nunca una ventana que interrumpa.
-    const frase = vivos.length ? tarjetaFraseDelDia(ctx) : null;
-    if (frase) raiz.append(frase);
+    for (const extra of [tarjetaRecordatorios(ctx), rescates(ctx, hoy)]) if (extra) raiz.append(extra);
     if (minimo) raiz.append(bannerMinimo(ctx, minimo));
   }
 
@@ -88,6 +83,18 @@ export function renderHoy(raiz, ctx) {
     ));
   }
   raiz.append(bloques);
+
+  if (fecha === hoy) {
+    const { manifiesto, manifiestoModo } = modelo.config;
+    const ajuste = modelo.revisionDe(sumarDias(inicioSemana(hoy), -7))?.ajuste;
+    if (ajuste) raiz.append(el('p', { class: 'ajuste-semana' }, icono('lapiz', 'tv-icono--sm'), t('semana.ajusteActual', { ajuste })));
+    const semana = tarjetaSemana(ctx, hoy, vivos);
+    if (semana) raiz.append(semana);
+    // Frase del día: discreta y cerrable, después de los hábitos.
+    const frase = tarjetaFraseDelDia(ctx);
+    if (frase) raiz.append(frase);
+    if (manifiesto && manifiestoModo === 'linea') raiz.append(el('blockquote', { class: 'manifiesto-linea', aria: { label: t('manifiesto.titulo') } }, manifiesto));
+  }
 
   if (fecha === hoy) {
     const completo = prog.total > 0 && prog.hechos === prog.total;
