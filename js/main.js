@@ -70,6 +70,7 @@ async function iniciar() {
   let renderPendiente = false;
   let cargado = false; // evita avisos de paletas al reemplazar datos durante el arranque
   let bloqueoDibujado = false;
+  let pantallaAnterior = null; // "pestaña|fecha": si es la misma, el redibujo no anima ni mueve la pantalla
   const ctx = {
     pestana: leerPestana(),
     fechaVista: null, // null = hoy
@@ -278,11 +279,24 @@ async function iniciar() {
       if (clave === 'aviso.ios') ctx.ocultarAvisoPara('ios');
       ctx.render();
     });
+    // Redibujar la misma pantalla (por ejemplo, al marcar un hábito) no debe moverla ni repetir
+    // las animaciones de entrada: se guarda la posición y se reserva el alto mientras se rearma.
+    // (Safari en iPhone no ancla el scroll: sin esto, al vaciar la vista volvía arriba.)
+    const pantalla = `${ctx.pestana}|${ctx.fechaVista ?? ''}`;
+    const misma = pantalla === pantallaAnterior;
+    pantallaAnterior = pantalla;
+    const y = window.scrollY;
+    if (misma) vista.style.minHeight = `${vista.offsetHeight}px`;
+    vista.toggleAttribute('data-entrada', !misma);
     vaciar(vista);
     const [, , render] = PESTANAS.find(([id]) => id === ctx.pestana) || PESTANAS[0];
     render(vista, ctx);
     ctx.animar = null;
     dibujarPestanas();
+    if (misma) {
+      if (window.scrollY !== y) window.scrollTo(0, y);
+      requestAnimationFrame(() => { vista.style.minHeight = ''; });
+    }
 
     if (foco && !enHoja) document.querySelector(`[data-foco="${CSS.escape(foco)}"]`)?.focus({ preventScroll: true });
   }

@@ -30,8 +30,8 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.13.1'`
-- `js/textos.js` → `version: '0.13.1'`
+- `sw.js` → `const VERSION = 'tavia-0.14.1'`
+- `js/textos.js` → `version: '0.14.1'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 

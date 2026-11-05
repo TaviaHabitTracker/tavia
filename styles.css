@@ -1417,3 +1417,11 @@ details.mas > summary { color: var(--acento-texto); }
 @media (prefers-color-scheme: dark) { :root[data-estilo="kanso"]:not([data-theme="claro"]) { color-scheme: dark; --fondo: #141414; --superficie: #1E1E1D; --hundido: #1C1C1B; --capa: #212121; --linea: #30302E; --linea-fuerte: #75736D; --tinta: #EDEBE6; --tinta-suave: #A3A09A; --tinta-tenue: #98958F; --principal: #EDEBE6; --sobre-principal: #141414; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #373636; --sobre-acento: #141414; --calor-0: #252525; --calor-1: #61605F; --calor-2: #93928F; --calor-3: #C1BFBC; --calor-4: #EDEBE6; --oro: #D6B878; } }
 :root[data-estilo="kanso"][data-theme="oscuro"] { color-scheme: dark; --fondo: #141414; --superficie: #1E1E1D; --hundido: #1C1C1B; --capa: #212121; --linea: #30302E; --linea-fuerte: #75736D; --tinta: #EDEBE6; --tinta-suave: #A3A09A; --tinta-tenue: #98958F; --principal: #EDEBE6; --sobre-principal: #141414; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #373636; --sobre-acento: #141414; --calor-0: #252525; --calor-1: #61605F; --calor-2: #93928F; --calor-3: #C1BFBC; --calor-4: #EDEBE6; --oro: #D6B878; }
 :root[data-estilo="kanso"][data-theme="negro"] { color-scheme: dark; --fondo: #000000; --superficie: #0D0D0C; --hundido: #080808; --capa: #0E0E0E; --linea: #262624; --linea-fuerte: #6B6964; --tinta: #EDEBE6; --tinta-suave: #9A978F; --tinta-tenue: #8E8C84; --principal: #EDEBE6; --sobre-principal: #000000; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #262625; --sobre-acento: #000000; --calor-0: #131312; --calor-1: #545452; --calor-2: #8B8A87; --calor-3: #BDBBB7; --calor-4: #EDEBE6; --oro: #CFB06E; }
+
+/* ---------- Fluidez (0.14.1) ----------
+   Las animaciones de entrada solo corren al llegar a una pantalla (#vista[data-entrada]),
+   no cada vez que se marca un hábito. Así la parte de arriba no parpadea en cada toque. */
+#vista:not([data-entrada]) .guia,
+#vista:not([data-entrada]) .tarjeta-frase,
+#vista:not([data-entrada]) .desc-tarjeta,
+#vista:not([data-entrada]) .desc-grafico__barra { animation: none; }

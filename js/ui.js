@@ -29,16 +29,23 @@ export function abrirHoja({ titulo, encabezado = null, contenido, alCerrar = () 
   dialogo.addEventListener('click', (e) => { if (e.target === dialogo) cerrar(); });
   // Al cerrar, el foco vuelve al botón que abrió la hoja (aunque la lista se haya redibujado).
   const origen = document.activeElement?.closest?.('[data-foco]')?.dataset.foco;
+  // Al cerrar, la pantalla de atrás queda donde estaba (en iPhone el foco podía llevarla arriba).
+  const y = window.scrollY;
+  const volver = () => { if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y); };
   dialogo.addEventListener('close', () => {
     dialogo.remove();
     alCerrar();
-    if (origen) setTimeout(() => document.querySelector(`[data-foco="${CSS.escape(origen)}"]`)?.focus({ preventScroll: true }), 0);
+    volver();
+    setTimeout(() => {
+      if (origen) document.querySelector(`[data-foco="${CSS.escape(origen)}"]`)?.focus({ preventScroll: true });
+      volver();
+    }, 0);
   });
   document.body.append(dialogo);
   dialogo.showModal();
   // Foco inicial: el primer elemento marcado con autofocus, o el título (no abre el teclado).
   const auto = dialogo.querySelector('[data-autofoco]');
-  (auto || dialogo.querySelector(`#${idTitulo}`)).focus();
+  (auto || dialogo.querySelector(`#${idTitulo}`)).focus({ preventScroll: true });
   return { cerrar, dialogo };
 }
 
