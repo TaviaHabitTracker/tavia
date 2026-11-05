@@ -60,7 +60,28 @@ export function renderAjustes(raiz, ctx) {
   raiz.append(seccionSeguridad(ctx));
   raiz.append(seccionDatos(ctx));
   raiz.append(seccionInstalar(ctx));
-  raiz.append(el('p', { class: 'nota-pie' }, `${APP.nombreCompleto} · ${t('ajustes.version', { v: APP.version })}`));
+  raiz.append(seccionVersion(ctx));
+}
+
+/** Versión y «Buscar actualización» (por si el aviso de versión nueva no aparece solo). */
+function seccionVersion(ctx) {
+  // El resultado se guarda en ctx: al aparecer el aviso la pantalla se redibuja y no debe perderse.
+  const estado = el('p', { class: 'texto-ayuda', aria: { live: 'polite' } }, ctx.estadoVersion ? t(`version.${ctx.estadoVersion}`) : '');
+  const boton = el('button', {
+    class: 'tv-boton tv-boton--secundario tv-boton--chico', type: 'button', data: { foco: 'buscar-version' },
+    onclick: async () => {
+      if (!ctx.pwa?.buscarActualizacion) return;
+      boton.disabled = true;
+      estado.textContent = t('version.buscando');
+      ctx.estadoVersion = await ctx.pwa.buscarActualizacion();
+      estado.textContent = t(`version.${ctx.estadoVersion}`);
+      boton.disabled = false;
+      ctx.render();
+    },
+  }, t('version.buscar'));
+  return el('div', { class: 'version-pie' },
+    el('p', { class: 'nota-pie' }, `${APP.nombreCompleto} · ${t('ajustes.version', { v: APP.version })}`),
+    boton, estado);
 }
 
 function seccionHabitos(ctx) {

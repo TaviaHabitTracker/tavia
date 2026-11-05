@@ -21,9 +21,11 @@ export function iniciarPWA(ctx) {
     ctx.avisar('aviso.ios');
   }
 
-  registrarServiceWorker(ctx);
+  const sw = registrarServiceWorker(ctx);
 
   return {
+    /** Busca una versión nueva ahora. Devuelve 'nueva' (y muestra el aviso), 'aldia' o 'sinconexion'. */
+    buscarActualizacion: () => sw.buscar(),
     esIOS,
     get instalada() { return instalada(); },
     get puedeInstalar() { return eventoInstalar !== null; },
@@ -38,8 +40,9 @@ export function iniciarPWA(ctx) {
 }
 
 function registrarServiceWorker(ctx) {
+  const sinSW = { buscar: async () => 'sinconexion' };
   const seguro = location.protocol === 'https:' || ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
-  if (!('serviceWorker' in navigator) || !seguro) return;
+  if (!('serviceWorker' in navigator) || !seguro) return sinSW;
 
   const habiaControlador = Boolean(navigator.serviceWorker.controller);
   let recargando = false;
@@ -59,22 +62,49 @@ function registrarServiceWorker(ctx) {
     if (politica) urlSW = politica.createScriptURL('./sw.js');
   } catch { /* la política ya existía o el navegador no la soporta */ }
 
-  navigator.serviceWorker.register(urlSW).then((reg) => {
-    const avisarSiEspera = () => {
-      if (reg.waiting && navigator.serviceWorker.controller) {
-        ctx.avisar('aviso.actualizar', {
-          accion: { texto: t('aviso.actualizar.boton'), fn: () => reg.waiting?.postMessage({ tipo: 'saltarEspera' }) },
-        });
-      }
-    };
+  let registro = null;
+  const avisarSiEspera = () => {
+    if (registro?.waiting && navigator.serviceWorker.controller) {
+      ctx.avisar('aviso.actualizar', {
+        accion: { texto: t('aviso.actualizar.boton'), fn: () => registro.waiting?.postMessage({ tipo: 'saltarEspera' }) },
+      });
+      return true;
+    }
+    return false;
+  };
+  // Espera a que la versión nueva termine de descargarse (si se está descargando).
+  const esperarInstalacion = (nuevo) => new Promise((listo) => {
+    if (!nuevo) { listo(); return; }
+    const fin = () => { if (['installed', 'redundant', 'activated'].includes(nuevo.state)) listo(); };
+    nuevo.addEventListener('statechange', fin);
+    setTimeout(listo, 30000);
+    fin();
+  });
+
+  const listo = navigator.serviceWorker.register(urlSW, { updateViaCache: 'none' }).then((reg) => {
+    registro = reg;
     avisarSiEspera();
     reg.addEventListener('updatefound', () => {
       const nuevo = reg.installing;
       nuevo?.addEventListener('statechange', () => { if (nuevo.state === 'installed') avisarSiEspera(); });
     });
-    // Buscar versión nueva cada vez que se vuelve a la app.
+    // Buscar versión nueva al abrir, al volver a la app y cada 30 minutos con la app abierta.
+    reg.update().catch(() => {});
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') reg.update().catch(() => {});
     });
-  }).catch(() => { /* sin Service Worker la app igual funciona con conexión */ });
+    setInterval(() => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); }, 30 * 60 * 1000);
+    return reg;
+  }).catch(() => null); // sin Service Worker la app igual funciona con conexión
+
+  return {
+    async buscar() {
+      const reg = await listo;
+      if (!reg) return 'sinconexion';
+      if (avisarSiEspera()) return 'nueva';
+      try { await reg.update(); } catch { return 'sinconexion'; }
+      await esperarInstalacion(reg.installing);
+      return avisarSiEspera() ? 'nueva' : 'aldia';
+    },
+  };
 }

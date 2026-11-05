@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.15.1', // igual que VERSION en sw.js
+  version: '0.15.2', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -609,6 +609,11 @@ const es = {
   'aviso.ios': 'En iPhone, Safari puede borrar los datos de sitios que no usas por unos días. Instala Tavia en tu pantalla de inicio para protegerlos (Ajustes → Instalar Tavia).',
   'aviso.actualizar': 'Hay una versión nueva de Tavia.',
   'aviso.actualizar.boton': 'Actualizar',
+  'version.buscar': 'Buscar actualización',
+  'version.buscando': 'Buscando…',
+  'version.nueva': 'Hay una versión nueva: toca «Actualizar» en el aviso de arriba.',
+  'version.aldia': 'Tienes la versión más reciente.',
+  'version.sinconexion': 'No se pudo revisar. Prueba con internet.',
   'aviso.offline': 'Lista para usar sin conexión.',
 
   /* ---------- Módulo 10: frases y palabras guía ---------- */

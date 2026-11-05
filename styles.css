@@ -1553,3 +1553,6 @@ details.mas > summary { color: var(--acento-texto); }
 .coleccion-abrir { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espacio-3); }
 .coleccion-pro { display: grid; gap: var(--espacio-2); justify-items: start; }
 .coleccion-tema__ver { position: relative; z-index: 2; justify-self: start; }
+
+/* Versión y «Buscar actualización» al pie de Ajustes (0.15.2) */
+.version-pie { display: grid; justify-items: center; gap: var(--espacio-2); margin-top: var(--espacio-4); text-align: center; }
