@@ -123,6 +123,8 @@ const ARCHIVOS = [
   './js/frases.js',
   './js/palabras.js',
   './data/frases_tavia.json',
+  './js/plantillas.js',
+  './data/plantillas_tavia.json',
   './js/anual.js',
   './js/tarjeta-anual.js',
   './js/jardin.js',
