@@ -24,6 +24,25 @@ const PALETAS = {
 
 export const COLECCIONES = COLECCIONES_IDS;
 
+/**
+ * Acceso: los temas de colección son Pro. Durante la beta son gratis para todos.
+ * Cuando exista Pro, basta con poner `gratisEnBeta: false` y revisar `disponible()`.
+ */
+export const ACCESO = { pro: true, gratisEnBeta: true };
+export const disponible = (esPro = false) => !ACCESO.pro || ACCESO.gratisEnBeta || esPro;
+
+/**
+ * Animación al subir de nivel (dura menos de 2 s, sin sonido ni confeti; quieta con «reducir movimiento»).
+ * brillo: la luz cruza las facetas · alas: se abren desde el cuerpo · estrellas: aparecen una a una ·
+ * burbujas: sube y se mece · crecer: crece desde la raíz · ruta: se arma de abajo hacia la cima ·
+ * plegar: se pliega en tres movimientos · trazar: las líneas se trazan y entra la luz ·
+ * girar: la aguja da la vuelta y apunta al sur · llenar: las celdas se llenan una a una.
+ */
+export const ANIMACION = {
+  minas: 'brillo', condor: 'alas', cielo: 'estrellas', oceano: 'burbujas', araucaria: 'crecer',
+  cumbre: 'ruta', origami: 'plegar', arquitectura: 'trazar', navegante: 'girar', panal: 'llenar',
+};
+
 /** Nivel (1 a 5) que corresponde a una cantidad de días registrados. */
 export function nivelDe(dias) {
   let n = 1;

@@ -1495,3 +1495,61 @@ details.mas > summary { color: var(--acento-texto); }
   --habito-pino: #7CC2AE; --habito-lago: #8FB6D6; --habito-ciruela: #C99BBD;
   --habito-arcilla: #E09A7C; --habito-musgo: #B3C47A; --habito-miel: #E2B45E;
 }
+
+/* ---------- Animaciones al subir de nivel, una por tema (0.15.1) ----------
+   Menos de 2 s, sin sonido ni confeti. Solo opacidad en las piezas (respetan sus giros propios)
+   y movimiento en el dibujo entero. Con «reducir movimiento» todo queda quieto. */
+.subida__arte { position: relative; overflow: hidden; perspective: 700px; }
+.subida__arte > svg { transform-origin: 50% 50%; }
+.subida__arte[data-anim="estrellas"] .subida__pieza,
+.subida__arte[data-anim="burbujas"] .subida__pieza,
+.subida__arte[data-anim="ruta"] .subida__pieza,
+.subida__arte[data-anim="trazar"] .subida__pieza,
+.subida__arte[data-anim="llenar"] .subida__pieza { animation: tv-pieza 650ms ease-out var(--t, 0ms) both; }
+@keyframes tv-pieza { from { opacity: 0; } to { opacity: 1; } }
+
+/* Minas: la luz cruza las facetas. */
+.subida__arte[data-anim="brillo"]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(112deg, transparent 38%, rgba(255, 255, 255, .5) 50%, transparent 62%);
+  transform: translateX(-130%); animation: tv-brillo 1400ms ease-in-out 350ms both;
+}
+@keyframes tv-brillo { to { transform: translateX(130%); } }
+/* Cóndor: las alas se abren desde el cuerpo. */
+.subida__arte[data-anim="alas"] > svg { animation: tv-alas 1300ms var(--curva-suave) both; }
+@keyframes tv-alas { from { transform: scale(.3, .85); opacity: .2; } 60% { transform: scale(1.04, 1); opacity: 1; } to { transform: none; } }
+/* Océano: sube desde abajo y se mece. */
+.subida__arte[data-anim="burbujas"] > svg { animation: tv-mecer 1600ms var(--curva-suave) both; }
+@keyframes tv-mecer { from { transform: translateY(16px); } 55% { transform: translateY(-4px) rotate(-1deg); } 80% { transform: translateY(1px) rotate(.6deg); } to { transform: none; } }
+/* Araucaria: crece desde la raíz. */
+.subida__arte[data-anim="crecer"] > svg { transform-origin: 50% 92%; animation: tv-crecer 1500ms var(--curva-suave) both; }
+@keyframes tv-crecer { from { transform: scaleY(.15); opacity: .3; } to { transform: none; opacity: 1; } }
+/* Cumbre: la ruta se arma de abajo hacia la cima. */
+.subida__arte[data-anim="ruta"] > svg { animation: tv-ruta 1500ms var(--curva-suave) both; }
+@keyframes tv-ruta { from { transform: translateY(10px); } to { transform: none; } }
+/* Origami: el papel se pliega en tres movimientos. */
+.subida__arte[data-anim="plegar"] > svg { animation: tv-plegar 1400ms ease-out both; }
+@keyframes tv-plegar { 0% { transform: rotateY(88deg); } 33% { transform: rotateY(48deg); } 66% { transform: rotateY(18deg); } 100% { transform: none; } }
+/* Arquitectura: las piezas se trazan y entra la luz. */
+.subida__arte[data-anim="trazar"]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 236, 190, .35), transparent 60%);
+  opacity: 0; animation: tv-luz 900ms ease-out 1000ms both;
+}
+@keyframes tv-luz { 50% { opacity: 1; } to { opacity: 0; } }
+/* Navegante: la aguja da la vuelta y apunta al sur. */
+.subida__arte[data-anim="girar"] > svg { animation: tv-girar 1600ms cubic-bezier(.2, .9, .25, 1) both; }
+@keyframes tv-girar { from { transform: rotate(-300deg); } to { transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .subida__arte > svg, .subida__arte .subida__pieza, .subida__arte::after { animation: none !important; }
+  .subida__arte::after { display: none; }
+}
+
+/* Sello Pro: los temas de colección son Pro (gratis mientras dure la beta). */
+.sello-pro { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .06em; padding: 3px 9px; border-radius: var(--radio-pill); background: var(--principal); color: var(--sobre-principal); white-space: nowrap; }
+.sello-pro__beta { font-weight: 600; letter-spacing: 0; opacity: .85; }
+.sello-pro--chico { padding: 1px 7px; font-size: 10px; }
+.coleccion-abrir { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espacio-3); }
+.coleccion-pro { display: grid; gap: var(--espacio-2); justify-items: start; }
+.coleccion-tema__ver { position: relative; z-index: 2; justify-self: start; }

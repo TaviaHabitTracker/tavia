@@ -30,8 +30,8 @@ Mantén presionado el ícono instalado (Android y PC) para ver los atajos: Hoy, 
 
 Cada vez que cambies cualquier archivo, sube la versión en **dos** lugares y vuelve a subir los archivos:
 
-- `sw.js` → `const VERSION = 'tavia-0.15.0'`
-- `js/textos.js` → `version: '0.15.0'`
+- `sw.js` → `const VERSION = 'tavia-0.15.1'`
+- `js/textos.js` → `version: '0.15.1'`
 
 Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar». Sus datos no se tocan.
 
@@ -51,7 +51,7 @@ Quien tenga la app abierta verá «Hay una versión nueva de Tavia · Actualizar
 - **Tu manifiesto:** unas líneas propias que aparecen al abrir (una vez al día, se cierran solas o con un toque) o como una línea arriba en Hoy.
 - **Guardado:** IndexedDB. La primera vez se mudan solos los datos de localStorage; si el navegador no tiene IndexedDB, sigue con localStorage.
 
-- **Temas de colección (0.15, Pro en prueba):** Ajustes → Apariencia → «Temas de colección (prueba)». 10 temas (Minas y diamantes, Cóndor andino, Cielo de Atacama, Océano Pacífico, Araucaria, Cumbre, Origami, Arquitectura, Navegante y Panal) con 5 niveles cada uno, que se ganan con días registrados acumulados: 1, 10, 30, 75 y 150, seguidos o no. Un solo contador para los 10; nada baja ni se pierde. Cada nivel cambia los colores de toda la app (contraste AA calculado) y reemplaza el brote de Hoy por su dibujo, con el avance del día en un anillo fino. La colección muestra lo ganado y lo próximo (punteado, sin candados). Al subir de nivel aparece una pantalla sobria, sin confeti. «Modo prueba» simula días para ver cada nivel sin tocar los días reales. Pruebas: `tests/coleccion.test.mjs` y `tests/e2e-coleccion.cjs`.
+- **Temas de colección (0.15, Pro · gratis en la beta):** Ajustes → Apariencia → «Temas de colección». Son parte de Tavia Pro; mientras dure la beta están abiertos para todos (`ACCESO.gratisEnBeta` en `js/coleccion.js`). Cada tema tiene su animación al subir de nivel (0.15.1): brillo en las facetas, alas que se abren, estrellas una a una, el mar que se mece, el árbol que crece, la ruta a la cima, el papel que se pliega, la luz en el vitral, la brújula que gira y las celdas que se llenan; «Ver animación» la muestra en cada tema. 10 temas (Minas y diamantes, Cóndor andino, Cielo de Atacama, Océano Pacífico, Araucaria, Cumbre, Origami, Arquitectura, Navegante y Panal) con 5 niveles cada uno, que se ganan con días registrados acumulados: 1, 10, 30, 75 y 150, seguidos o no. Un solo contador para los 10; nada baja ni se pierde. Cada nivel cambia los colores de toda la app (contraste AA calculado) y reemplaza el brote de Hoy por su dibujo, con el avance del día en un anillo fino. La colección muestra lo ganado y lo próximo (punteado, sin candados). Al subir de nivel aparece una pantalla sobria, sin confeti. «Modo prueba» simula días para ver cada nivel sin tocar los días reales. Pruebas: `tests/coleccion.test.mjs` y `tests/e2e-coleccion.cjs`.
 - **Frases guía (0.10):** 100 frases con autor y fuente en `data/frases_tavia.json`, elegidas según tus rachas (inicio, construyendo, racha larga, hito, día difícil, tropiezo, regreso, descanso, día completo, identidad y revisión). Una al abrir el día y otra opcional al completarlo; tras un tropiezo o un regreso, solo frases suaves. Favoritas, colección, «Mi frase», tarjeta para compartir y filtro «solo fuente confirmada». Se amplía editando el JSON, sin tocar código.
 - **Palabras guía (0.10):** palabra del día (florece al elegirla), check-in «¿cómo llegas?» con día liviano (solo lo esencial o descanso), hasta 3 palabras de identidad y las palabras de la semana en la revisión, como observación y nunca como causa.
 

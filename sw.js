@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.15.0';
+const VERSION = 'tavia-0.15.1';
 
 const ARCHIVOS = [
   './',

@@ -5,9 +5,14 @@ import { el, vaciar } from '../dom.js';
 import { t } from '../textos.js';
 import { num } from '../formato.js';
 import { abrirHoja, anunciar } from '../ui.js';
-import { COLECCIONES, UMBRALES, dibujarColeccion, fondoDe, nivelDe, proximoNivel } from '../coleccion.js';
+import { ACCESO, ANIMACION, COLECCIONES, UMBRALES, dibujarColeccion, fondoDe, nivelDe, proximoNivel } from '../coleccion.js';
 
 const PRUEBA_MAX = 200;
+
+/** Sello «PRO» (con «gratis en la beta» mientras dure). */
+export function selloPro() {
+  return el('span', { class: 'sello-pro' }, t('pro.sello'), ACCESO.gratisEnBeta ? el('span', { class: 'sello-pro__beta' }, t('pro.gratisBeta')) : null);
+}
 
 /** Una baldosa de nivel: con su color si está ganada; punteada y en gris si es la próxima. */
 function baldosa(tema, nivel, ganada) {
@@ -86,10 +91,16 @@ export function abrirColeccion(ctx) {
         el('input', { type: 'radio', name: 'coleccion', value: id, checked: activo === id, data: { foco: `coleccion-${id}` } }),
         el('span', { class: 'coleccion-tema__cabeza' },
           el('span', { class: 'coleccion-tema__nombre' }, t(`coleccion.${id}`)),
+          el('span', { class: 'sello-pro sello-pro--chico' }, t('pro.sello')),
           activo === id ? el('span', { class: 'coleccion-tema__uso' }, t('coleccion.enUso')) : null,
           el('span', { class: 'coleccion-tema__cuenta' }, t('coleccion.cuenta', { n: nivel }))),
         el('span', { class: 'coleccion-tema__desc' }, t(`coleccion.${id}.desc`)),
         el('span', { class: 'coleccion-tema__niveles' }, [1, 2, 3, 4, 5].map((n) => baldosa(id, n, n <= nivel))),
+        el('button', {
+          class: 'tv-boton tv-boton--secundario tv-boton--chico coleccion-tema__ver', type: 'button', data: { foco: `coleccion-ver-${id}` },
+          aria: { label: t('coleccion.verSubida.etiqueta', { tema: t(`coleccion.${id}`) }) },
+          onclick: (e) => { e.preventDefault(); e.stopPropagation(); abrirSubida(ctx, id, nivel, dias); },
+        }, t('coleccion.verSubida')),
       )));
     lista.addEventListener('change', (e) => {
       modelo.setConfig({ coleccion: e.target.value });
@@ -97,7 +108,7 @@ export function abrirColeccion(ctx) {
       pintar();
       document.querySelector(`[data-foco="coleccion-${e.target.value || 'ninguno'}"]`)?.focus({ preventScroll: true });
     });
-    cuerpo.append(lista, el('p', { class: 'texto-ayuda' }, t('coleccion.pro')));
+    cuerpo.append(lista, el('div', { class: 'coleccion-pro' }, selloPro(), el('p', { class: 'texto-ayuda' }, t('coleccion.pro'))));
   }
 
   pintar();
@@ -112,8 +123,12 @@ export function abrirSubida(ctx, tema, nivel, dias = UMBRALES[nivel - 1]) {
     clase: 'tv-hoja--subida',
     encabezado: el('p', { class: 'subida__ceja' }, t('coleccion.subida.ceja', { tema: t(`coleccion.${tema}`) })),
     contenido: (cerrar) => {
-      const arte = el('div', { class: 'subida__arte' }, dibujarColeccion(tema, nivel));
+      const svg = dibujarColeccion(tema, nivel);
+      const arte = el('div', { class: 'subida__arte', data: { anim: ANIMACION[tema] } }, svg);
       arte.style.setProperty('--baldosa', fondoDe(tema, nivel));
+      // Las piezas del dibujo entran en orden (la animación de cada tema decide cómo).
+      const piezas = [...svg.children].filter((n) => n.tagName !== 'defs');
+      piezas.forEach((n, i) => { n.classList.add('subida__pieza'); n.style.setProperty('--t', `${Math.round((i / Math.max(1, piezas.length - 1)) * 900)}ms`); });
       return [
         arte,
         el('p', { class: 'subida__nivel' }, t('coleccion.subida.nivel', { n: nivel })),

@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.15.0', // igual que VERSION en sw.js
+  version: '0.15.1', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -451,7 +451,7 @@ const es = {
 
   // Temas de colección (Pro, en prueba)
   'coleccion.titulo': 'Temas de colección',
-  'coleccion.abrir': 'Temas de colección (prueba)',
+  'coleccion.abrir': 'Temas de colección',
   'coleccion.abrir.ayuda': '10 temas que suben de nivel con tus días registrados. El dibujo reemplaza al brote en Hoy y los colores cambian en toda la app; mientras uno está activo, el tema Pro y el color de acento de arriba no se usan.',
   'coleccion.diasReales': 'días registrados',
   'coleccion.diasSimulados': 'días simulados (modo prueba)',
@@ -470,7 +470,11 @@ const es = {
   'coleccion.dias': '{n} días',
   'coleccion.usando': 'Usando el tema {tema}',
   'coleccion.verNivel': 'Tema {tema}, nivel {nivel}: {nombre}. Abrir la colección',
-  'coleccion.pro': 'Pro en prueba: todos los temas están abiertos para probar. Al pasar a Pro, los niveles que ya ganaste con tus días quedan al tiro.',
+  'coleccion.pro': 'Los temas de colección son parte de Tavia Pro. Mientras dure la beta son gratis para todos. Cuando llegue Pro, los niveles que ya ganaste con tus días se quedan contigo.',
+  'coleccion.verSubida': 'Ver animación',
+  'coleccion.verSubida.etiqueta': 'Ver la animación de subida de nivel de {tema}',
+  'pro.sello': 'PRO',
+  'pro.gratisBeta': 'Gratis en la beta',
   'coleccion.subida.ceja': 'Nuevo nivel · {tema}',
   'coleccion.subida.nivel': 'Nivel {n} de 5',
   'coleccion.subida.texto': 'Llegaste a {n} días registrados. Seguidos o no, cada uno sumó.',

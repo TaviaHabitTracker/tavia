@@ -15,7 +15,7 @@ import { num } from '../formato.js';
 import { seccionFrases } from './frases.js';
 import { seccionPalabras } from './palabras.js';
 import { seccionAjustesDesc } from './descubrimientos.js';
-import { abrirColeccion } from './coleccion.js';
+import { abrirColeccion, selloPro } from './coleccion.js';
 
 export function renderAjustes(raiz, ctx) {
   const { modelo } = ctx;
@@ -175,7 +175,9 @@ function seccionApariencia(ctx) {
     el('div', { class: 'separador' }), lista, el('p', { class: 'texto-ayuda' }, t('paleta.ayuda', { n: num(dias) })),
     el('div', { class: 'separador' }), estilos, el('p', { class: 'texto-ayuda' }, t('estilo.ayuda')),
     el('div', { class: 'separador' }),
-    el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'abrir-coleccion' }, onclick: () => abrirColeccion(ctx) }, icono('brote'), t('coleccion.abrir')),
+    el('div', { class: 'coleccion-abrir' },
+      el('button', { class: 'tv-boton tv-boton--secundario', type: 'button', data: { foco: 'abrir-coleccion' }, onclick: () => abrirColeccion(ctx) }, icono('brote'), t('coleccion.abrir')),
+      selloPro()),
     el('p', { class: 'texto-ayuda' }, t('coleccion.abrir.ayuda')));
 }
 

@@ -120,6 +120,37 @@ async function abrir(b, config, op = {}) {
     await c2.close();
   }
 
+  // 0.15.1: cada tema tiene su animación al subir de nivel y los temas llevan el sello Pro (gratis en la beta).
+  {
+    const ANIM = { minas: 'brillo', condor: 'alas', cielo: 'estrellas', oceano: 'burbujas', araucaria: 'crecer', cumbre: 'ruta', origami: 'plegar', arquitectura: 'trazar', navegante: 'girar', panal: 'llenar' };
+    const { ctx: c3, p: p3 } = await abrir(b, { coleccionPrueba: 160 }, { reducedMotion: 'no-preference' });
+    vigilar(p3, 'animaciones');
+    await p3.goto(URL_APP + '#ajustes');
+    assert.match(await p3.locator('.coleccion-abrir .sello-pro').textContent(), /PRO.*beta/i);
+    await p3.locator('[data-foco="abrir-coleccion"]').click();
+    await p3.waitForSelector('[data-hoja="coleccion"]');
+    assert.equal(await p3.locator('.coleccion-tema .sello-pro').count(), 10);
+    for (const tema of TEMAS) {
+      await p3.locator(`[data-foco="coleccion-ver-${tema}"]`).click();
+      await p3.waitForSelector('[data-hoja="subida"]');
+      assert.equal(await p3.locator('[data-hoja="subida"] .subida__arte').getAttribute('data-anim'), ANIM[tema]);
+      // La animación corre (no está quieta) y termina en menos de 2 s.
+      const corre = await p3.evaluate(() => document.getAnimations().some((a) => a.playState === 'running' && a.effect?.target?.closest?.('.subida__arte')));
+      assert.ok(corre, `${tema}: la animación corre`);
+      await p3.waitForTimeout(450);
+      await p3.locator('[data-hoja="subida"]').screenshot({ path: `${CAPT}/anim-${tema}-medio.png` });
+      await p3.waitForTimeout(1700);
+      const quedan = await p3.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running' && a.effect?.target?.closest?.('.subida__arte')).length);
+      assert.equal(quedan, 0, `${tema}: termina antes de 2,2 s`);
+      // Elegir el tema no debe dispararse al tocar «Ver animación».
+      await p3.locator('[data-hoja="subida"] .tv-boton--secundario').click();
+      await p3.waitForSelector('[data-hoja="subida"]', { state: 'detached' });
+    }
+    assert.equal(await p3.evaluate(() => document.documentElement.dataset.coleccion), undefined);
+    paso('Animación propia por tema (< 2 s) y sello Pro · gratis en la beta');
+    await c3.close();
+  }
+
   assert.deepEqual(errores, []);
   paso('sin errores de consola');
   await b.close();
