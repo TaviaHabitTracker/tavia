@@ -1,6 +1,1766 @@
 {
   "formato": 1,
   "version": 1,
-  "rutinas": [],
-  "retos": []
+  "rutinas": [
+    {
+      "id": "manana-tranquila",
+      "nombre": "Mañana tranquila",
+      "descripcion": "Diez minutos para empezar el día sin apuro.",
+      "objetivo": "calma",
+      "momento": "manana",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "manana",
+      "etiquetas": [
+        "calma",
+        "despertar"
+      ],
+      "habitos": [
+        {
+          "nombre": "Abrir la ventana",
+          "icono": "☀️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que empieza el día con calma.",
+          "pregunta": "¿Abrimos la ventana un momento?",
+          "versionMinima": "Abre la cortina y mira afuera unos segundos.",
+          "nota": "Un minuto de luz basta para marcar el inicio del día.",
+          "horaSugerida": "07:30"
+        },
+        {
+          "nombre": "Un vaso de agua al despertar",
+          "icono": "💧",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que se cuida desde temprano.",
+          "pregunta": "¿Un vaso de agua para partir?",
+          "versionMinima": "Un par de sorbos también cuenta.",
+          "nota": "Deja el vaso listo la noche anterior."
+        },
+        {
+          "nombre": "Intención del día",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que elige hacia dónde va su día.",
+          "pregunta": "¿Qué quieres que tenga tu día de hoy?",
+          "versionMinima": "Piensa una sola palabra para hoy.",
+          "nota": "Una línea basta: lo que quieres cuidar hoy."
+        }
+      ],
+      "palabraGuia": "calma"
+    },
+    {
+      "id": "arranque-energia-suave",
+      "nombre": "Arranque con energía suave",
+      "descripcion": "Mover el cuerpo un poco para despertar de a poco.",
+      "objetivo": "energia",
+      "momento": "manana",
+      "minutosPorDia": 15,
+      "nivel": "suave",
+      "categoria": "manana",
+      "etiquetas": [
+        "energía",
+        "mañana"
+      ],
+      "habitos": [
+        {
+          "nombre": "Estirarse al despertar",
+          "icono": "🧘",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 5
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que despierta su cuerpo con cariño.",
+          "pregunta": "¿Unos estiramientos antes de partir?",
+          "versionMinima": "Estira los brazos hacia arriba y respira.",
+          "nota": "Movimientos lentos, sin forzar.",
+          "horaSugerida": "07:15"
+        },
+        {
+          "nombre": "Moverse un poco",
+          "icono": "🚶",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 5
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que se mueve cada mañana.",
+          "pregunta": "¿Una vuelta corta o unos pasos en casa?",
+          "versionMinima": "Camina dentro de la casa 2 minutos.",
+          "nota": "Puede ser una vuelta a la manzana o subir escaleras."
+        },
+        {
+          "nombre": "Desayunar sentado",
+          "icono": "☀️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que se da tiempo para empezar.",
+          "pregunta": "¿Un desayuno sin apuro?",
+          "versionMinima": "Siéntate 2 minutos con lo que tengas.",
+          "nota": "Lo que comas lo eliges tú; aquí solo importa sentarse."
+        }
+      ],
+      "palabraGuia": "energia",
+      "avisoCuerpo": true
+    },
+    {
+      "id": "media-hora-de-foco",
+      "nombre": "Media hora de foco",
+      "descripcion": "Lo más importante del día, antes que todo lo demás.",
+      "objetivo": "foco",
+      "momento": "manana",
+      "minutosPorDia": 30,
+      "nivel": "normal",
+      "categoria": "manana",
+      "etiquetas": [
+        "foco",
+        "trabajo",
+        "estudio"
+      ],
+      "habitos": [
+        {
+          "nombre": "Elegir la tarea más importante",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que sabe qué es lo primero.",
+          "pregunta": "¿Cuál es lo más importante de hoy?",
+          "versionMinima": "Escribe el nombre de la tarea y nada más.",
+          "nota": "Si dudas entre dos, elige la que te deja más tranquilo al terminarla."
+        },
+        {
+          "nombre": "Bloque de foco",
+          "icono": "💼",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 25
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que protege su tiempo.",
+          "pregunta": "¿Empezamos tu media hora de foco?",
+          "versionMinima": "Trabaja 2 minutos en la tarea elegida.",
+          "nota": "Empieza por el paso más chico.",
+          "horaSugerida": "09:00"
+        },
+        {
+          "nombre": "Teléfono lejos durante el foco",
+          "icono": "📵",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que decide dónde pone su atención.",
+          "pregunta": "¿Dejamos el teléfono en otra pieza?",
+          "versionMinima": "Pon el teléfono boca abajo.",
+          "nota": "Lejos de la vista funciona mejor que en silencio."
+        }
+      ],
+      "palabraGuia": "foco"
+    },
+    {
+      "id": "cierre-del-dia",
+      "nombre": "Cierre del día",
+      "descripcion": "Dejar el día ordenado antes de descansar.",
+      "objetivo": "descanso",
+      "momento": "noche",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "noche",
+      "etiquetas": [
+        "noche",
+        "orden"
+      ],
+      "habitos": [
+        {
+          "nombre": "Ordenar lo que quedó a la mano",
+          "icono": "🧹",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que cierra sus días con orden.",
+          "pregunta": "¿Ordenamos un poco antes de dormir?",
+          "versionMinima": "Guarda una sola cosa en su lugar.",
+          "nota": "Solo lo que se ve; lo demás puede esperar.",
+          "horaSugerida": "21:30"
+        },
+        {
+          "nombre": "Preparar lo de mañana",
+          "icono": "🌱",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que se adelanta con cariño.",
+          "pregunta": "¿Dejamos listo lo de mañana?",
+          "versionMinima": "Deja las llaves donde las veas al salir.",
+          "nota": "Ropa, bolso o almuerzo: lo que te ahorre apuro."
+        },
+        {
+          "nombre": "Una cosa que salió bien",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que nota lo bueno de su día.",
+          "pregunta": "¿Qué salió bien hoy?",
+          "versionMinima": "Piénsala, sin escribirla.",
+          "nota": "Puede ser algo pequeño; también cuenta."
+        }
+      ],
+      "palabraGuia": "orden"
+    },
+    {
+      "id": "desacelerar",
+      "nombre": "Rutina para desacelerar",
+      "descripcion": "Bajar el ritmo de a poco al final del día.",
+      "objetivo": "descanso",
+      "momento": "noche",
+      "minutosPorDia": 15,
+      "nivel": "suave",
+      "categoria": "noche",
+      "etiquetas": [
+        "sueño",
+        "calma"
+      ],
+      "habitos": [
+        {
+          "nombre": "Bajar las luces",
+          "icono": "😴",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que se prepara para descansar.",
+          "pregunta": "¿Bajamos las luces?",
+          "versionMinima": "Apaga una luz de la casa.",
+          "nota": "Una luz más tenue avisa que el día va terminando.",
+          "horaSugerida": "22:00"
+        },
+        {
+          "nombre": "Leer algo tranquilo",
+          "icono": "📖",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 10
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que termina el día con calma.",
+          "pregunta": "¿Unas páginas antes de dormir?",
+          "versionMinima": "Lee una página.",
+          "nota": "Mejor en papel o con la pantalla en modo noche."
+        },
+        {
+          "nombre": "Tres respiraciones lentas",
+          "icono": "🌬️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que sabe soltar el día.",
+          "pregunta": "¿Tres respiraciones antes de dormir?",
+          "versionMinima": "Una respiración lenta también sirve.",
+          "nota": "Sin contar ni esforzarte: solo respira más despacio."
+        }
+      ],
+      "palabraGuia": "descanso"
+    },
+    {
+      "id": "noche-con-menos-pantallas",
+      "nombre": "Noche con menos pantallas",
+      "descripcion": "Un rato sin pantallas antes de dormir.",
+      "objetivo": "descanso",
+      "momento": "noche",
+      "minutosPorDia": 15,
+      "nivel": "normal",
+      "categoria": "noche",
+      "etiquetas": [
+        "sueño",
+        "pantallas"
+      ],
+      "habitos": [
+        {
+          "nombre": "Teléfono fuera de la cama",
+          "icono": "📵",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que deja descansar su atención.",
+          "pregunta": "¿Dejamos el teléfono cargando lejos de la cama?",
+          "versionMinima": "Déjalo al otro lado de la pieza.",
+          "nota": "Un despertador simple ayuda si usas el teléfono para eso.",
+          "horaSugerida": "22:30"
+        },
+        {
+          "nombre": "Algo sin pantalla antes de dormir",
+          "icono": "📖",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 15
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que tiene sus propios rituales.",
+          "pregunta": "¿Un rato sin pantalla?",
+          "versionMinima": "Dos minutos de lo que sea sin pantalla.",
+          "nota": "Leer, conversar, ordenar, escuchar música."
+        },
+        {
+          "nombre": "Acostarse a una hora parecida",
+          "icono": "😴",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que respeta su descanso.",
+          "pregunta": "¿Vamos llegando a la cama?",
+          "versionMinima": "Acuéstate aunque no tengas sueño todavía.",
+          "nota": "Una hora parecida cada noche, sin exigirte exactitud.",
+          "horaSugerida": "23:00"
+        }
+      ],
+      "palabraGuia": "descanso"
+    },
+    {
+      "id": "estudiante-constante",
+      "nombre": "Estudiante constante",
+      "descripcion": "Un poco cada día rinde más que todo la noche antes.",
+      "objetivo": "estudiar",
+      "momento": "tarde",
+      "minutosPorDia": 30,
+      "nivel": "normal",
+      "categoria": "estudio",
+      "etiquetas": [
+        "estudio",
+        "colegio",
+        "universidad"
+      ],
+      "habitos": [
+        {
+          "nombre": "Sesión de estudio",
+          "icono": "📖",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 25
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que aprende un poco cada día.",
+          "pregunta": "¿Empezamos tu sesión de estudio?",
+          "versionMinima": "Abre el cuaderno y lee el título del tema.",
+          "nota": "Un tema por sesión; cierra lo que no uses.",
+          "horaSugerida": "17:00"
+        },
+        {
+          "nombre": "Repasar los apuntes de hoy",
+          "icono": "✍️",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 5
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que vuelve sobre lo aprendido.",
+          "pregunta": "¿Un repaso corto de lo de hoy?",
+          "versionMinima": "Lee un párrafo de tus apuntes.",
+          "nota": "Repasar el mismo día ayuda a ordenar lo nuevo."
+        },
+        {
+          "nombre": "Preparar la mochila",
+          "icono": "🌱",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que llega preparada.",
+          "pregunta": "¿Dejamos lista la mochila?",
+          "versionMinima": "Mete una cosa que vas a necesitar.",
+          "nota": "Revisa el horario de mañana antes de cerrarla."
+        }
+      ],
+      "palabraGuia": "constancia"
+    },
+    {
+      "id": "semana-de-examenes",
+      "nombre": "Semana de exámenes",
+      "descripcion": "Estudiar en bloques y cuidar el descanso en semanas intensas.",
+      "objetivo": "estudiar",
+      "momento": "flexible",
+      "minutosPorDia": 30,
+      "nivel": "normal",
+      "categoria": "estudio",
+      "etiquetas": [
+        "exámenes",
+        "pruebas",
+        "estudio"
+      ],
+      "habitos": [
+        {
+          "nombre": "Bloques de estudio",
+          "icono": "📖",
+          "tipo": "cantidad",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 2,
+            "unidad": "bloques"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se prepara con tiempo.",
+          "pregunta": "¿Un bloque de estudio ahora?",
+          "versionMinima": "Un bloque de 2 minutos para empezar.",
+          "nota": "Bloques de 25 minutos con pausas cortas entre ellos."
+        },
+        {
+          "nombre": "Pausa para moverse",
+          "icono": "🚶",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se da pausas.",
+          "pregunta": "¿Una pausa para estirar las piernas?",
+          "versionMinima": "Párate y camina hasta la ventana.",
+          "nota": "Levantarse entre bloques despeja la cabeza."
+        },
+        {
+          "nombre": "Dormir a una hora fija",
+          "icono": "😴",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que cuida su descanso también en semanas difíciles.",
+          "pregunta": "¿Cerramos por hoy?",
+          "versionMinima": "Deja los apuntes cerrados a la hora que elegiste.",
+          "nota": "Lo que no alcanzaste hoy puede ir en el primer bloque de mañana.",
+          "horaSugerida": "23:00"
+        }
+      ],
+      "palabraGuia": "foco"
+    },
+    {
+      "id": "idioma-en-10-minutos",
+      "nombre": "Idioma en 10 minutos",
+      "descripcion": "Diez minutos al día para un idioma nuevo.",
+      "objetivo": "aprender",
+      "momento": "flexible",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "estudio",
+      "etiquetas": [
+        "idiomas",
+        "aprender"
+      ],
+      "habitos": [
+        {
+          "nombre": "Practicar el idioma",
+          "icono": "🗣️",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 10
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que está aprendiendo un idioma.",
+          "pregunta": "¿Diez minutos de idioma?",
+          "versionMinima": "Escucha o lee una frase en el idioma.",
+          "nota": "Una app, un podcast o una canción: lo que te guste."
+        },
+        {
+          "nombre": "Una palabra nueva",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que siente curiosidad.",
+          "pregunta": "¿Cuál es tu palabra de hoy?",
+          "versionMinima": "Repite en voz alta una palabra que ya sabes.",
+          "nota": "Anótala en una libreta para verla crecer."
+        }
+      ],
+      "palabraGuia": "curiosidad"
+    },
+    {
+      "id": "caminar-cada-dia",
+      "nombre": "Caminar cada día",
+      "descripcion": "Una caminata corta que crece solo si tú quieres.",
+      "objetivo": "moverme",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "movimiento",
+      "etiquetas": [
+        "caminar",
+        "aire libre"
+      ],
+      "habitos": [
+        {
+          "nombre": "Caminar",
+          "icono": "🚶",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 5
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que se mueve a su ritmo.",
+          "pregunta": "¿Salimos a caminar un rato?",
+          "versionMinima": "Camina 2 minutos, aunque sea dentro de la casa.",
+          "nota": "Elige un camino que te guste.",
+          "horaSugerida": "18:30"
+        }
+      ],
+      "palabraGuia": "constancia",
+      "escalera": [
+        5,
+        8,
+        12,
+        15
+      ]
+    },
+    {
+      "id": "estiramientos-de-5-minutos",
+      "nombre": "Estiramientos de 5 minutos",
+      "descripcion": "Soltar el cuerpo en cinco minutos, donde estés.",
+      "objetivo": "moverme",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "movimiento",
+      "etiquetas": [
+        "estirar",
+        "pausa activa"
+      ],
+      "habitos": [
+        {
+          "nombre": "Estirar",
+          "icono": "🧘",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 5
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que escucha a su cuerpo.",
+          "pregunta": "¿Cinco minutos para estirar?",
+          "versionMinima": "Gira los hombros despacio unas veces.",
+          "nota": "Cuello, hombros, espalda y piernas, sin llegar al dolor."
+        }
+      ],
+      "palabraGuia": "presencia",
+      "escalera": [
+        5,
+        8,
+        10
+      ]
+    },
+    {
+      "id": "fuerza-en-casa",
+      "nombre": "Fuerza en casa para empezar",
+      "descripcion": "Ejercicios simples en casa, tres veces por semana.",
+      "objetivo": "moverme",
+      "momento": "flexible",
+      "minutosPorDia": 15,
+      "nivel": "normal",
+      "categoria": "movimiento",
+      "etiquetas": [
+        "fuerza",
+        "casa"
+      ],
+      "habitos": [
+        {
+          "nombre": "Calentar",
+          "icono": "🧘",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 3
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que prepara su cuerpo.",
+          "pregunta": "¿Calentamos un poco?",
+          "versionMinima": "Mueve los brazos y marcha en el lugar unos segundos.",
+          "nota": "Movimientos suaves de brazos y piernas."
+        },
+        {
+          "nombre": "Ejercicios de fuerza",
+          "icono": "💪",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 10
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 3
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que se hace más fuerte de a poco.",
+          "pregunta": "¿Unos ejercicios en casa?",
+          "versionMinima": "Haz una sentadilla apoyado en una silla.",
+          "nota": "Sentadillas con silla, flexiones en la pared o pesas livianas. Botellas llenas también sirven.",
+          "horaSugerida": "18:00"
+        }
+      ],
+      "palabraGuia": "disciplina",
+      "escalera": [
+        10,
+        12,
+        15,
+        20
+      ]
+    },
+    {
+      "id": "tres-respiraciones",
+      "nombre": "Tres respiraciones",
+      "descripcion": "Una pausa de un minuto, cuando la necesites.",
+      "objetivo": "calma",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "calma",
+      "etiquetas": [
+        "respirar",
+        "pausa"
+      ],
+      "habitos": [
+        {
+          "nombre": "Tres respiraciones",
+          "icono": "🌬️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que sabe hacer una pausa.",
+          "pregunta": "¿Tres respiraciones lentas?",
+          "versionMinima": "Una respiración lenta, con los ojos abiertos o cerrados.",
+          "nota": "Inhala por la nariz y bota el aire despacio.",
+          "horaSugerida": "15:00"
+        }
+      ],
+      "palabraGuia": "calma"
+    },
+    {
+      "id": "gratitud-y-diario",
+      "nombre": "Gratitud y diario de una línea",
+      "descripcion": "Una línea al día para recordar lo que importa.",
+      "objetivo": "calma",
+      "momento": "noche",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "calma",
+      "etiquetas": [
+        "gratitud",
+        "diario"
+      ],
+      "habitos": [
+        {
+          "nombre": "Algo que agradecer",
+          "icono": "🤍",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que se fija en lo bueno.",
+          "pregunta": "¿Qué agradeces hoy?",
+          "versionMinima": "Piensa en una persona o cosa, sin escribir.",
+          "nota": "Lo pequeño también cuenta: un café, un mensaje, una pausa.",
+          "horaSugerida": "21:30"
+        },
+        {
+          "nombre": "Diario de una línea",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que guarda sus días.",
+          "pregunta": "¿Una línea sobre tu día?",
+          "versionMinima": "Escribe tres palabras.",
+          "nota": "Con el tiempo, esas líneas se vuelven tu propia historia."
+        }
+      ],
+      "palabraGuia": "presencia"
+    },
+    {
+      "id": "menos-ruido",
+      "nombre": "Menos ruido",
+      "descripcion": "Menos avisos y más rato para ti.",
+      "objetivo": "calma",
+      "momento": "flexible",
+      "minutosPorDia": 15,
+      "nivel": "normal",
+      "categoria": "calma",
+      "etiquetas": [
+        "pantallas",
+        "digital"
+      ],
+      "habitos": [
+        {
+          "nombre": "Un rato sin notificaciones",
+          "icono": "📵",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 15
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que decide cuándo conectarse.",
+          "pregunta": "¿Silenciamos el teléfono un rato?",
+          "versionMinima": "Silencia un solo grupo o aplicación.",
+          "nota": "El modo «No molestar» puede quedar programado."
+        },
+        {
+          "nombre": "Revisar redes en un horario",
+          "icono": "📵",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que elige en qué pone su atención.",
+          "pregunta": "¿Ya es tu rato de redes?",
+          "versionMinima": "Abre las redes después de algo que ya hiciste.",
+          "nota": "Elige un momento del día para revisarlas con calma."
+        },
+        {
+          "nombre": "Limpiar una aplicación o grupo",
+          "icono": "🧹",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 1
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que cuida su espacio, también el digital.",
+          "pregunta": "¿Limpiamos algo que ya no usas?",
+          "versionMinima": "Sal de un grupo o borra una aplicación.",
+          "nota": "Una por semana basta."
+        }
+      ],
+      "palabraGuia": "presencia"
+    },
+    {
+      "id": "casa-en-orden-10",
+      "nombre": "Casa en orden en 10 minutos",
+      "descripcion": "Diez minutos al día para que la casa no se acumule.",
+      "objetivo": "orden",
+      "momento": "flexible",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "hogar",
+      "etiquetas": [
+        "casa",
+        "orden"
+      ],
+      "habitos": [
+        {
+          "nombre": "Orden de 10 minutos",
+          "icono": "🧹",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 10
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que cuida su casa de a poco.",
+          "pregunta": "¿Diez minutos de orden?",
+          "versionMinima": "Ordena una sola superficie.",
+          "nota": "Pon un temporizador y para cuando suene."
+        },
+        {
+          "nombre": "Lavar la loza del día",
+          "icono": "🏠",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que no deja nada para mañana en la cocina.",
+          "pregunta": "¿Dejamos la loza lista?",
+          "versionMinima": "Lava un plato.",
+          "nota": "Con música o un podcast se pasa más rápido."
+        },
+        {
+          "nombre": "Una superficie despejada",
+          "icono": "🏠",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que disfruta de un espacio despejado.",
+          "pregunta": "¿Despejamos la mesa antes de dormir?",
+          "versionMinima": "Saca una cosa de la mesa.",
+          "nota": "La mesa, el velador o el escritorio: elige una."
+        }
+      ],
+      "palabraGuia": "orden"
+    },
+    {
+      "id": "compras-y-lavanderia",
+      "nombre": "Compras y lavandería",
+      "descripcion": "Las tareas de la semana repartidas, sin correr.",
+      "objetivo": "orden",
+      "momento": "flexible",
+      "minutosPorDia": 15,
+      "nivel": "suave",
+      "categoria": "hogar",
+      "etiquetas": [
+        "casa",
+        "semana"
+      ],
+      "habitos": [
+        {
+          "nombre": "Hacer la lista de compras",
+          "icono": "🛒",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              6
+            ]
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se organiza para la semana.",
+          "pregunta": "¿Revisamos qué falta en la casa?",
+          "versionMinima": "Anota una cosa que falte.",
+          "nota": "Revisa el refrigerador y la despensa antes de anotar."
+        },
+        {
+          "nombre": "Hacer las compras",
+          "icono": "🛒",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              6
+            ]
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que tiene su casa abastecida.",
+          "pregunta": "¿Salimos a comprar con la lista?",
+          "versionMinima": "Compra lo primero de la lista.",
+          "nota": "Con lista se compra más rápido."
+        },
+        {
+          "nombre": "Lavar ropa",
+          "icono": "🏠",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 2
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se adelanta a la semana.",
+          "pregunta": "¿Ponemos una lavadora?",
+          "versionMinima": "Junta la ropa sucia en un canasto.",
+          "nota": "Separar por colores antes ahorra tiempo."
+        },
+        {
+          "nombre": "Doblar y guardar",
+          "icono": "🧹",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 2
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que termina lo que empieza.",
+          "pregunta": "¿Doblamos lo que ya se secó?",
+          "versionMinima": "Dobla una prenda.",
+          "nota": "Mejor el mismo día que se seca."
+        }
+      ],
+      "palabraGuia": "orden"
+    },
+    {
+      "id": "cuentas-claras",
+      "nombre": "Cuentas claras en 5 minutos",
+      "descripcion": "Saber en qué se va tu plata, sin planillas.",
+      "objetivo": "finanzas",
+      "momento": "noche",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "finanzas",
+      "etiquetas": [
+        "plata",
+        "gastos"
+      ],
+      "habitos": [
+        {
+          "nombre": "Anotar los gastos del día",
+          "icono": "💰",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que sabe en qué gasta.",
+          "pregunta": "¿Anotamos lo que gastaste hoy?",
+          "versionMinima": "Anota solo el gasto más grande.",
+          "nota": "En una libreta o en las notas del teléfono.",
+          "horaSugerida": "21:00"
+        },
+        {
+          "nombre": "Mirar la semana",
+          "icono": "💰",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              0
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que mira sus cuentas con calma.",
+          "pregunta": "¿Una mirada a la semana?",
+          "versionMinima": "Suma los gastos de un solo día.",
+          "nota": "Mirar, no juzgar: es para conocerte."
+        }
+      ],
+      "palabraGuia": "orden"
+    },
+    {
+      "id": "ahorro-pequeno",
+      "nombre": "Ahorro pequeño y constante",
+      "descripcion": "Guardar un poco, de a poco, a tu medida.",
+      "objetivo": "finanzas",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "finanzas",
+      "etiquetas": [
+        "ahorro",
+        "plata"
+      ],
+      "habitos": [
+        {
+          "nombre": "Guardar un monto pequeño",
+          "icono": "💰",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 1
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que ahorra a su medida.",
+          "pregunta": "¿Guardamos algo esta semana?",
+          "versionMinima": "Guarda una moneda.",
+          "nota": "El monto lo eliges tú; lo que importa es repetirlo."
+        },
+        {
+          "nombre": "Pausa antes de comprar",
+          "icono": "🛒",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que decide sus compras con calma.",
+          "pregunta": "¿Esperamos un día antes de comprar eso?",
+          "versionMinima": "Deja el producto en el carrito un rato.",
+          "nota": "Si mañana lo sigues queriendo, cómpralo tranquilo."
+        }
+      ],
+      "palabraGuia": "paciencia"
+    },
+    {
+      "id": "trabajo-enfocado",
+      "nombre": "Día de trabajo enfocado",
+      "descripcion": "Menos interrupciones y lo importante primero.",
+      "objetivo": "foco",
+      "momento": "manana",
+      "minutosPorDia": 30,
+      "nivel": "normal",
+      "categoria": "trabajo",
+      "etiquetas": [
+        "trabajo",
+        "foco"
+      ],
+      "habitos": [
+        {
+          "nombre": "Elegir tres tareas",
+          "icono": "💼",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que sabe qué es lo importante.",
+          "pregunta": "¿Cuáles son tus tres tareas de hoy?",
+          "versionMinima": "Elige una sola tarea.",
+          "nota": "Si son más de tres, el resto va a mañana.",
+          "horaSugerida": "09:00"
+        },
+        {
+          "nombre": "Bloque de foco",
+          "icono": "💼",
+          "tipo": "tiempo",
+          "meta": {
+            "modo": "al_menos",
+            "valor": 25
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "manana",
+          "identidad": "Soy una persona que protege su tiempo.",
+          "pregunta": "¿Empezamos un bloque de foco?",
+          "versionMinima": "Trabaja 2 minutos en la primera tarea.",
+          "nota": "Cierra el correo y las pestañas que no uses."
+        },
+        {
+          "nombre": "Pausas para moverse",
+          "icono": "🚶",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se da pausas.",
+          "pregunta": "¿Una pausa para pararte?",
+          "versionMinima": "Párate y estira los brazos.",
+          "nota": "Una pausa corta entre bloques despeja la cabeza."
+        }
+      ],
+      "palabraGuia": "foco"
+    },
+    {
+      "id": "cierre-de-jornada",
+      "nombre": "Cierre de jornada",
+      "descripcion": "Terminar el trabajo para que no se vaya contigo a casa.",
+      "objetivo": "foco",
+      "momento": "tarde",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "trabajo",
+      "etiquetas": [
+        "trabajo",
+        "descanso"
+      ],
+      "habitos": [
+        {
+          "nombre": "Anotar dónde quedé",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que cierra sus días de trabajo con orden.",
+          "pregunta": "¿Anotamos dónde quedaste?",
+          "versionMinima": "Escribe la próxima tarea.",
+          "nota": "Así mañana partes sin pensar por dónde seguir.",
+          "horaSugerida": "18:00"
+        },
+        {
+          "nombre": "Ordenar el escritorio",
+          "icono": "🧹",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que deja su lugar listo.",
+          "pregunta": "¿Ordenamos el escritorio?",
+          "versionMinima": "Guarda una cosa.",
+          "nota": "El escritorio de mañana te lo vas a agradecer."
+        },
+        {
+          "nombre": "Cerrar el correo y las pestañas",
+          "icono": "📵",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "dias_fijos",
+            "dias": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bloque": "tarde",
+          "identidad": "Soy una persona que separa el trabajo del descanso.",
+          "pregunta": "¿Cerramos el correo por hoy?",
+          "versionMinima": "Cierra solo el correo.",
+          "nota": "Lo que llegue después puede esperar a mañana."
+        }
+      ],
+      "palabraGuia": "orden"
+    },
+    {
+      "id": "hidratacion",
+      "nombre": "Hidratación",
+      "descripcion": "Tomar agua durante el día, con la meta que tú elijas.",
+      "objetivo": "cuidarme",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "cuidado",
+      "etiquetas": [
+        "agua",
+        "cuidado"
+      ],
+      "habitos": [
+        {
+          "nombre": "Tomar agua",
+          "icono": "💧",
+          "tipo": "cantidad",
+          "meta": {
+            "modo": "libre",
+            "unidad": "vasos"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se acuerda de tomar agua.",
+          "pregunta": "¿Un vaso de agua?",
+          "versionMinima": "Toma un sorbo.",
+          "nota": "Tú eliges la meta: vasos, botellas o solo marcar el día."
+        }
+      ],
+      "palabraGuia": "presencia",
+      "avisoCuerpo": true
+    },
+    {
+      "id": "aseo-y-cuidado",
+      "nombre": "Aseo y cuidado básico",
+      "descripcion": "Lo básico del día, a tu ritmo.",
+      "objetivo": "cuidarme",
+      "momento": "flexible",
+      "minutosPorDia": 10,
+      "nivel": "suave",
+      "categoria": "cuidado",
+      "etiquetas": [
+        "cuidado",
+        "básico"
+      ],
+      "habitos": [
+        {
+          "nombre": "Lavarse los dientes",
+          "icono": "🦷",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que cuida lo básico.",
+          "pregunta": "¿Te lavaste los dientes?",
+          "versionMinima": "Un enjuague con agua también cuenta.",
+          "nota": "Deja el cepillo a la vista."
+        },
+        {
+          "nombre": "Ducha o aseo",
+          "icono": "🌱",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se da un momento para sí.",
+          "pregunta": "¿Un momento para la ducha?",
+          "versionMinima": "Lávate la cara.",
+          "nota": "En los días pesados, la versión corta basta."
+        },
+        {
+          "nombre": "Cambiar la ropa de cama",
+          "icono": "🏠",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "semanal_n",
+            "n": 1
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que cuida su espacio de descanso.",
+          "pregunta": "¿Toca cambiar las sábanas?",
+          "versionMinima": "Cambia solo las fundas de almohada.",
+          "nota": "Un día fijo a la semana ayuda a no olvidarlo."
+        }
+      ],
+      "palabraGuia": "amabilidad"
+    },
+    {
+      "id": "volver-con-calma",
+      "nombre": "Volver con calma",
+      "descripcion": "Para retomar después de una pausa, sin ponerse al día.",
+      "objetivo": "volver",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "especiales",
+      "etiquetas": [
+        "volver",
+        "pausa"
+      ],
+      "habitos": [
+        {
+          "nombre": "Un hábito para volver",
+          "icono": "🌱",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que siempre puede volver.",
+          "pregunta": "¿Damos un paso pequeño hoy?",
+          "versionMinima": "Hazlo en su forma más pequeña.",
+          "nota": "No necesitas recuperar nada: hoy empieza de nuevo."
+        },
+        {
+          "nombre": "Anotar cómo llegas",
+          "icono": "✍️",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se escucha.",
+          "pregunta": "¿Cómo llegas hoy?",
+          "versionMinima": "Una palabra para cómo te sientes.",
+          "nota": "Sin juzgarte; solo para saberlo."
+        }
+      ],
+      "palabraGuia": "amabilidad"
+    },
+    {
+      "id": "minimo-del-dia",
+      "nombre": "Mínimo del día",
+      "descripcion": "Tres esenciales para los días con poca energía.",
+      "objetivo": "volver",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "especiales",
+      "etiquetas": [
+        "mínimo",
+        "días difíciles"
+      ],
+      "habitos": [
+        {
+          "nombre": "Moverme un poco",
+          "icono": "🚶",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se mueve aunque sea un poco.",
+          "pregunta": "¿Unos pasos?",
+          "versionMinima": "Párate y estírate.",
+          "nota": "Cualquier movimiento cuenta."
+        },
+        {
+          "nombre": "Tomar agua",
+          "icono": "💧",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que se cuida en lo simple.",
+          "pregunta": "¿Un vaso de agua?",
+          "versionMinima": "Un sorbo.",
+          "nota": "Sin metas, solo acordarte."
+        },
+        {
+          "nombre": "Un momento para mí",
+          "icono": "🤍",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "noche",
+          "identidad": "Soy una persona que se trata con amabilidad.",
+          "pregunta": "¿Un momento para ti?",
+          "versionMinima": "Cierra los ojos un minuto.",
+          "nota": "Lo que te haga bien: música, aire, silencio."
+        }
+      ],
+      "palabraGuia": "amabilidad"
+    },
+    {
+      "id": "habito-en-blanco",
+      "nombre": "Hábito en blanco guiado",
+      "descripcion": "Tu propio hábito, empezando por su versión más pequeña.",
+      "objetivo": "empezar",
+      "momento": "flexible",
+      "minutosPorDia": 5,
+      "nivel": "suave",
+      "categoria": "especiales",
+      "etiquetas": [
+        "propio",
+        "empezar"
+      ],
+      "habitos": [
+        {
+          "nombre": "Mi hábito",
+          "icono": "🌱",
+          "tipo": "check",
+          "meta": {
+            "modo": "libre"
+          },
+          "frecuencia": {
+            "tipo": "diaria"
+          },
+          "bloque": "dia",
+          "identidad": "Soy una persona que cumple lo que se propone, a su ritmo.",
+          "pregunta": "¿Le damos 2 minutos a tu hábito?",
+          "versionMinima": "Hazlo 2 minutos y márcalo.",
+          "nota": "Ponle nombre, hora y meta; lo demás se ajusta después."
+        }
+      ],
+      "palabraGuia": "proposito"
+    }
+  ],
+  "retos": [
+    {
+      "id": "lectura-21",
+      "nombre": "Lectura 21 días",
+      "descripcion": "Diez páginas al día durante tres semanas.",
+      "duracionDias": 21,
+      "categoria": "estudio",
+      "habito": {
+        "nombre": "Leer",
+        "icono": "📖",
+        "tipo": "cantidad",
+        "meta": {
+          "modo": "al_menos",
+          "valor": 10,
+          "unidad": "páginas"
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "noche",
+        "identidad": "Soy una persona que lee.",
+        "pregunta": "¿Tus páginas de hoy?",
+        "versionMinima": "Lee una página.",
+        "nota": "Cualquier libro vale; si no te gusta, cámbialo."
+      },
+      "hitos": [
+        7,
+        14
+      ],
+      "textoCierre": "Tres semanas leyendo. Cada página que leíste es tuya."
+    },
+    {
+      "id": "caminar-30",
+      "nombre": "Caminar 30 días",
+      "descripcion": "Una caminata al día durante un mes.",
+      "duracionDias": 30,
+      "categoria": "movimiento",
+      "habito": {
+        "nombre": "Caminar",
+        "icono": "🚶",
+        "tipo": "tiempo",
+        "meta": {
+          "modo": "al_menos",
+          "valor": 10
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "tarde",
+        "identidad": "Soy una persona que camina.",
+        "pregunta": "¿Salimos a caminar?",
+        "versionMinima": "Camina 2 minutos.",
+        "nota": "El largo lo eliges tú cada día."
+      },
+      "hitos": [
+        7,
+        14,
+        21
+      ],
+      "textoCierre": "Un mes de caminatas. Tus pasos siguen ahí cuando quieras volver a salir."
+    },
+    {
+      "id": "orden-30",
+      "nombre": "Orden 30 días",
+      "descripcion": "Una cosa en su lugar cada día, durante un mes.",
+      "duracionDias": 30,
+      "categoria": "hogar",
+      "habito": {
+        "nombre": "Ordenar una cosa",
+        "icono": "🧹",
+        "tipo": "check",
+        "meta": {
+          "modo": "libre"
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "dia",
+        "identidad": "Soy una persona que cuida su espacio.",
+        "pregunta": "¿Qué ordenamos hoy?",
+        "versionMinima": "Guarda una cosa.",
+        "nota": "Un cajón, una repisa o una bolsa para regalar."
+      },
+      "hitos": [
+        7,
+        14,
+        21
+      ],
+      "textoCierre": "Un mes ordenando de a poco. Tu casa lo nota, y tú también."
+    },
+    {
+      "id": "escribir-14",
+      "nombre": "Escribir 14 días",
+      "descripcion": "Unas líneas al día durante dos semanas.",
+      "duracionDias": 14,
+      "categoria": "especiales",
+      "habito": {
+        "nombre": "Escribir",
+        "icono": "✍️",
+        "tipo": "tiempo",
+        "meta": {
+          "modo": "al_menos",
+          "valor": 5
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "noche",
+        "identidad": "Soy una persona que escribe.",
+        "pregunta": "¿Escribimos un poco?",
+        "versionMinima": "Escribe una línea.",
+        "nota": "Lo que quieras: el día, una idea, una lista."
+      },
+      "hitos": [
+        7
+      ],
+      "textoCierre": "Dos semanas escribiendo. Esas páginas ya cuentan una historia."
+    },
+    {
+      "id": "gratitud-21",
+      "nombre": "Gratitud 21 días",
+      "descripcion": "Una cosa que agradecer cada día, durante tres semanas.",
+      "duracionDias": 21,
+      "categoria": "calma",
+      "habito": {
+        "nombre": "Agradecer algo",
+        "icono": "🤍",
+        "tipo": "check",
+        "meta": {
+          "modo": "libre"
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "noche",
+        "identidad": "Soy una persona que se fija en lo bueno.",
+        "pregunta": "¿Qué agradeces hoy?",
+        "versionMinima": "Piensa en una cosa.",
+        "nota": "Puede repetirse; también vale."
+      },
+      "hitos": [
+        7,
+        14
+      ],
+      "textoCierre": "Tres semanas notando lo bueno. Esa mirada se queda contigo."
+    },
+    {
+      "id": "estirar-21",
+      "nombre": "Estirar 21 días",
+      "descripcion": "Cinco minutos de estiramientos al día, durante tres semanas.",
+      "duracionDias": 21,
+      "categoria": "movimiento",
+      "habito": {
+        "nombre": "Estirar",
+        "icono": "🧘",
+        "tipo": "tiempo",
+        "meta": {
+          "modo": "al_menos",
+          "valor": 5
+        },
+        "frecuencia": {
+          "tipo": "diaria"
+        },
+        "bloque": "dia",
+        "identidad": "Soy una persona que escucha a su cuerpo.",
+        "pregunta": "¿Cinco minutos para estirar?",
+        "versionMinima": "Gira los hombros despacio.",
+        "nota": "Sin llegar al dolor."
+      },
+      "hitos": [
+        7,
+        14
+      ],
+      "textoCierre": "Tres semanas estirando. Ya sabes cómo regalarte una pausa."
+    }
+  ]
 }

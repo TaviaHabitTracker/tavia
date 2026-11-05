@@ -9,7 +9,7 @@ import {
 } from '../js/plantillas.js';
 import { revisarTexto, revisarRutina, revisarReto, revisarCatalogo } from './plantillas-linter.mjs';
 import { validarEntrada, crearModelo } from '../js/modelo.js';
-import { datosVacios } from '../js/esquema.js';
+import { datosVacios, PALABRAS_GUIA } from '../js/esquema.js';
 
 const HOY = '2026-11-04';
 
@@ -41,6 +41,13 @@ test('el catálogo de la app es válido y pasa el linter', () => {
   const raw = JSON.parse(readFileSync(new URL('../data/plantillas_tavia.json', import.meta.url), 'utf8'));
   const cat = validarCatalogo(raw);
   assert.equal(cat.descartadas.length, 0, JSON.stringify(cat.descartadas));
+  assert.deepEqual(cat.avisos, [], 'sin íconos ni frecuencias aproximadas');
+  assert.ok(cat.rutinas.length >= 24, 'al menos 24 rutinas');
+  assert.ok(cat.retos.length >= 6, 'al menos 6 retos');
+  for (const c of ['manana', 'noche', 'estudio', 'movimiento', 'calma', 'hogar', 'finanzas', 'trabajo', 'cuidado', 'especiales']) {
+    assert.ok(cat.rutinas.some((r) => r.categoria === c), `categoría ${c}`);
+  }
+  assert.ok(cat.rutinas.every((r) => !r.palabraGuia || PALABRAS_GUIA.includes(r.palabraGuia)), 'palabras guía existentes');
   const r = revisarCatalogo(cat);
   assert.ok(r.ok, JSON.stringify(r.problemas, null, 1));
 });
@@ -219,7 +226,7 @@ test('el linter atrapa cada categoría prohibida', () => {
     cuerpo_ideal: ['Logra tu cuerpo ideal', 'abdomen plano en verano'],
     medicamentos: ['Toma tu pastilla', 'Recuerda tus medicamentos', 'un suplemento al día'],
     promesa_medica: ['Esto cura el cansancio', 'Previene enfermedades', 'Adiós al insomnio'],
-    estudios_o_cifras: ['Los estudios dicen que…', 'Mejora un 40 %', '21 días forman un hábito', 'según los expertos'],
+    estudios_o_cifras: ['Los estudios dicen que…', 'Un estudio de Harvard', 'Según un estudio reciente', 'Mejora un 40 %', '21 días forman un hábito', 'según los expertos'],
     culpa: ['Tienes que hacerlo', 'Debes cumplir', 'Sin excusas', 'No falles hoy', 'Perdiste la racha'],
     presion: ['¡Vamos!!', 'Compra ya'],
   };
@@ -239,6 +246,8 @@ test('el linter deja pasar el tono de la marca (sin falsos positivos comunes)', 
     'Guarda una moneda en el frasco.',
     'Pesas livianas o botellas de agua sirven.',
     'Ordena tu escritorio según cómo trabajas.',
+    'Empezamos tu sesión de estudio.',
+    'Bloques de estudio con pausas.',
   ];
   for (const s of bien) assert.deepEqual(revisarTexto(s), [], s);
 });

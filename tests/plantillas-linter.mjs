@@ -15,7 +15,11 @@ export const REGLAS = [
   { regla: 'cuerpo_ideal', patrones: [/\bcuerpo (ideal|perfecto|de verano|sonado)/, /\babdomen plano/, /\bvientre plano/, /\bmarcar (abdominales|el abdomen)/, /\btonific/, /\bverte (mejor|bien) (en|al) /, /\bfigura\b/, /\bbikini\b/] },
   { regla: 'medicamentos', patrones: [/\bmedicament/, /\bpastilla/, /\bfarmac/, /\bdosis\b/, /\bsuplement/, /\bvitamina/, /\btratamiento/, /\bremedio/, /\bmelatonina/] },
   { regla: 'promesa_medica', patrones: [/\bcura(r|s|ra)?\b/, /\bsana(r|ra)?\b/, /\bprevien|\bprevenir/, /\breduce el riesgo/, /\bterapia\b/, /\bansiedad\b/, /\bdepresi/, /\binsomnio\b/, /\bdiagnost/, /\bsintoma/, /\bsistema inmun/, /\bdesintoxic/, /\bmejora(ra|s)? tu salud/, /\bgarantiz/] },
-  { regla: 'estudios_o_cifras', patrones: [/\bestudios?\b/, /\binvestigac/, /\bcientific/, /\bcomprobad/, /\bexpertos?\b/, /\bsegun (la|los|las|un|una)\b/, /\d+\s*%/, /\bpor ciento\b/, /\d+\s*veces mas\b/, /\b21 dias (forman?|crean?|bastan|para (formar|crear))/, /\bforma(r)? un habito en\b/] },
+  { regla: 'estudios_o_cifras', patrones: [
+    // «estudio» de estudiar está bien; lo que se bloquea es citar estudios.
+    /\b(un|el|los|varios|algunos|nuevos|ultimos|recientes) estudios? (dice|dicen|muestra|muestran|demuestra|demuestran|indica|indican|revela|revelan|confirma|confirman|de|del)\b/,
+    /\bestudios (dicen|muestran|demuestran|indican|revelan|confirman)\b/, /\bsegun (un|el|los) estudio/,
+    /\binvestigac/, /\bcientific/, /\bcomprobad/, /\bexpertos?\b/, /\bsegun (la|los|las|un|una)\b/, /\d+\s*%/, /\bpor ciento\b/, /\d+\s*veces mas\b/, /\b21 dias (forman?|crean?|bastan|para (formar|crear))/, /\bforma(r)? un habito en\b/] },
   { regla: 'culpa', patrones: [/\btienes que\b/, /\bdebes\b/, /\bdeberias\b/, /\bhay que\b/, /\bsin excusas?\b/, /\bno hay excusa/, /\bobligatori/, /\bno falles\b/, /\bfracas/, /\bperdiste\b/, /\bflojo|\bfloja\b|\bvago\b|\bvaga\b/, /\bno te rindas\b/, /\bnunca (falles|faltes)\b/, /\btodos los dias sin falta\b/, /\bno seas\b/] },
   { regla: 'presion', patrones: [/!{2,}/, /\bya mismo\b/, /\bahora o nunca\b/, /\bultima oportunidad\b/, /\b(compra|compralo|desbloquea) (ya|ahora|pro)\b/,/\bgratis por tiempo\b/] },
 ];
