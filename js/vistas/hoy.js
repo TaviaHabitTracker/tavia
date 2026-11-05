@@ -1,6 +1,8 @@
 // vistas/hoy.js — La pantalla Hoy: hace una sola cosa, marcar lo de hoy.
 
 import { el, icono, iconoHabito, menosMovimiento, simboloTavia } from '../dom.js';
+import { dibujarColeccion } from '../coleccion.js';
+import { abrirColeccion } from './coleccion.js';
 import { t } from '../textos.js';
 import { BLOQUES } from '../esquema.js';
 import { fechaLarga, inicioSemana, sumarDias } from '../fechas.js';
@@ -195,6 +197,17 @@ export function dibujarBrote(fraccion, { antes = fraccion, clase = 'brote' } = {
   return svg;
 }
 
+/** El brote clásico o, con un tema de colección activo, el dibujo de su nivel (tocable: abre la colección). */
+function broteDelDia(ctx, fraccion, antes) {
+  const col = ctx.coleccion?.();
+  if (!col) return dibujarBrote(fraccion, { antes });
+  return el('button', {
+    class: 'panel-dia__coleccion', type: 'button', data: { foco: 'abrir-coleccion' },
+    aria: { label: t('coleccion.verNivel', { tema: t(`coleccion.${col.id}`), nombre: t(`coleccion.${col.id}.${col.nivel}`), nivel: col.nivel }) },
+    onclick: () => abrirColeccion(ctx),
+  }, dibujarColeccion(col.id, col.nivel, { progreso: fraccion }));
+}
+
 function cifra(valor, etiqueta, { sufijo = null, extra = null, clase = '' } = {}) {
   return el('div', { class: `kpi ${clase}`.trim() },
     el('dt', { class: 'kpi__etiqueta' }, etiqueta, extra),
@@ -237,7 +250,7 @@ function panelDia(ctx, fecha, hoy, prog, vivos) {
       el('div', {
         class: 'panel-dia__brote', role: 'progressbar',
         aria: { valuemin: 0, valuemax: prog.total, valuenow: prog.hechos, label: t('hoy.progreso', prog) },
-      }, dibujarBrote(fraccion, { antes })),
+      }, broteDelDia(ctx, fraccion, antes)),
       el('dl', { class: 'kpis' },
         cifra(String(prog.hechos), t(fecha === hoy ? 'hoy.kpi.hoy' : 'hoy.kpi.dia'), { sufijo: `/${prog.total}`, clase: 'tv-progreso__texto' }),
         cifra(num(racha), t('hoy.kpi.racha', { n: racha })),

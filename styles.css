@@ -1439,3 +1439,59 @@ details.mas > summary { color: var(--acento-texto); }
 .guia--compacta[open] .guia__flecha { transform: rotate(90deg); }
 .guia__cuerpo { display: grid; gap: 16px; padding: 4px 16px 10px; }
 .guia--compacta[open] .guia__cuerpo { animation: tv-aparecer 220ms ease-out; }
+
+/* ---------- Temas de colección (Pro, en prueba · 0.15) ----------
+   10 temas × 5 niveles que se ganan con días registrados. Sus colores llegan como variables en la raíz
+   (las pone main.js); aquí van el dibujo de Hoy, la colección y la pantalla al subir de nivel. */
+:root[data-coleccion] .panel-dia__fila { grid-template-columns: 124px 1fr; }
+:root[data-coleccion] .panel-dia__brote { width: 124px; height: 124px; }
+.panel-dia__coleccion { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; border-radius: 50%; }
+.panel-dia__coleccion:focus-visible { outline: 2px solid var(--foco); outline-offset: 4px; }
+.coleccion-arte { width: 100%; height: 100%; display: block; overflow: visible; }
+.coleccion-arte__pista { fill: none; stroke: var(--linea); stroke-width: 2; }
+.coleccion-arte__anillo { fill: none; stroke: var(--acento); stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 900ms var(--curva-suave); }
+
+.coleccion { display: grid; gap: var(--espacio-4); }
+.coleccion-resumen__cifra { font-size: 15px; font-weight: 600; }
+.coleccion-resumen__cifra strong { font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; }
+.coleccion-rango { width: 100%; accent-color: var(--acento); min-height: 44px; }
+.coleccion-lista { display: grid; gap: var(--espacio-3); border: 0; padding: 0; margin: 0; min-width: 0; }
+.coleccion-tema {
+  position: relative; display: grid; gap: var(--espacio-2); padding: var(--espacio-3);
+  border: 1px solid var(--linea); border-radius: var(--radio-lg); background: var(--superficie); cursor: pointer;
+}
+.coleccion-tema input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; z-index: 1; }
+.coleccion-tema:has(input:checked) { border-color: var(--acento-texto); box-shadow: inset 0 0 0 1px var(--acento); }
+.coleccion-tema:has(input:focus-visible) { outline: 2px solid var(--foco); outline-offset: 2px; }
+.coleccion-tema__cabeza { display: flex; align-items: center; gap: var(--espacio-2); }
+.coleccion-tema__nombre { font-weight: 700; }
+.coleccion-tema__uso { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: var(--radio-pill); background: var(--acento); color: var(--sobre-acento); }
+.coleccion-tema__cuenta { margin-left: auto; font-size: 13px; color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.coleccion-tema__desc { font-size: 13px; color: var(--tinta-suave); }
+.coleccion-tema__niveles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.coleccion-nivel { display: grid; justify-items: center; gap: 4px; min-width: 0; }
+.coleccion-nivel__nombre { font-size: 11px; line-height: 1.25; text-align: center; color: var(--tinta-suave); }
+.coleccion-baldosa { display: block; width: 100%; aspect-ratio: 1; padding: 4px; border-radius: 12px; background: var(--baldosa, transparent); }
+.coleccion-baldosa--proxima { border: 1.5px dashed var(--linea-fuerte); }
+.coleccion-baldosa--proxima svg { filter: grayscale(1); opacity: .4; }
+
+.tv-hoja--subida .tv-hoja__cuerpo { text-align: center; }
+.tv-hoja--subida .tv-hoja__titulo { font-size: 28px; line-height: 1.15; }
+.tv-hoja--subida .tv-hoja__cabecera { flex-wrap: wrap; }
+.tv-hoja--subida .tv-hoja__titulo { flex: 1; }
+.subida__ceja { flex-basis: 100%; order: -1; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); }
+.subida__arte { width: min(240px, 70vw); aspect-ratio: 1; margin: var(--espacio-2) auto 0; padding: 18px; border-radius: var(--radio-xl); background: var(--baldosa); animation: tv-subida 1200ms var(--curva-suave) both; }
+.subida__nivel { color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.subida__texto { max-width: 34ch; margin: 0 auto; }
+@keyframes tv-subida { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .subida__arte { animation: none; } .coleccion-arte__anillo { transition: none; } }
+
+/* Colores de hábito según si el tema de colección es claro u oscuro (manda sobre claro/oscuro del sistema). */
+:root[data-coleccion-tono="claro"] {
+  --habito-pino: #3E7D69; --habito-lago: #3D6A8A; --habito-ciruela: #7A4A6E;
+  --habito-arcilla: #A65A3C; --habito-musgo: #5B6E2F; --habito-miel: #8A6312;
+}
+:root[data-coleccion-tono="oscuro"] {
+  --habito-pino: #7CC2AE; --habito-lago: #8FB6D6; --habito-ciruela: #C99BBD;
+  --habito-arcilla: #E09A7C; --habito-musgo: #B3C47A; --habito-miel: #E2B45E;
+}

@@ -26,6 +26,8 @@ import { BARRA, BARRA_ESTILO, PALETA, paletaEfectiva } from './temas.js';
 import { mostrarManifiestoSiToca } from './vistas/manifiesto.js';
 import { cargarFrases } from './frases.js';
 import { prepararSemana } from './vistas/descubrimientos.js';
+import { COLECCIONES, nivelDe, paletaDe } from './coleccion.js';
+import { abrirSubida } from './vistas/coleccion.js';
 
 const PESTANAS = [
   ['hoy', 'hoy', renderHoy],
@@ -34,16 +36,31 @@ const PESTANAS = [
 ];
 const PISTA_TEMA = 'tavia:tema'; // copia mínima (tema, paleta y estilo) para pintar sin parpadeo antes de abrir la base
 
-/** Aplica tema y paleta al documento y a la barra del sistema. */
-function pintarTema(tema, paleta, estilo = 'analista') {
+/** Aplica tema y paleta al documento y a la barra del sistema. Un tema de colección manda sobre ambos. */
+function pintarTema(tema, paleta, estilo = 'analista', col = null) {
   const raiz = document.documentElement;
-  if (ESTILOS.includes(estilo) && estilo !== 'analista') raiz.dataset.estilo = estilo;
+  const vars = col ? paletaDe(col.id, col.nivel) : null;
+  if (!vars && ESTILOS.includes(estilo) && estilo !== 'analista') raiz.dataset.estilo = estilo;
   else delete raiz.dataset.estilo;
   if (tema === 'claro' || tema === 'oscuro' || tema === 'negro') raiz.dataset.theme = tema;
   else delete raiz.dataset.theme;
   if (paleta && paleta !== 'ambar') raiz.dataset.paleta = paleta;
   else delete raiz.dataset.paleta;
+  // Tema de colección: sus colores van como variables en la raíz (CSSOM, permitido por la CSP).
+  for (const k of [...raiz.style]) if (k.startsWith('--') || k === 'color-scheme') raiz.style.removeProperty(k);
+  if (vars) {
+    raiz.dataset.coleccion = col.id;
+    raiz.dataset.nivel = String(col.nivel);
+    raiz.dataset.coleccionTono = vars.oscuro ? 'oscuro' : 'claro';
+    for (const [k, v] of Object.entries(vars)) if (k.startsWith('--')) raiz.style.setProperty(k, v);
+    raiz.style.setProperty('color-scheme', vars.oscuro ? 'dark' : 'light');
+  } else {
+    delete raiz.dataset.coleccion;
+    delete raiz.dataset.nivel;
+    delete raiz.dataset.coleccionTono;
+  }
   document.querySelectorAll('meta[name="theme-color"]').forEach((m, i) => {
+    if (vars) { m.setAttribute('content', vars['--fondo']); return; }
     const barra = BARRA_ESTILO[estilo] || BARRA;
     m.setAttribute('content', tema === 'auto' ? (i === 0 ? barra.claro : barra.oscuro) : barra[tema]);
   });
@@ -51,8 +68,9 @@ function pintarTema(tema, paleta, estilo = 'analista') {
 
 // Antes de abrir la base de datos (asíncrona), pintamos con lo último que se usó.
 try {
-  const [tema, paleta, estilo] = (localStorage.getItem(PISTA_TEMA) || '').split('|');
-  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'ambar', estilo);
+  const [tema, paleta, estilo, coleccion, nivel] = (localStorage.getItem(PISTA_TEMA) || '').split('|');
+  const col = COLECCIONES.includes(coleccion) && /^[1-5]$/.test(nivel) ? { id: coleccion, nivel: Number(nivel) } : null;
+  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'ambar', estilo, col);
 } catch { /* sin localStorage: se pinta al cargar */ }
 
 async function iniciar() {
@@ -123,9 +141,20 @@ async function iniciar() {
   /* Días registrados: desbloquean paletas. Si se gana una nueva, se avisa con calma (sin confeti). */
   let diasRegistrados = modelo.diasRegistrados();
   ctx.diasRegistrados = () => diasRegistrados;
+  /** Tema de colección activo con su nivel (con los días simulados si está el modo prueba). */
+  ctx.coleccion = () => {
+    const id = modelo.config.coleccion;
+    if (!COLECCIONES.includes(id)) return null;
+    const prueba = modelo.config.coleccionPrueba;
+    const dias = prueba ?? diasRegistrados;
+    return { id, dias, nivel: nivelDe(dias), prueba: prueba !== null };
+  };
   function contarDias(avisar) {
     const antes = diasRegistrados;
     diasRegistrados = modelo.diasRegistrados();
+    // Subir de nivel en el tema de colección: una pantalla sobria (sin confeti), una sola vez.
+    const col = ctx.coleccion();
+    if (col && !col.prueba && avisar && cargado && nivelDe(diasRegistrados) > nivelDe(antes)) abrirSubida(ctx, col.id, col.nivel);
     if (diasRegistrados !== antes) aplicarTema(); // por si la paleta elegida dejó de estar ganada
     const nueva = Object.entries(PALETA).find(([, p]) => p.dias > antes && p.dias <= diasRegistrados);
     if (nueva && avisar && cargado) deshacer.mostrar(t('paleta.ganada', { nombre: t(`paleta.${nueva[0]}`) }));
@@ -327,8 +356,9 @@ async function iniciar() {
     const tema = modelo.config.tema;
     const paleta = paletaEfectiva(modelo.config.paleta, diasRegistrados);
     const estilo = modelo.config.estilo || 'analista';
-    pintarTema(tema, paleta, estilo);
-    try { localStorage.setItem(PISTA_TEMA, `${tema}|${paleta}|${estilo}`); } catch { /* no es grave */ }
+    const col = ctx.coleccion();
+    pintarTema(tema, paleta, estilo, col);
+    try { localStorage.setItem(PISTA_TEMA, `${tema}|${paleta}|${estilo}|${col?.id ?? ''}|${col?.nivel ?? ''}`); } catch { /* no es grave */ }
   }
 
   /* ---------- Aviso de respaldo (más de 14 días) ---------- */

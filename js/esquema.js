@@ -36,6 +36,8 @@ const PALETAS_ANTES = { pino: 'ambar', arena: 'cobre', niebla: 'acero', ciruela:
 export const TEMAS = ['auto', 'claro', 'oscuro', 'negro'];
 /** Temas Pro (en prueba): cambian letra, colores, brote, mapa de calor y movimiento. «analista» es el de siempre. */
 export const ESTILOS = ['analista', 'kanso', 'calibre', 'observatorio', 'gaceta'];
+/** Temas de colección (Pro, en prueba): suben de nivel con días registrados (ver coleccion.js). */
+export const COLECCIONES_IDS = ['minas', 'condor', 'cielo', 'oceano', 'araucaria', 'cumbre', 'origami', 'arquitectura', 'navegante', 'panal'];
 export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
 /* Jardín anual: solo ajustes. El jardín se calcula siempre desde los registros. */
 export const HEMISFERIOS = ['sur', 'norte'];
@@ -95,6 +97,8 @@ export function configPorDefecto() {
     avisosVistos: [],
     paleta: 'ambar',
     estilo: 'analista', // tema Pro en prueba (ver ESTILOS)
+    coleccion: '', // tema de colección activo ('' = ninguno; ver COLECCIONES_IDS)
+    coleccionPrueba: null, // días simulados para probar los niveles (null = días reales)
     manifiesto: '',
     manifiestoModo: 'pantalla', // pantalla breve una vez al día · línea en Hoy · no mostrar
     manifiestoVisto: null, // 'YYYY-MM-DD' del último día en que se mostró la pantalla
@@ -261,6 +265,8 @@ export function sanearConfig(c, idsValidos = null) {
       : [],
     paleta: PALETAS.includes(c.paleta) ? c.paleta : PALETAS_ANTES[c.paleta] || base.paleta,
     estilo: ESTILOS.includes(c.estilo) ? c.estilo : base.estilo,
+    coleccion: COLECCIONES_IDS.includes(c.coleccion) ? c.coleccion : '',
+    coleccionPrueba: Number.isInteger(c.coleccionPrueba) && c.coleccionPrueba >= 0 && c.coleccionPrueba <= 400 ? c.coleccionPrueba : null,
     manifiesto: texto(c.manifiesto, LIMITES.manifiesto).replace(/\n{3,}/g, '\n\n'),
     manifiestoModo: MODOS_MANIFIESTO.includes(c.manifiestoModo) ? c.manifiestoModo : base.manifiestoModo,
     manifiestoVisto: esFechaValida(c.manifiestoVisto) ? c.manifiestoVisto : null,
