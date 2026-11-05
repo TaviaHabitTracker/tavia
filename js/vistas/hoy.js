@@ -197,15 +197,28 @@ export function dibujarBrote(fraccion, { antes = fraccion, clase = 'brote' } = {
   return svg;
 }
 
-/** El brote clásico o, con un tema de colección activo, el dibujo de su nivel (tocable: abre la colección). */
+/**
+ * El brote clásico o, con un tema de colección activo, el dibujo de su nivel (tocable: abre la colección).
+ * Al marcar un hábito el anillo avanza suave y el dibujo late una vez; al completar el día, brilla.
+ */
 function broteDelDia(ctx, fraccion, antes) {
   const col = ctx.coleccion?.();
   if (!col) return dibujarBrote(fraccion, { antes });
-  return el('button', {
-    class: 'panel-dia__coleccion', type: 'button', data: { foco: 'abrir-coleccion' },
+  const svg = dibujarColeccion(col.id, col.nivel, { progreso: antes });
+  const cambio = antes !== fraccion;
+  const florece = fraccion >= 1 && antes < 1;
+  const boton = el('button', {
+    class: `panel-dia__coleccion${cambio ? (florece ? ' panel-dia__coleccion--florece' : ' panel-dia__coleccion--late') : ''}`,
+    type: 'button', data: { foco: 'abrir-coleccion' },
     aria: { label: t('coleccion.verNivel', { tema: t(`coleccion.${col.id}`), nombre: t(`coleccion.${col.id}.${col.nivel}`), nivel: col.nivel }) },
     onclick: () => abrirColeccion(ctx),
-  }, dibujarColeccion(col.id, col.nivel, { progreso: fraccion }));
+  }, svg);
+  if (cambio) {
+    const anillo = svg.querySelector('.coleccion-arte__anillo');
+    if (menosMovimiento()) anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`);
+    else requestAnimationFrame(() => requestAnimationFrame(() => anillo.setAttribute('stroke-dasharray', `${fraccion * 100} 100`)));
+  }
+  return boton;
 }
 
 function cifra(valor, etiqueta, { sufijo = null, extra = null, clase = '' } = {}) {

@@ -151,6 +151,21 @@ async function abrir(b, config, op = {}) {
     await c3.close();
   }
 
+  // 0.15.4: en Hoy el dibujo late al marcar un hábito y brilla al completar el día.
+  {
+    const { ctx: c4, p: p4 } = await abrir(b, { coleccion: 'navegante', coleccionPrueba: 160 }, { reducedMotion: 'no-preference' });
+    vigilar(p4, 'hoy-movimiento');
+    await p4.goto(URL_APP + '#hoy');
+    await p4.waitForSelector('.panel-dia__coleccion');
+    await p4.locator('[data-foco="check-med"]').click();
+    await p4.waitForSelector('.panel-dia__coleccion--late');
+    await p4.locator('[data-foco="check-cam"]').click();
+    await p4.waitForSelector('.panel-dia__coleccion--florece');
+    assert.equal(await p4.locator('.coleccion-arte__anillo').getAttribute('stroke-dasharray'), '100 100');
+    paso('Hoy: el dibujo late al marcar y brilla al completar el día');
+    await c4.close();
+  }
+
   assert.deepEqual(errores, []);
   paso('sin errores de consola');
   await b.close();

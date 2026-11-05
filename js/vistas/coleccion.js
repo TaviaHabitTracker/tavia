@@ -112,6 +112,10 @@ export function abrirColeccion(ctx) {
   }
 
   pintar();
+  // Solo al abrir: los temas entran escalonados (no cada vez que se elige uno).
+  cuerpo.classList.add('coleccion--entra');
+  [...cuerpo.querySelectorAll('.coleccion-tema')].forEach((n, i) => n.style.setProperty('--t', `${Math.min(i, 8) * 45}ms`));
+  setTimeout(() => cuerpo.classList.remove('coleccion--entra'), 1200);
   abrirHoja({ titulo: t('coleccion.titulo'), etiqueta: 'coleccion', clase: 'tv-hoja--completa', contenido: () => cuerpo });
 }
 
@@ -126,9 +130,16 @@ export function abrirSubida(ctx, tema, nivel, dias = UMBRALES[nivel - 1]) {
       const svg = dibujarColeccion(tema, nivel);
       const arte = el('div', { class: 'subida__arte', data: { anim: ANIMACION[tema] } }, svg);
       arte.style.setProperty('--baldosa', fondoDe(tema, nivel));
-      // Las piezas del dibujo entran en orden (la animación de cada tema decide cómo).
+      // Las piezas del dibujo entran en orden. Cada una va dentro de un grupo propio: así se mueve
+      // (sube, crece) sin pisar los giros que ya trae en su dibujo.
       const piezas = [...svg.children].filter((n) => n.tagName !== 'defs');
-      piezas.forEach((n, i) => { n.classList.add('subida__pieza'); n.style.setProperty('--t', `${Math.round((i / Math.max(1, piezas.length - 1)) * 900)}ms`); });
+      piezas.forEach((n, i) => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'subida__pieza');
+        g.style.setProperty('--t', `${Math.round((i / Math.max(1, piezas.length - 1)) * 700)}ms`);
+        n.replaceWith(g);
+        g.append(n);
+      });
       return [
         arte,
         el('p', { class: 'subida__nivel' }, t('coleccion.subida.nivel', { n: nivel })),
