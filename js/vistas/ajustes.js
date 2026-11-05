@@ -2,7 +2,7 @@
 
 import { el, icono, iconoHabito } from '../dom.js';
 import { APP, t } from '../textos.js';
-import { BLOQUEOS, FINES_DE_DIA, HEMISFERIOS, LIMITES, MODOS_MANIFIESTO, TEMAS, UMBRALES_JARDIN } from '../esquema.js';
+import { BLOQUEOS, ESTILOS, FINES_DE_DIA, HEMISFERIOS, LIMITES, MODOS_MANIFIESTO, TEMAS, UMBRALES_JARDIN } from '../esquema.js';
 import { diffDias, fechaLarga } from '../fechas.js';
 import { pausaActual } from '../calculos.js';
 import { confirmar } from '../ui.js';
@@ -158,8 +158,21 @@ function seccionApariencia(ctx) {
         el('span', { class: 'paleta-opcion__estado' }, p.ganada ? t(p.dias ? 'paleta.ganadaCon' : 'paleta.base', { n: p.dias }) : t('paleta.faltan', { n: p.dias, faltan: p.faltan }))),
     )));
   lista.addEventListener('change', (e) => modelo.setConfig({ paleta: e.target.value }));
+
+  // Temas Pro (en prueba): cambian toda la app, no solo el acento.
+  const estiloActual = ESTILOS.includes(modelo.config.estilo) ? modelo.config.estilo : 'analista';
+  const estilos = el('fieldset', { class: 'paletas' },
+    el('legend', { class: 'campo__etiqueta' }, t('estilo.titulo')),
+    ESTILOS.map((id) => el('label', { class: 'paleta-opcion' },
+      el('input', { type: 'radio', name: 'estilo', value: id, checked: estiloActual === id, data: { foco: `estilo-${id}` } }),
+      el('span', { class: `muestra muestra--estilo-${id}`, aria: { hidden: 'true' } }),
+      el('span', { class: 'paleta-opcion__texto' },
+        el('span', { class: 'paleta-opcion__nombre' }, t(`estilo.${id}`)),
+        el('span', { class: 'paleta-opcion__estado' }, t(`estilo.${id}.desc`))))));
+  estilos.addEventListener('change', (e) => modelo.setConfig({ estilo: e.target.value }));
   return seccion(t('ajustes.apariencia'), grupo, el('p', { class: 'texto-ayuda' }, t('tema.ayuda')),
-    el('div', { class: 'separador' }), lista, el('p', { class: 'texto-ayuda' }, t('paleta.ayuda', { n: num(dias) })));
+    el('div', { class: 'separador' }), lista, el('p', { class: 'texto-ayuda' }, t('paleta.ayuda', { n: num(dias) })),
+    el('div', { class: 'separador' }), estilos, el('p', { class: 'texto-ayuda' }, t('estilo.ayuda')));
 }
 
 /** Manifiesto personal: unas líneas propias que se muestran al abrir (o arriba en Hoy). */

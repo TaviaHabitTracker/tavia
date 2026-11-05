@@ -4,7 +4,7 @@
 export const APP = {
   nombre: 'Tavia',
   nombreCompleto: 'Tavia Habit Tracker',
-  version: '0.13.3', // igual que VERSION en sw.js
+  version: '0.14.0', // igual que VERSION en sw.js
 };
 
 const es = {
@@ -436,6 +436,18 @@ const es = {
   'paleta.faltan': 'Con {n} días registrados · te {faltan|falta|faltan} {faltan}',
   'paleta.ayuda': 'Los colores se ganan con días registrados, seguidos o no: fallar un día no te quita nada. Llevas {n}.',
   'paleta.ganada': 'Ganaste el color {nombre}. Puedes usarlo en Ajustes → Apariencia.',
+  'estilo.titulo': 'Temas Pro (prueba)',
+  'estilo.analista': 'Analista',
+  'estilo.analista.desc': 'El de siempre: grafito o papel y un solo acento',
+  'estilo.kanso': 'Kanso',
+  'estilo.kanso.desc': 'Tinta y papel; al volver tras una pausa, una costura de oro',
+  'estilo.calibre': 'Calibre',
+  'estilo.calibre.desc': 'Reloj suizo: el brote es una esfera de 60 marcas',
+  'estilo.observatorio': 'Observatorio',
+  'estilo.observatorio.desc': 'Noche: cada día cumplido enciende una estrella',
+  'estilo.gaceta': 'Gaceta',
+  'estilo.gaceta.desc': 'Revista de domingo: letra Bodoni y puntos de imprenta',
+  'estilo.ayuda': 'Versión de prueba de los temas Pro. Cambian la letra, los colores, el brote y el mapa de calor, y funcionan con claro, oscuro y negro. Con un tema Pro, el color de acento de arriba no se usa.',
 
   'manifiesto.titulo': 'Tu manifiesto',
   'manifiesto.etiqueta': 'Unas líneas tuyas, para recordar por qué haces esto',

@@ -34,6 +34,8 @@ export const PALETAS = ['ambar', 'cobre', 'salvia', 'acero', 'platino'];
 /** Nombres de la versión 0.8 → paletas nuevas (para no perder la elección al actualizar). */
 const PALETAS_ANTES = { pino: 'ambar', arena: 'cobre', niebla: 'acero', ciruela: 'salvia', obsidiana: 'platino' };
 export const TEMAS = ['auto', 'claro', 'oscuro', 'negro'];
+/** Temas Pro (en prueba): cambian letra, colores, brote, mapa de calor y movimiento. «analista» es el de siempre. */
+export const ESTILOS = ['analista', 'kanso', 'calibre', 'observatorio', 'gaceta'];
 export const MODOS_MANIFIESTO = ['pantalla', 'linea', 'no'];
 /* Jardín anual: solo ajustes. El jardín se calcula siempre desde los registros. */
 export const HEMISFERIOS = ['sur', 'norte'];
@@ -92,6 +94,7 @@ export function configPorDefecto() {
     pinEspera: 0,
     avisosVistos: [],
     paleta: 'ambar',
+    estilo: 'analista', // tema Pro en prueba (ver ESTILOS)
     manifiesto: '',
     manifiestoModo: 'pantalla', // pantalla breve una vez al día · línea en Hoy · no mostrar
     manifiestoVisto: null, // 'YYYY-MM-DD' del último día en que se mostró la pantalla
@@ -257,6 +260,7 @@ export function sanearConfig(c, idsValidos = null) {
       ? [...new Set(c.avisosVistos.filter((x) => typeof x === 'string' && /^[\w.-]{1,40}$/.test(x)))].slice(0, 50)
       : [],
     paleta: PALETAS.includes(c.paleta) ? c.paleta : PALETAS_ANTES[c.paleta] || base.paleta,
+    estilo: ESTILOS.includes(c.estilo) ? c.estilo : base.estilo,
     manifiesto: texto(c.manifiesto, LIMITES.manifiesto).replace(/\n{3,}/g, '\n\n'),
     manifiestoModo: MODOS_MANIFIESTO.includes(c.manifiestoModo) ? c.manifiestoModo : base.manifiestoModo,
     manifiestoVisto: esFechaValida(c.manifiestoVisto) ? c.manifiestoVisto : null,

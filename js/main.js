@@ -4,7 +4,7 @@
 import { el, icono, vaciar, vibrar } from './dom.js';
 import { t } from './textos.js';
 import { diffDias, fechaLocal, msHastaCambioDeDia } from './fechas.js';
-import { datosVacios } from './esquema.js';
+import { datosVacios, ESTILOS } from './esquema.js';
 import { crearAlmacen } from './storage.js';
 import { crearModelo } from './modelo.js';
 import { estadoDelDia } from './calculos.js';
@@ -22,7 +22,7 @@ import { abrirAnalisis } from './vistas/analisis.js';
 import { renderBloqueo } from './vistas/seguridad.js';
 import { exportar } from './vistas/datos.js';
 import { iniciarPWA } from './pwa.js';
-import { BARRA, PALETA, paletaEfectiva } from './temas.js';
+import { BARRA, BARRA_ESTILO, PALETA, paletaEfectiva } from './temas.js';
 import { mostrarManifiestoSiToca } from './vistas/manifiesto.js';
 import { cargarFrases } from './frases.js';
 import { prepararSemana } from './vistas/descubrimientos.js';
@@ -32,24 +32,27 @@ const PESTANAS = [
   ['progreso', 'progreso', renderProgreso],
   ['ajustes', 'ajustes', renderAjustes],
 ];
-const PISTA_TEMA = 'tavia:tema'; // copia mínima (tema y paleta) para pintar sin parpadeo antes de abrir la base
+const PISTA_TEMA = 'tavia:tema'; // copia mínima (tema, paleta y estilo) para pintar sin parpadeo antes de abrir la base
 
 /** Aplica tema y paleta al documento y a la barra del sistema. */
-function pintarTema(tema, paleta) {
+function pintarTema(tema, paleta, estilo = 'analista') {
   const raiz = document.documentElement;
+  if (ESTILOS.includes(estilo) && estilo !== 'analista') raiz.dataset.estilo = estilo;
+  else delete raiz.dataset.estilo;
   if (tema === 'claro' || tema === 'oscuro' || tema === 'negro') raiz.dataset.theme = tema;
   else delete raiz.dataset.theme;
   if (paleta && paleta !== 'ambar') raiz.dataset.paleta = paleta;
   else delete raiz.dataset.paleta;
   document.querySelectorAll('meta[name="theme-color"]').forEach((m, i) => {
-    m.setAttribute('content', tema === 'auto' ? (i === 0 ? BARRA.claro : BARRA.oscuro) : BARRA[tema]);
+    const barra = BARRA_ESTILO[estilo] || BARRA;
+    m.setAttribute('content', tema === 'auto' ? (i === 0 ? barra.claro : barra.oscuro) : barra[tema]);
   });
 }
 
 // Antes de abrir la base de datos (asíncrona), pintamos con lo último que se usó.
 try {
-  const [tema, paleta] = (localStorage.getItem(PISTA_TEMA) || '').split('|');
-  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'ambar');
+  const [tema, paleta, estilo] = (localStorage.getItem(PISTA_TEMA) || '').split('|');
+  if (tema) pintarTema(tema, PALETA[paleta] ? paleta : 'ambar', estilo);
 } catch { /* sin localStorage: se pinta al cargar */ }
 
 async function iniciar() {
@@ -309,8 +312,9 @@ async function iniciar() {
   function aplicarTema() {
     const tema = modelo.config.tema;
     const paleta = paletaEfectiva(modelo.config.paleta, diasRegistrados);
-    pintarTema(tema, paleta);
-    try { localStorage.setItem(PISTA_TEMA, `${tema}|${paleta}`); } catch { /* no es grave */ }
+    const estilo = modelo.config.estilo || 'analista';
+    pintarTema(tema, paleta, estilo);
+    try { localStorage.setItem(PISTA_TEMA, `${tema}|${paleta}|${estilo}`); } catch { /* no es grave */ }
   }
 
   /* ---------- Aviso de respaldo (más de 14 días) ---------- */

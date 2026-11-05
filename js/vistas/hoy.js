@@ -162,7 +162,9 @@ function svgNodo(tag, attrs, padre) {
 export function dibujarBrote(fraccion, { antes = fraccion, clase = 'brote' } = {}) {
   const svg = svgNodo('svg', { viewBox: '0 0 96 96', class: clase, 'aria-hidden': 'true' });
   svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__pista' }, svg);
+  svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__doble' }, svg); // doble filete (tema Gaceta)
   const anillo = svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__anillo', pathLength: 100, transform: 'rotate(-90 48 48)', 'stroke-dasharray': `${antes * 100} 100` }, svg);
+  svgNodo('circle', { cx: 48, cy: 48, r: 45, class: 'brote__marcas' }, svg); // corta el anillo en 60 marcas (tema Calibre)
   svgNodo('path', { d: 'M48 80V42', class: 'brote__tallo' }, svg);
   const hojas = [
     ['M48 66C40 66 31 62 28 51c10 0 18 5 20 15z', fraccion > 0, antes > 0],

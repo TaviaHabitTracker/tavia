@@ -3,7 +3,7 @@
 // IMPORTANTE: cada vez que cambies cualquier archivo de la app, sube VERSION.
 // Así el navegador detecta la versión nueva y la app muestra "Hay una versión nueva · Actualizar".
 
-const VERSION = 'tavia-0.13.3';
+const VERSION = 'tavia-0.14.0';
 
 const ARCHIVOS = [
   './',
@@ -12,6 +12,19 @@ const ARCHIVOS = [
   './manifest.json',
   './fonts/InstrumentSans-Variable.woff2',
   './fonts/FrauncesSoft-Variable.woff2',
+  './fonts/pro/Archivo.woff',
+  './fonts/pro/BodoniModa-Italic.woff',
+  './fonts/pro/BodoniModa.woff',
+  './fonts/pro/CormorantGaramond-Italic.woff',
+  './fonts/pro/DMMono-Medium.woff',
+  './fonts/pro/DMMono-Regular.woff',
+  './fonts/pro/DMSans.woff',
+  './fonts/pro/HankenGrotesk.woff',
+  './fonts/pro/IBMPlexMono-Regular.woff',
+  './fonts/pro/IBMPlexMono-SemiBold.woff',
+  './fonts/pro/LibreFranklin.woff',
+  './fonts/pro/OFL.txt',
+  './fonts/pro/Spectral-ExtraLight.woff',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',

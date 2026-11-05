@@ -445,7 +445,7 @@ details.mas > .campos { display: grid; gap: var(--espacio-4); padding-top: var(-
 .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: var(--espacio-2); }
 .cifra { display: grid; gap: 2px; align-content: start; }
 .cifra.tarjeta { gap: 2px; }
-.cifra__valor { font: 520 28px/34px var(--font-display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--tinta); }
+.cifra__valor { font: 520 28px/34px var(--font-cifras, var(--font-display)); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--tinta); }
 .cifra__valor--chica { font-size: 22px; line-height: 28px; }
 .cifra__etiqueta { font: 500 12px/16px var(--font-sans); color: var(--tinta-suave); }
 .estadisticas { display: grid; gap: var(--espacio-3); }
@@ -676,7 +676,7 @@ body { font-family: var(--font-sans); }
 
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; margin: 0; }
 .kpi { display: flex; flex-direction: column-reverse; justify-content: flex-end; margin: 0; min-width: 0; }
-.kpi__valor { margin: 0; font: 600 30px/32px var(--font-display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--tinta); white-space: nowrap; }
+.kpi__valor { margin: 0; font: 600 30px/32px var(--font-cifras, var(--font-display)); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--tinta); white-space: nowrap; }
 .kpi__valor small { font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--tinta-tenue); }
 .kpi__etiqueta { font: 500 12px/16px var(--font-sans); color: var(--tinta-tenue); }
 .kpi__cambio { color: var(--acento-texto); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -1288,3 +1288,132 @@ details.mas > summary { color: var(--acento-texto); }
 .desc-revision { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--radio-md); background: var(--capa); }
 .desc-revision p { margin: 0; }
 .desc-ajustes > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+
+/* ================================================================
+   Temas Pro (0.14, en prueba): Gaceta, Calibre, Observatorio y Kanso.
+   Cambian letra, colores, brote, mapa de calor y movimiento. Se eligen en Ajustes → Apariencia.
+   Fuentes con licencia OFL en fonts/pro (ver fonts/pro/OFL.txt).
+   ================================================================ */
+@font-face { font-family: 'Bodoni Moda'; src: url('fonts/pro/BodoniModa.woff') format('woff'); font-weight: 400 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Bodoni Moda'; src: url('fonts/pro/BodoniModa-Italic.woff') format('woff'); font-weight: 400 900; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Libre Franklin'; src: url('fonts/pro/LibreFranklin.woff') format('woff'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('fonts/pro/Archivo.woff') format('woff'); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/pro/IBMPlexMono-Regular.woff') format('woff'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/pro/IBMPlexMono-SemiBold.woff') format('woff'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Cormorant Garamond'; src: url('fonts/pro/CormorantGaramond-Italic.woff') format('woff'); font-weight: 300 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'DM Sans'; src: url('fonts/pro/DMSans.woff') format('woff'); font-weight: 100 1000; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url('fonts/pro/DMMono-Regular.woff') format('woff'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url('fonts/pro/DMMono-Medium.woff') format('woff'); font-weight: 500 700; font-display: swap; }
+@font-face { font-family: 'Spectral'; src: url('fonts/pro/Spectral-ExtraLight.woff') format('woff'); font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Hanken Grotesk'; src: url('fonts/pro/HankenGrotesk.woff') format('woff'); font-weight: 100 900; font-display: swap; }
+
+/* Muestras en Ajustes */
+.muestra--estilo-analista { background: linear-gradient(135deg, #18191C 50%, #F2B66D 50%); }
+.muestra--estilo-gaceta { background: linear-gradient(135deg, #F2EFE8 50%, #1D5A43 50%); }
+.muestra--estilo-calibre { background: linear-gradient(135deg, #0F1011 50%, #D4F542 50%); }
+.muestra--estilo-observatorio { background: linear-gradient(135deg, #0B0E17 50%, #8FDCEB 50%); }
+.muestra--estilo-kanso { background: linear-gradient(135deg, #F1EFEA 50%, #1A1918 50%); box-shadow: inset -6px -6px 0 -3px #76591B; }
+
+/* Piezas extra del brote: solo se ven en los temas que las usan */
+.brote__doble, .brote__marcas { display: none; fill: none; }
+
+/* ---------- Gaceta: revista de domingo ---------- */
+:root[data-estilo="gaceta"] { --font-display: 'Bodoni Moda', Georgia, serif; --font-sans: 'Libre Franklin', system-ui, sans-serif; --font-cifras: 'Bodoni Moda', Georgia, serif; }
+:root[data-estilo="gaceta"] .titulo-pantalla { font: italic 600 38px/40px var(--font-display); letter-spacing: -0.01em; }
+:root[data-estilo="gaceta"] .cabecera { border-top: 2px solid var(--tinta); padding-top: var(--espacio-2); }
+:root[data-estilo="gaceta"] .panel-dia { border-top: 3px double var(--tinta); border-bottom-color: var(--tinta); }
+:root[data-estilo="gaceta"] .kpi__valor { font-weight: 500; letter-spacing: 0; }
+:root[data-estilo="gaceta"] .brote__pista { stroke: var(--tinta); stroke-width: 7; }
+:root[data-estilo="gaceta"] .brote__doble { display: inline; stroke: var(--fondo); stroke-width: 4.6; }
+:root[data-estilo="gaceta"] .brote__anillo { stroke-width: 4; stroke-linecap: butt; transition-duration: 1400ms; }
+:root[data-estilo="gaceta"] .brote__tallo { stroke: var(--tinta); stroke-width: 1.6; }
+:root[data-estilo="gaceta"] .brote__hoja, :root[data-estilo="gaceta"] .brote__yema { stroke: var(--linea-fuerte); stroke-dasharray: 2 3; }
+:root[data-estilo="gaceta"] .brote__hoja--on { fill: var(--acento-suave); stroke: var(--tinta); stroke-dasharray: none; }
+:root[data-estilo="gaceta"] .celda { position: relative; display: grid; place-items: center; background: transparent; box-shadow: none; }
+:root[data-estilo="gaceta"] .celda::after { content: ''; width: var(--d, 0); aspect-ratio: 1; border-radius: 50%; background: var(--tinta); }
+:root[data-estilo="gaceta"] .celda[data-nivel="0"]::after { --d: 30%; background: transparent; box-shadow: inset 0 0 0 1.5px var(--linea-fuerte); }
+:root[data-estilo="gaceta"] .celda[data-nivel="1"]::after { --d: 32%; }
+:root[data-estilo="gaceta"] .celda[data-nivel="2"]::after { --d: 50%; }
+:root[data-estilo="gaceta"] .celda[data-nivel="3"]::after { --d: 68%; }
+:root[data-estilo="gaceta"] .celda[data-nivel="4"]::after { --d: 86%; }
+:root[data-estilo="gaceta"] .celda[data-nivel="vacio"], :root[data-estilo="gaceta"] .celda[data-nivel="futuro"], :root[data-estilo="gaceta"] .celda[data-nivel="antes"] { box-shadow: inset 0 0 0 1px var(--linea); }
+:root[data-estilo="gaceta"] .celda[data-hoy] { outline: 0; box-shadow: inset 0 -2px 0 var(--acento); }
+
+/* ---------- Calibre: instrumento suizo ---------- */
+:root[data-estilo="calibre"] { --font-display: 'Archivo', system-ui, sans-serif; --font-sans: 'Archivo', system-ui, sans-serif; --font-cifras: 'IBM Plex Mono', ui-monospace, monospace; }
+:root[data-estilo="calibre"] .titulo-pantalla { font: 800 32px/36px var(--font-display); font-stretch: 115%; text-transform: uppercase; letter-spacing: -0.02em; }
+:root[data-estilo="calibre"] .subtitulo, :root[data-estilo="calibre"] .kpi__etiqueta, :root[data-estilo="calibre"] .cifra__etiqueta { font-family: 'IBM Plex Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; }
+:root[data-estilo="calibre"] .kpi__valor, :root[data-estilo="calibre"] .cifra__valor { font-weight: 600; letter-spacing: -0.01em; font-size: 26px; }
+:root[data-estilo="calibre"] .brote__pista { stroke: var(--linea-fuerte); stroke-width: 6; stroke-dasharray: 1.3 3.41; }
+:root[data-estilo="calibre"] .brote__anillo { stroke-width: 6; stroke-linecap: butt; transition: stroke-dasharray 900ms steps(9); }
+:root[data-estilo="calibre"] .brote__marcas { display: inline; stroke: var(--fondo); stroke-width: 7; stroke-dasharray: 0 1.3 3.41 0; }
+:root[data-estilo="calibre"] .brote__tallo { stroke: var(--tinta); stroke-width: 2.5; stroke-linecap: square; }
+:root[data-estilo="calibre"] .brote__hoja--on { fill: var(--tinta); stroke: var(--tinta); }
+:root[data-estilo="calibre"] .brote__flor path { fill: var(--acento); }
+:root[data-estilo="calibre"] .celda { border-radius: 6px; background: linear-gradient(to top, var(--acento) var(--h, 0%), transparent var(--h, 0%)); box-shadow: inset 0 0 0 1.5px var(--linea-fuerte); }
+:root[data-estilo="calibre"] .celda[data-nivel="0"] { box-shadow: none; outline: 1.5px dashed var(--linea-fuerte); outline-offset: -1.5px; }
+:root[data-estilo="calibre"] .celda[data-nivel="1"] { --h: 25%; }
+:root[data-estilo="calibre"] .celda[data-nivel="2"] { --h: 50%; }
+:root[data-estilo="calibre"] .celda[data-nivel="3"] { --h: 75%; }
+:root[data-estilo="calibre"] .celda[data-nivel="4"] { --h: 100%; }
+:root[data-estilo="calibre"] .celda[data-nivel="vacio"], :root[data-estilo="calibre"] .celda[data-nivel="futuro"], :root[data-estilo="calibre"] .celda[data-nivel="antes"] { background: transparent; box-shadow: inset 0 0 0 1px var(--linea); }
+:root[data-estilo="calibre"] .celda[data-hoy] { outline: 2.5px solid var(--tinta); outline-offset: 1px; }
+
+/* ---------- Observatorio: noche ---------- */
+:root[data-estilo="observatorio"] { --font-display: 'Cormorant Garamond', Georgia, serif; --font-sans: 'DM Sans', system-ui, sans-serif; --font-cifras: 'DM Mono', ui-monospace, monospace; }
+:root[data-estilo="observatorio"] .titulo-pantalla { font: italic 600 40px/42px var(--font-display); letter-spacing: 0; }
+:root[data-estilo="observatorio"] .kpi__valor, :root[data-estilo="observatorio"] .cifra__valor { font-weight: 400; letter-spacing: -0.02em; font-size: 26px; }
+:root[data-estilo="observatorio"] .brote__pista { stroke: var(--linea-fuerte); stroke-width: 1; stroke-dasharray: 1 4; }
+:root[data-estilo="observatorio"] .brote__anillo { stroke-width: 2; transition-duration: 1600ms; }
+:root[data-estilo="observatorio"] .brote__tallo { stroke: var(--tinta-suave); stroke-width: 1; stroke-dasharray: 2 2; }
+:root[data-estilo="observatorio"] .brote__hoja--on { fill: none; stroke: var(--tinta); stroke-width: 1.5; }
+:root[data-estilo="observatorio"] .brote__flor path { fill: var(--acento); animation: tv-titilar 3.6s ease-in-out infinite; }
+:root[data-estilo="observatorio"] .celda { position: relative; display: grid; place-items: center; background: transparent; box-shadow: none; border-radius: 50%; }
+:root[data-estilo="observatorio"] .celda::after { content: ''; width: var(--d, 0); aspect-ratio: 1; background: var(--acento); clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); animation: tv-titilar 4s ease-in-out infinite; }
+:root[data-estilo="observatorio"] .celda:nth-child(3n)::after { animation-delay: -1.3s; }
+:root[data-estilo="observatorio"] .celda:nth-child(4n)::after { animation-delay: -2.6s; }
+:root[data-estilo="observatorio"] .celda[data-nivel="0"]::after { --d: 12%; clip-path: none; border-radius: 50%; background: var(--linea-fuerte); animation: none; }
+:root[data-estilo="observatorio"] .celda[data-nivel="1"]::after { --d: 34%; }
+:root[data-estilo="observatorio"] .celda[data-nivel="2"]::after { --d: 50%; }
+:root[data-estilo="observatorio"] .celda[data-nivel="3"]::after { --d: 66%; }
+:root[data-estilo="observatorio"] .celda[data-nivel="4"]::after { --d: 80%; }
+:root[data-estilo="observatorio"] .celda[data-nivel="4"] { box-shadow: inset 0 0 0 1px var(--acento); }
+:root[data-estilo="observatorio"] .celda[data-nivel="vacio"], :root[data-estilo="observatorio"] .celda[data-nivel="futuro"], :root[data-estilo="observatorio"] .celda[data-nivel="antes"] { box-shadow: none; }
+:root[data-estilo="observatorio"] .celda[data-hoy] { outline: 1.5px dashed var(--tinta); outline-offset: 0; }
+@keyframes tv-titilar { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+/* ---------- Kanso: tinta y oro ---------- */
+:root[data-estilo="kanso"] { --font-display: 'Spectral', Georgia, serif; --font-sans: 'Hanken Grotesk', system-ui, sans-serif; --font-cifras: 'Hanken Grotesk', system-ui, sans-serif; }
+:root[data-estilo="kanso"] .titulo-pantalla { font: 200 42px/46px var(--font-display); letter-spacing: .01em; }
+:root[data-estilo="kanso"] .kpi__valor, :root[data-estilo="kanso"] .cifra__valor { font-weight: 500; font-size: 26px; letter-spacing: 0; }
+:root[data-estilo="kanso"] .panel-dia { border-color: transparent; }
+:root[data-estilo="kanso"] .brote__pista { stroke: var(--linea); stroke-width: 5; }
+:root[data-estilo="kanso"] .brote__anillo { stroke: var(--tinta); stroke-width: 5; transition-duration: 1800ms; }
+:root[data-estilo="kanso"] .brote__tallo { stroke: var(--tinta); stroke-width: 2.5; }
+:root[data-estilo="kanso"] .brote__hoja--on { fill: var(--tinta); stroke: var(--tinta); }
+:root[data-estilo="kanso"] .brote__flor path { fill: var(--oro); }
+:root[data-estilo="kanso"] .celda { position: relative; border-radius: 6px; }
+:root[data-estilo="kanso"] .celda[data-nivel="0"] { background: transparent; box-shadow: inset 0 0 0 1px var(--linea-fuerte); }
+/* Kintsugi: el día en que vuelves después de una pausa lleva una costura de oro */
+:root[data-estilo="kanso"] .celda[data-nivel="0"] + .celda:is([data-nivel="1"], [data-nivel="2"], [data-nivel="3"], [data-nivel="4"])::before {
+  content: ''; position: absolute; left: -5px; top: -2px; bottom: -2px; width: 4px; background: var(--oro);
+  clip-path: polygon(50% 0, 100% 22%, 0 45%, 100% 70%, 20% 100%, 0 100%, 70% 70%, 0 45%, 80% 22%, 30% 0);
+}
+:root[data-estilo="kanso"] .celda[data-hoy] { outline: 0; box-shadow: 0 6px 0 -4px var(--oro); }
+/* Colores de los temas Pro (generados y revisados con contraste AA) */
+:root[data-estilo="gaceta"] { color-scheme: light; --fondo: #F2EFE8; --superficie: #FBFAF6; --hundido: #EAE7E1; --capa: #E5E2DB; --linea: #D9D4C9; --linea-fuerte: #87837B; --tinta: #151413; --tinta-suave: #5B5852; --tinta-tenue: #66635C; --principal: #151413; --sobre-principal: #F2EFE8; --acento: #1D5A43; --acento-texto: #1D5A43; --acento-fuerte: #1B4C39; --acento-suave: #D0D7CE; --sobre-acento: #F2EFE8; --calor-0: #E0DDD7; --calor-1: #A6B6AB; --calor-2: #759586; --calor-3: #487764; --calor-4: #1D5A43; --oro: #1D5A43; }
+@media (prefers-color-scheme: dark) { :root[data-estilo="gaceta"]:not([data-theme="claro"]) { color-scheme: dark; --fondo: #161513; --superficie: #201F1C; --hundido: #1E1D1A; --capa: #232220; --linea: #34322E; --linea-fuerte: #78746C; --tinta: #F2EFE8; --tinta-suave: #A9A49A; --tinta-tenue: #9D988E; --principal: #F2EFE8; --sobre-principal: #161513; --acento: #7CC7A3; --acento-texto: #7CC7A3; --acento-fuerte: #94CFB1; --acento-suave: #26312A; --sobre-acento: #161513; --calor-0: #282624; --calor-1: #41564A; --calor-2: #567F6A; --calor-3: #6AA487; --calor-4: #7CC7A3; --oro: #7CC7A3; } }
+:root[data-estilo="gaceta"][data-theme="oscuro"] { color-scheme: dark; --fondo: #161513; --superficie: #201F1C; --hundido: #1E1D1A; --capa: #232220; --linea: #34322E; --linea-fuerte: #78746C; --tinta: #F2EFE8; --tinta-suave: #A9A49A; --tinta-tenue: #9D988E; --principal: #F2EFE8; --sobre-principal: #161513; --acento: #7CC7A3; --acento-texto: #7CC7A3; --acento-fuerte: #94CFB1; --acento-suave: #26312A; --sobre-acento: #161513; --calor-0: #282624; --calor-1: #41564A; --calor-2: #567F6A; --calor-3: #6AA487; --calor-4: #7CC7A3; --oro: #7CC7A3; }
+:root[data-estilo="gaceta"][data-theme="negro"] { color-scheme: dark; --fondo: #000000; --superficie: #0F0F0E; --hundido: #080808; --capa: #0F0E0E; --linea: #262522; --linea-fuerte: #6E6A62; --tinta: #F2EFE8; --tinta-suave: #9E998F; --tinta-tenue: #928D84; --principal: #F2EFE8; --sobre-principal: #000000; --acento: #74C29C; --acento-texto: #74C29C; --acento-fuerte: #8DCBAB; --acento-suave: #131F19; --sobre-acento: #000000; --calor-0: #131313; --calor-1: #30483C; --calor-2: #48735E; --calor-3: #5F9C7E; --calor-4: #74C29C; --oro: #74C29C; }
+:root[data-estilo="calibre"] { color-scheme: light; --fondo: #E8E9EB; --superficie: #F7F7F8; --hundido: #E0E1E3; --capa: #DBDCDE; --linea: #CDD0D4; --linea-fuerte: #7C8086; --tinta: #0F1011; --tinta-suave: #4C5056; --tinta-tenue: #585C62; --principal: #0F1011; --sobre-principal: #E8E9EB; --acento: #3D5C00; --acento-texto: #3D5C00; --acento-fuerte: #344D03; --acento-suave: #CDD2C5; --sobre-acento: #E8E9EB; --calor-0: #D7D8DA; --calor-1: #A9B399; --calor-2: #829462; --calor-3: #5F7730; --calor-4: #3D5C00; --oro: #3D5C00; }
+@media (prefers-color-scheme: dark) { :root[data-estilo="calibre"]:not([data-theme="claro"]) { color-scheme: dark; --fondo: #0F1011; --superficie: #1A1C1E; --hundido: #171819; --capa: #1C1D1E; --linea: #2C2F33; --linea-fuerte: #6C7178; --tinta: #ECEDEE; --tinta-suave: #9DA2A8; --tinta-tenue: #91969C; --principal: #ECEDEE; --sobre-principal: #0F1011; --acento: #D4F542; --acento-texto: #D4F542; --acento-fuerte: #D9F364; --acento-suave: #2F3519; --sobre-acento: #0F1011; --calor-0: #212223; --calor-1: #57612C; --calor-2: #839634; --calor-3: #ADC73B; --calor-4: #D4F542; --oro: #D4F542; } }
+:root[data-estilo="calibre"][data-theme="oscuro"] { color-scheme: dark; --fondo: #0F1011; --superficie: #1A1C1E; --hundido: #171819; --capa: #1C1D1E; --linea: #2C2F33; --linea-fuerte: #6C7178; --tinta: #ECEDEE; --tinta-suave: #9DA2A8; --tinta-tenue: #91969C; --principal: #ECEDEE; --sobre-principal: #0F1011; --acento: #D4F542; --acento-texto: #D4F542; --acento-fuerte: #D9F364; --acento-suave: #2F3519; --sobre-acento: #0F1011; --calor-0: #212223; --calor-1: #57612C; --calor-2: #839634; --calor-3: #ADC73B; --calor-4: #D4F542; --oro: #D4F542; }
+:root[data-estilo="calibre"][data-theme="negro"] { color-scheme: dark; --fondo: #000000; --superficie: #0B0C0D; --hundido: #080808; --capa: #0E0E0E; --linea: #222528; --linea-fuerte: #686D73; --tinta: #ECEDEE; --tinta-suave: #959AA0; --tinta-tenue: #8A8F95; --principal: #ECEDEE; --sobre-principal: #000000; --acento: #CDEE3A; --acento-texto: #CDEE3A; --acento-fuerte: #D3EE5E; --acento-suave: #212609; --sobre-acento: #000000; --calor-0: #131313; --calor-1: #4B551F; --calor-2: #798B28; --calor-3: #A4BE31; --calor-4: #CDEE3A; --oro: #CDEE3A; }
+:root[data-estilo="observatorio"] { color-scheme: light; --fondo: #ECEEF1; --superficie: #F8F9FA; --hundido: #E4E6EA; --capa: #DFE1E4; --linea: #D3D7DE; --linea-fuerte: #7C8290; --tinta: #0E1320; --tinta-suave: #4F5666; --tinta-tenue: #5A6170; --principal: #0E1320; --sobre-principal: #ECEEF1; --acento: #0C5866; --acento-texto: #0C5866; --acento-fuerte: #0C4A58; --acento-suave: #C8D6DB; --sobre-acento: #ECEEF1; --calor-0: #DADCE0; --calor-1: #9CB4BB; --calor-2: #69939D; --calor-3: #397581; --calor-4: #0C5866; --oro: #0C5866; }
+@media (prefers-color-scheme: dark) { :root[data-estilo="observatorio"]:not([data-theme="claro"]) { color-scheme: dark; --fondo: #0B0E17; --superficie: #141927; --hundido: #13161F; --capa: #181B24; --linea: #262C3C; --linea-fuerte: #687086; --tinta: #E8ECF4; --tinta-suave: #98A1B3; --tinta-tenue: #8C95A8; --principal: #E8ECF4; --sobre-principal: #0B0E17; --acento: #8FDCEB; --acento-texto: #8FDCEB; --acento-fuerte: #A1DFED; --acento-suave: #202F39; --sobre-acento: #0B0E17; --calor-0: #1D2029; --calor-1: #3F5863; --calor-2: #5C8794; --calor-3: #76B3C0; --calor-4: #8FDCEB; --oro: #8FDCEB; } }
+:root[data-estilo="observatorio"][data-theme="oscuro"] { color-scheme: dark; --fondo: #0B0E17; --superficie: #141927; --hundido: #13161F; --capa: #181B24; --linea: #262C3C; --linea-fuerte: #687086; --tinta: #E8ECF4; --tinta-suave: #98A1B3; --tinta-tenue: #8C95A8; --principal: #E8ECF4; --sobre-principal: #0B0E17; --acento: #8FDCEB; --acento-texto: #8FDCEB; --acento-fuerte: #A1DFED; --acento-suave: #202F39; --sobre-acento: #0B0E17; --calor-0: #1D2029; --calor-1: #3F5863; --calor-2: #5C8794; --calor-3: #76B3C0; --calor-4: #8FDCEB; --oro: #8FDCEB; }
+:root[data-estilo="observatorio"][data-theme="negro"] { color-scheme: dark; --fondo: #000000; --superficie: #080A10; --hundido: #080809; --capa: #0E0E0F; --linea: #1C2130; --linea-fuerte: #626A7E; --tinta: #E8ECF4; --tinta-suave: #8E97A8; --tinta-tenue: #838C9E; --principal: #E8ECF4; --sobre-principal: #000000; --acento: #86D6E6; --acento-texto: #86D6E6; --acento-fuerte: #9ADAE9; --acento-suave: #152225; --sobre-acento: #000000; --calor-0: #131314; --calor-1: #364E53; --calor-2: #527E88; --calor-3: #6DABB8; --calor-4: #86D6E6; --oro: #86D6E6; }
+:root[data-estilo="kanso"] { color-scheme: light; --fondo: #F1EFEA; --superficie: #FAF9F6; --hundido: #E9E8E3; --capa: #E4E2DD; --linea: #DDD8CF; --linea-fuerte: #86827B; --tinta: #1A1918; --tinta-suave: #5E5A55; --tinta-tenue: #625E58; --principal: #1A1918; --sobre-principal: #F1EFEA; --acento: #1A1918; --acento-texto: #1A1918; --acento-fuerte: #1A1918; --acento-suave: #CFCDC8; --sobre-acento: #F1EFEA; --calor-0: #E0DED9; --calor-1: #A5A39F; --calor-2: #73726F; --calor-3: #464442; --calor-4: #1A1918; --oro: #76591B; }
+@media (prefers-color-scheme: dark) { :root[data-estilo="kanso"]:not([data-theme="claro"]) { color-scheme: dark; --fondo: #141414; --superficie: #1E1E1D; --hundido: #1C1C1B; --capa: #212121; --linea: #30302E; --linea-fuerte: #75736D; --tinta: #EDEBE6; --tinta-suave: #A3A09A; --tinta-tenue: #98958F; --principal: #EDEBE6; --sobre-principal: #141414; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #373636; --sobre-acento: #141414; --calor-0: #252525; --calor-1: #61605F; --calor-2: #93928F; --calor-3: #C1BFBC; --calor-4: #EDEBE6; --oro: #D6B878; } }
+:root[data-estilo="kanso"][data-theme="oscuro"] { color-scheme: dark; --fondo: #141414; --superficie: #1E1E1D; --hundido: #1C1C1B; --capa: #212121; --linea: #30302E; --linea-fuerte: #75736D; --tinta: #EDEBE6; --tinta-suave: #A3A09A; --tinta-tenue: #98958F; --principal: #EDEBE6; --sobre-principal: #141414; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #373636; --sobre-acento: #141414; --calor-0: #252525; --calor-1: #61605F; --calor-2: #93928F; --calor-3: #C1BFBC; --calor-4: #EDEBE6; --oro: #D6B878; }
+:root[data-estilo="kanso"][data-theme="negro"] { color-scheme: dark; --fondo: #000000; --superficie: #0D0D0C; --hundido: #080808; --capa: #0E0E0E; --linea: #262624; --linea-fuerte: #6B6964; --tinta: #EDEBE6; --tinta-suave: #9A978F; --tinta-tenue: #8E8C84; --principal: #EDEBE6; --sobre-principal: #000000; --acento: #EDEBE6; --acento-texto: #EDEBE6; --acento-fuerte: #EDEBE6; --acento-suave: #262625; --sobre-acento: #000000; --calor-0: #131312; --calor-1: #545452; --calor-2: #8B8A87; --calor-3: #BDBBB7; --calor-4: #EDEBE6; --oro: #CFB06E; }
